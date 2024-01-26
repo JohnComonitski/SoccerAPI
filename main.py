@@ -1,4 +1,4 @@
-from soccerapi import SoccerAPI 
+from SoccerAPI.soccerapi import SoccerAPI 
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)

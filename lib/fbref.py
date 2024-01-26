@@ -1,6 +1,6 @@
+from SoccerAPI.lib.ratelimiter import RateLimiter
 from datetime import datetime
 from bs4 import BeautifulSoup
-from lib.ratelimiter import RateLimiter
 import requests
 import re
 

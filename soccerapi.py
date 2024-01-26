@@ -1,10 +1,11 @@
-from lib.env import Env
+from SoccerAPI.lib.env import Env
+from SoccerAPI.lib.postgres import PostgreSQL
+from SoccerAPI.lib.tm import TM
+from SoccerAPI.lib.fapi import FAPI
+from SoccerAPI.lib.fbref import FBRef
 from datetime import datetime
 from tqdm import tqdm
-from lib.postgres import PostgreSQL
-from lib.tm import TM
-from lib.fapi import FAPI
-from lib.fbref import FBRef
+
 
 class SoccerAPI():
     def __init__(self):

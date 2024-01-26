@@ -1,7 +1,8 @@
+from SoccerAPI.lib.schema import Schema
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
-from lib.schema import Schema
+
 
 class PostgreSQL:
     def __init__(self, host, port, database, user, password):
@@ -122,7 +123,7 @@ class PostgreSQL:
                 query = sql.SQL("SELECT * FROM {} WHERE {} = {}").format(
                     sql.Identifier(table_name),
                     sql.SQL(schema["primary_key"]),
-                    sql.SQL(primary_key)
+                    sql.SQL(str(primary_key))
                 )
                 cursor.execute(query)
 
