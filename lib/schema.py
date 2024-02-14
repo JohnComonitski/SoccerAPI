@@ -160,6 +160,16 @@ class Schema:
                     "increment":True
                 },
                 {
+                    "sql":"position",
+                    "label":"Position",
+                    "type":"TEXT"
+                },
+                {
+                    "sql":"year",
+                    "label":"Year",
+                    "type":"TEXT"
+                },
+                {
                     "sql":"fbref_league_id",
                     "label":"Fbref League Id",
                     "type":"TEXT"

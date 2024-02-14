@@ -79,7 +79,7 @@ class FBRef:
                             if(str(col.text.strip()) != ""):
                                 stats[year][team_id][stat_maping[str(col_count)]] = str(col.text.strip())
                             else:
-                                stats[year][team_id][stat_maping[str(col_count)]] = "0.0"
+                                stats[year][team_id][stat_maping[str(col_count)]] = "0"
                             col_count+= 1   
                     row_count += 1
             
@@ -110,9 +110,7 @@ class FBRef:
                         if(stats["position"] == None):
                             stats["position"] = pos.split(" ")[1].split(" ▪")[0]
 
-                if(stats["position"] == None):
-                    stats["position"] = "GK"
-            else:
+            if("position" not in stats):
                 return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Player could not be parsed" }
             
             tables = ["stats_keeper_adv_dom_lg", "stats_keeper_dom_lg", "stats_standard_dom_lg", "stats_shooting_dom_lg", "stats_passing_dom_lg", "stats_passing_types_dom_lg", "stats_defense_dom_lg", "stats_possession_dom_lg", "stats_playing_time_dom_lg", "stats_misc_dom_lg"]
