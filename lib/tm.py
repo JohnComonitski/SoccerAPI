@@ -52,6 +52,61 @@ class TM:
 
         return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player page could not be found" }
 
+    def get_player_value_by_year(self, player, year):
+        if("tm_player_id" not in player):
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
+        
+        tm_player_id = player["tm_player_id"]
+        if(not tm_player_id):
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
+        
+        end_point = "https://www.transfermarkt.us/player-name/leistungsdatendetails/spieler/"
+        end_point += tm_player_id
+
+        page = self.make_request(end_point)
+
+        if(page):
+            team_url = ""
+            seasons_table = page.find("table", class_="items")
+            if(seasons_table):
+                body = seasons_table.find("tbody")
+                rows = body.find_all("tr")
+                for row in rows:
+                    cols = row.find_all("td")
+                    team_link = cols[3]
+                    team_link = team_link.find("a")
+                    if(team_link):
+                        team_url = team_link["href"]
+                        if year in team_url: 
+                            break
+            else:
+                return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player seasons table could not be found" }
+
+            if(team_url != ""):
+                end_point = "https://www.transfermarkt.us" + team_url
+                team_page = self.make_request(end_point)
+                if(team_page):
+                    player_table = team_page.find("table", class_="items")
+                    if(player_table):
+                        body = player_table.find("tbody")
+                        rows = body.find_all("tr")
+                        for row in rows:
+                            cols = row.find_all("td")
+                            if(len(cols) > 3):
+                                player_link = cols[3]
+                                player_link = player_link.find("a")
+                                if(player_link):
+                                    player_link = player_link["href"]
+                                    pattern = r'\/.*\/profil\/spieler\/([a-zA-Z0-9]*)'
+                                    match = re.match(pattern, player_link, re.IGNORECASE)
+                                    if match:
+                                        if(str(player["tm_player_id"]) == str(match.group(1))):
+                                            return { "success" : 1, "res" : { "market_value" : self.parse_value(cols[-1].text) }, "error_string" : "" }
+                                   
+            return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player could not be found on a team in " + year }
+        return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player page could not be found" }
+    
+
     def get_team_value(self, team, year):
         if("tm_team_id" not in team):
             return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_team_id" }
