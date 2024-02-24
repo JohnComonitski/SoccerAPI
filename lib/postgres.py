@@ -1,4 +1,4 @@
-from SoccerAPI.lib.schema import Schema
+from lib.schema import Schema
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
