@@ -122,7 +122,7 @@ class SoccerAPI():
             return { "success" : 1, "res" : { "teams" : teams}, "error_string" : "" }
         return { "success" : 0, "res" : { "teams" : teams}, "error_string" : res["error_string"]  }
     
-    def get_league_wide_player_stats(self, league, save_results):
+    def get_league_wide_player_stats(self, league, year, save_results):
         player_stats = {}
         res = self.fapi.get_teams_in_league(league, year=None)
         if(res["success"]):
@@ -149,25 +149,37 @@ class SoccerAPI():
                             db_player = self.db.search("players", { "fapi_player_id" : player_id })
                             if(len(db_player) > 0):
                                 db_player = db_player[0]
-                                player_fbref_stats = self.fbref.get_player_stats(db_player, year=self.this_year)
+                                player_fbref_stats = self.fbref.get_player_stats(db_player, year)
                                 if(player_fbref_stats["success"]):
-                                    if(self.this_year in player_fbref_stats["res"]["stats"]):
-                                        stats = player_fbref_stats["res"]["stats"][self.this_year]
+                                    if(year in player_fbref_stats["res"]["stats"]):
+                                        stats = player_fbref_stats["res"]["stats"][year]
                                         
                                         if(db_team["fbref_team_id"] in stats):
                                             player_stats[db_team["team_id"]]["players"][db_player["player_id"]] = {}
                                             player_stats[db_team["team_id"]]["players"][db_player["player_id"]]["stats"] = stats[db_team["fbref_team_id"]]
                                             player_stats[db_team["team_id"]]["players"][db_player["player_id"]]["player"] = db_player
                                             if save_results:
-                                                insert_obj = stats[db_team["fbref_team_id"]]
-                                                insert_obj["year"] = str(self.this_year)
-                                                insert_obj["position"] = player_fbref_stats["res"]["stats"]["position"]
-                                                insert_obj["player_id"] = db_player["player_id"]
-                                                insert_obj["fbref_player_id"] = db_player["fbref_player_id"]
-                                                insert_obj["league_id"] = league["league_id"]
-                                                insert_obj["team_id"] = db_team["team_id"]
-                                                insert_obj["fbref_team_id"] = db_team["fbref_team_id"]
-                                                self.db.create("player_stats", [insert_obj])
+                                                #Check if we have stats
+                                                search_params = { 
+                                                    "league_id" : league["league_id"], 
+                                                    "team_id" : db_team["team_id"], 
+                                                    "player_id" : db_player["player_id"],
+                                                    "year" : year
+                                                }
+                                                db_player_stats = self.db.search("player_stats", search_params)
+                                                if( len(db_player_stats) > 0 ):
+                                                    player_stat_id = db_player_stats[0]["player_stats_id"]
+                                                    self.db.update("player_stats", player_stat_id, stats[db_team["fbref_team_id"]])
+                                                else:
+                                                    insert_obj = stats[db_team["fbref_team_id"]]
+                                                    insert_obj["year"] = str(year)
+                                                    insert_obj["position"] = player_fbref_stats["res"]["stats"]["position"]
+                                                    insert_obj["player_id"] = db_player["player_id"]
+                                                    insert_obj["fbref_player_id"] = db_player["fbref_player_id"]
+                                                    insert_obj["league_id"] = league["league_id"]
+                                                    insert_obj["team_id"] = db_team["team_id"]
+                                                    insert_obj["fbref_team_id"] = db_team["fbref_team_id"]
+                                                    self.db.create("player_stats", [insert_obj])
 
                     else:
                         return { "success" : 0, "res" : { "players" : []}, "error_string" : res["error_string"]  }    
@@ -204,16 +216,27 @@ class SoccerAPI():
                                 player_stats[db_team["team_id"]]["players"][db_player["player_id"]]["stats"] = stats[db_team["fbref_team_id"]]
                                 player_stats[db_team["team_id"]]["players"][db_player["player_id"]]["player"] = db_player
                                 if save_results:
-                                    insert_obj = stats[db_team["fbref_team_id"]]
-                                    #TODO: Get League
-                                    
-                                    insert_obj["year"] = str(self.this_year)
-                                    insert_obj["position"] = player_fbref_stats["res"]["stats"]["position"]
-                                    insert_obj["player_id"] = db_player["player_id"]
-                                    insert_obj["fbref_player_id"] = db_player["fbref_player_id"]
-                                    insert_obj["team_id"] = db_team["team_id"]
-                                    insert_obj["fbref_team_id"] = db_team["fbref_team_id"]
-                                    self.db.create("player_stats", [insert_obj])
+                                    #Check if we have stats
+                                    search_params = { 
+                                        "team_id" : db_team["team_id"], 
+                                        "player_id" : db_player["player_id"],
+                                        "year" : self.this_year
+                                    }
+                                    db_player_stats = self.db.search("player_stats", search_params)
+                                    if( len(db_player_stats) > 0 ):
+                                        player_stat_id = db_player_stats[0]["player_stats_id"]
+                                        self.db.update(player_stats, player_stat_id, stats[db_team["fbref_team_id"]])
+                                    else:
+                                        insert_obj = stats[db_team["fbref_team_id"]]
+
+                                        #Non Statistical Information
+                                        insert_obj["year"] = str(self.this_year)
+                                        insert_obj["position"] = player_fbref_stats["res"]["stats"]["position"]
+                                        insert_obj["player_id"] = db_player["player_id"]
+                                        insert_obj["fbref_player_id"] = db_player["fbref_player_id"]
+                                        insert_obj["team_id"] = db_team["team_id"]
+                                        insert_obj["fbref_team_id"] = db_team["fbref_team_id"]
+                                        self.db.create("player_stats", [insert_obj])
                     else:
                         print(db_player)
                         print("-----------------------")

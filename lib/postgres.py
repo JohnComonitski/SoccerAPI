@@ -1,4 +1,4 @@
-from lib.schema import Schema
+from SoccerAPI.lib.schema import Schema
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
@@ -167,7 +167,6 @@ class PostgreSQL:
     def search(self, table_name, query):
         connection = self.create_connection()
         res = []
-        
         try:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 query_params = self.build_query(query, 0)
@@ -204,13 +203,13 @@ class PostgreSQL:
                 schema = self.get_schema(table_name)
 
                 updates_sql = (', ').join(updates)
-
+ 
                 # Generate the SQL query
                 update_query = sql.SQL("UPDATE {} SET {} WHERE {} = '{}'").format(
                     sql.Identifier(table_name),
                     sql.SQL(updates_sql),
                     sql.SQL(schema["primary_key"]),
-                    sql.SQL(primary_key)
+                    sql.SQL(str(primary_key))
                 )
                 cursor.execute(update_query)
 
