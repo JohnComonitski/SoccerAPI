@@ -1,15 +1,17 @@
+from SoccerAPI.lib.env import Env
 from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 import re
 
 class FAPI:
-    def __init__(self, host, key):
-            self.url = "https://api-football-v1.p.rapidapi.com/v3"
-            self.fapi_headers = {
-                "X-RapidAPI-Key": key,
-                "X-RapidAPI-Host": host
-            }
+    def __init__(self):
+        env = Env()
+        self.url = "https://api-football-v1.p.rapidapi.com/v3"
+        self.fapi_headers = {
+            "X-RapidAPI-Key": env.fapi_key,
+            "X-RapidAPI-Host": env.fapi_host
+        }
     
     def is_valid_date(self, date_string):
         try:
@@ -26,12 +28,9 @@ class FAPI:
     
     def get_players_on_team(self, team):
         res = {}
-        if("fapi_team_id" not in team):
+        if(not team.fapi_id):
             return { "success" : 0, "res" : { "players" : {res}}, "error_string" : "Error: Team object did not include a fapi_team_id" }
-        
-        fapi_team_id = team["fapi_team_id"]
-        if(not fapi_team_id):
-            return { "success" : 0, "res" : { "players" : {}}, "error_string" : "Error: Team object did not include a fapi_team_id" }
+        fapi_team_id = team.fapi_id
         
         query = { "team" : fapi_team_id}
         response = self.make_request("/players/squads", query)
@@ -42,13 +41,10 @@ class FAPI:
     
     def get_teams_in_league(self, league, year):
         res = []
-        if("fapi_league_id" not in league):
+        if(not league.fapi_id):
             return { "success" : 0, "res" : { "teams" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
+        fapi_league_id = league.fapi_id
 
-        fapi_league_id = league["fapi_league_id"]
-        if(not fapi_league_id):
-            return { "success" : 0, "res" : { "teams" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
-            
         if not year:
             current_date = datetime.now()
             if 1 <= current_date.month <= 6:
@@ -68,12 +64,9 @@ class FAPI:
 
     def get_team_schedule(self, team, year):
         res = []
-        if("fapi_team_id" not in team):
+        if(not team.fapi_id):
             return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Team object did not include a fapi_team_id" }
-        
-        fapi_team_id = team["fapi_team_id"]
-        if(not fapi_team_id):
-            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Team object did not include a fapi_team_id" }
+        fapi_team_id = team.fapi_id
             
         if not year:
             current_date = datetime.now()
@@ -100,13 +93,10 @@ class FAPI:
 
     def get_league_schedule(self, league, year):
         res = []
-        if("fapi_league_id" not in league):
+        if(not league.fapi_id):
             return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
-        
-        fapi_league_id = league["fapi_league_id"]
-        if(not fapi_league_id):
-            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
-            
+        fapi_league_id = league.fapi_id
+
         if not year:
             current_date = datetime.now()
             if 1 <= current_date.month <= 6:
@@ -132,13 +122,10 @@ class FAPI:
 
     def get_league_fixtures_on_date(self, league, date):
         res = []
-        if("fapi_league_id" not in league):
+        if(not league.fapi_id):
             return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
-        
-        fapi_league_id = league["fapi_league_id"]
-        if(not fapi_league_id):
-            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: League object did not include a fapi_league_id" }
-        
+        fapi_league_id = league.fapi_id
+
         if not self.is_valid_date(date):
             return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Date given is not a valid date" }
         
@@ -168,19 +155,20 @@ class FAPI:
 
     def get_team_fixtures_on_date(self, team, date):
         res = []
-        if("fapi_team_id" not in team):
+        if(not date):
+            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: No date was provided" }
+
+        if(not team.fapi_id):
             return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Team object did not include a fapi_team_id" }
-        
-        fapi_team_id = team["fapi_team_id"]
-        if(not fapi_team_id):
-            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Team object did not include a fapi_team_id" }
-        
+        fapi_team_id = team.fapi_id
+
         if not self.is_valid_date(date):
-            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Date given is not a valid date" }
+            return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: Date did not match '%Y-%m-%d' format" }
         
         year = date.split("-")[0]
         month = int(date.split("-")[1])
-        season = datetime.strptime(date, '%Y-%m-%d')
+        season = datetime.strptime(date, "%Y-%m-%d")
+
         if 1 <= month <= 6:
             previous_year = season.year - 1
             year = str(previous_year)
@@ -202,10 +190,10 @@ class FAPI:
 
         return { "success" : 0, "res" : { "matches" : res}, "error_string" : "Error: " + str(response["errors"]) }
 
-    def get_line_up(self, match):
+    def get_line_up(self, fixture):
         res = {}
 
-        query = { "fixture" : match }
+        query = { "fixture" : fixture.id }
         response = self.make_request("/fixtures/lineups", query)
 
         if "response" in response:

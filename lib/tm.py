@@ -27,13 +27,11 @@ class TM:
             return 0
 
     def get_player_value(self, player):
-        if("tm_player_id" not in player):
+        if(not player.tm_id):
             return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
         
-        tm_player_id = player["tm_player_id"]
-        if(not tm_player_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
-        
+        tm_player_id = player.tm_id
+
         end_point = "https://www.transfermarkt.us/player-name/profil/spieler/"
         end_point += tm_player_id
 
@@ -53,12 +51,10 @@ class TM:
         return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player page could not be found" }
 
     def get_player_value_by_year(self, player, year):
-        if("tm_player_id" not in player):
+        if(not player.tm_id):
             return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
         
-        tm_player_id = player["tm_player_id"]
-        if(not tm_player_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
+        tm_player_id = player.tm_id
         
         end_point = "https://www.transfermarkt.us/player-name/leistungsdatendetails/spieler/"
         end_point += tm_player_id
@@ -100,21 +96,17 @@ class TM:
                                     pattern = r'\/.*\/profil\/spieler\/([a-zA-Z0-9]*)'
                                     match = re.match(pattern, player_link, re.IGNORECASE)
                                     if match:
-                                        if(str(player["tm_player_id"]) == str(match.group(1))):
+                                        if(str(tm_player_id) == str(match.group(1))):
                                             return { "success" : 1, "res" : { "market_value" : self.parse_value(cols[-1].text) }, "error_string" : "" }
                                    
             return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player could not be found on a team in " + year }
         return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player page could not be found" }
     
-
     def get_team_value(self, team, year):
-        if("tm_team_id" not in team):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_team_id" }
-        
-        tm_team_id = team["tm_team_id"]
-        if(not tm_team_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_team_id" }
-        
+        if(not team.tm_id):
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_team_id" }     
+        tm_team_id = team.tm_id
+   
         if not year:
             current_date = datetime.now()
             if 1 <= current_date.month <= 6:
@@ -164,13 +156,10 @@ class TM:
         return { "success" : 1, "res" : { "market_value_by_year" : values_by_year }, "error_string" : ""  }
 
     def get_league_value(self, league, year):
-        if("tm_league_id" not in league):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_league_id" }
-        
-        tm_league_id = league["tm_league_id"]
-        if(not tm_league_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_league_id" }
-        
+        if( not league.tm_id ):
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_league_id" }       
+        tm_league_id = league.tm_id
+
         if not year:
             current_date = datetime.now()
             if 1 <= current_date.month <= 6:

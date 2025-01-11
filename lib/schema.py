@@ -1,3 +1,7 @@
+from SoccerAPI.obj.player import Player
+from SoccerAPI.obj.league import League
+from SoccerAPI.obj.team import Team
+
 class Schema:
     def __init__(self):
         self.countries = {
@@ -33,6 +37,7 @@ class Schema:
             ]
         }
         self.leagues = {
+            "class" : League,
             "name": "leagues",
             "primary_key" : "league_id",
             "columns": [
@@ -70,6 +75,7 @@ class Schema:
             ]  
         }  
         self.players = {
+            "class" : Player,
             "name": "players",
             "primary_key" : "player_id",
             "columns": [
@@ -108,10 +114,16 @@ class Schema:
                     "sql" : "fbref_player_id",
                     "label" : "FBRef Player ID",
                     "type" : "text"
+                },
+                {
+                    "sql" : "understat_player_id",
+                    "label" : "Understat Player ID",
+                    "type" : "text"
                 }
             ]
         }
         self.teams = {
+            "class" : Team,
             "name": "teams",
             "primary_key" : "team_id",
             "columns": [

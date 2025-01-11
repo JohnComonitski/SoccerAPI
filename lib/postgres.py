@@ -1,21 +1,31 @@
-from SoccerAPI.lib.schema import Schema
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
-
+from SoccerAPI.lib.schema import Schema
+from SoccerAPI.lib.env import Env
 
 class PostgreSQL:
-    def __init__(self, host, port, database, user, password):
+    def __init__(self, app):
+        env = Env()
         self.connection_params = {
-            "host": host,
-            "port": port,
-            "database": database,
-            "user": user,
-            "password": password
+            "host": env.db_host,
+            "port": env.db_port,
+            "database": env.db_database,
+            "user": env.db_user,
+            "password": env.db_password
         }
-
+        self.app = app
         self.schema = Schema()
-
+        #Cache
+        mapping_cache = {}
+        tables = ["players", "teams", "leagues"]
+        for table in tables:
+            mapping = {}
+            for team in self.get_all(table, dont_inflate=True):
+                mapping[team["fapi_" + table[0:-1] + "_id"]] = team
+            mapping_cache[table] = mapping
+        self.cache = mapping_cache
+        
     def build_schema(self):
         for k,table_info in vars(self.schema).items():
             if(table_info):
@@ -87,7 +97,8 @@ class PostgreSQL:
             # Close the connection
             connection.close()
 
-    def get_all(self, table_name):
+    def get_all(self, table_name, dont_inflate=None):
+        schema = self.get_schema(table_name)
         connection = self.create_connection()
         res = []
 
@@ -103,7 +114,10 @@ class PostgreSQL:
                     row = {}
                     for key in record.keys():
                         row[key] = record[key]
-                    res.append(row)
+                    if(dont_inflate):
+                        res.append(row)
+                    else:
+                        res.append(schema["class"](row, self))
 
         except Exception as e:
             print(f"Error: {e}")
@@ -131,13 +145,12 @@ class PostgreSQL:
                 for key in record.keys():
                     res[key] = record[key]
 
-
         except Exception as e:
             print(f"Error: {e}")
         finally:
             # Close the connection
             connection.close()
-            return res
+            return schema["class"](res, self)
         
     def build_query(self, query, use_or):
         query_params = []
@@ -165,8 +178,20 @@ class PostgreSQL:
             return " ( " + " AND ".join(query_params) + " ) "
 
     def search(self, table_name, query):
+        schema = self.get_schema(table_name)
+
+        #Check Cache
+        if( len(query.keys()) == 1):
+            key = list(query.keys())[0]
+            if(key in ["fapi_team_id", "fapi_league_id", "fapi_player_id" ]):
+                if str(query[key]) in self.cache[table_name].keys():
+                    db_data = self.cache[table_name][str(query[key])]
+                    return [ schema["class"](db_data, self)]
+
+        #Cache Fail Make Search
         connection = self.create_connection()
         res = []
+        
         try:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 query_params = self.build_query(query, 0)
@@ -181,8 +206,10 @@ class PostgreSQL:
                     row = {}
                     for key in record.keys():
                         row[key] = record[key]
-                    res.append(row)
-
+                    if("class" in schema):
+                        res.append(schema["class"](row, self))
+                    else:
+                        res.append(row)
         except Exception as e:
             print(f"Error: {e}")
 
@@ -203,13 +230,13 @@ class PostgreSQL:
                 schema = self.get_schema(table_name)
 
                 updates_sql = (', ').join(updates)
- 
+
                 # Generate the SQL query
                 update_query = sql.SQL("UPDATE {} SET {} WHERE {} = '{}'").format(
                     sql.Identifier(table_name),
                     sql.SQL(updates_sql),
                     sql.SQL(schema["primary_key"]),
-                    sql.SQL(str(primary_key))
+                    sql.SQL(primary_key)
                 )
                 cursor.execute(update_query)
 
