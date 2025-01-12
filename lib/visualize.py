@@ -438,4 +438,4 @@ class Visualize:
         file_name = x_stat + "_vs_" + y_stat + "_shots.png"
         plt.savefig(file_name, format="png", bbox_inches="tight")
 
-        return;
+        return { "success" : 1, "res" : {}, "error_string" : "" }
