@@ -233,7 +233,7 @@ class FBRef:
     
     def get_team_stats(self, team):
         if(not team.fbref_id ):
-            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_player_id" }
+            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
         
         fbref_team_id = team.fbref_id
         
@@ -253,7 +253,7 @@ class FBRef:
     
     def get_team_opposition_stats(self, team):
         if(not team.fbref_id ):
-            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_player_id" }
+            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
         
         fbref_team_id = team.fbref_id
         

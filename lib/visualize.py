@@ -413,3 +413,29 @@ class Visualize:
         file_name = player.first_name + "_" + player.last_name + "_shots.png"
         plt.savefig(file_name, format="png", bbox_inches="tight")
         return { "success" : 1, "res" : {}, "error_string" : "" }
+
+    def stat_comparison(self, objs, stats_names):
+        x_stat = stats_names[0]
+        y_stat = stats_names[1]
+        stats = [ { "object" : obj, x_stat : obj.statistic(x_stat), y_stat : obj.statistic(y_stat) } for obj in objs ]
+
+        x = []
+        y = []
+        labels = []
+        for stat in stats:
+            if( stat[x_stat] and stat[x_stat] ):
+                x.append(stat[x_stat].value)
+                y.append(stat[y_stat].value)
+                labels.append(stat["object"].name)
+
+        plt.scatter(x, y, color='blue', marker='o')
+
+        plt.xlabel(x_stat)
+        plt.ylabel(y_stat)
+        
+        plt.title(x_stat + "VS" + y_stat)
+
+        file_name = x_stat + "_vs_" + y_stat + "_shots.png"
+        plt.savefig(file_name, format="png", bbox_inches="tight")
+
+        return;
