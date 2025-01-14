@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from urllib.request import urlopen
-import pandas as pd
 from PIL import Image, ImageDraw, ImageOps
 from mplsoccer import VerticalPitch, PyPizza, FontManager, add_image
 
@@ -414,7 +413,7 @@ class Visualize:
         plt.savefig(file_name, format="png", bbox_inches="tight")
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def stat_comparison(self, objs, stats_names):
+    def stat_comparison(self, objs, stats_names, params = None):
         x_stat = stats_names[0]
         y_stat = stats_names[1]
         stats = [ { "object" : obj, x_stat : obj.statistic(x_stat), y_stat : obj.statistic(y_stat) } for obj in objs ]
@@ -426,16 +425,44 @@ class Visualize:
             if( stat[x_stat] and stat[x_stat] ):
                 x.append(stat[x_stat].value)
                 y.append(stat[y_stat].value)
-                labels.append(stat["object"].name)
+                labels.append(stat["object"].name())
 
-        plt.scatter(x, y, color='blue', marker='o')
+        c = 'blue'
+        if( params and "color" in params):
+            c = params["color"]
 
-        plt.xlabel(x_stat)
-        plt.ylabel(y_stat)
-        
-        plt.title(x_stat + "VS" + y_stat)
+        plt.scatter(x, y, color=c, marker='o', facecolors='none')
+        plt.grid(True, alpha=0.2)
+        plt.gca().spines['top'].set_visible(False)
+        plt.gca().spines['right'].set_visible(False)
 
+        if( params and "label_data" in params):
+            for i, text in enumerate(labels):
+                plt.annotate(text, (x[i] + .7, y[i] + .4))
+
+        #X Label
+        if( params and "x_label" in params):
+            plt.xlabel(params["x_label"])
+        else:
+            plt.xlabel(x_stat)
+
+        #Y Label
+        if( params and "y_label" in params):
+            plt.ylabel(params["y_label"])
+        else:
+            plt.ylabel(y_stat)
+
+        #Title
+        if( params and "title" in params):
+            plt.title(params["title"], fontweight='bold')
+        else:
+            plt.title(x_stat + " vs " + y_stat, fontweight='bold')
+
+        #filename
         file_name = x_stat + "_vs_" + y_stat + "_shots.png"
+        if( params and "filename" in params):
+            file_name = params["filename"]
+
         plt.savefig(file_name, format="png", bbox_inches="tight")
 
         return { "success" : 1, "res" : {}, "error_string" : "" }
