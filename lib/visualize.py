@@ -1,3 +1,4 @@
+from SoccerAPI.lib.utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans
 import matplotlib.pyplot as plt
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
@@ -414,24 +415,107 @@ class Visualize:
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
     def stat_comparison(self, objs, stats_names, params = None):
+        color = '#0e13ad'
+        if( params and "color" in params):
+            color = params["color"]
+            
+        has_obj_highlights = 0
+        highlight_color = '#ff0044'
+        obj_highlight = []
+        if(params and "highlight" in params):
+            if( "objects" in params["highlight"] and len(params["highlight"]["objects"]) > 0):
+                obj_highlight = [ str(obj.id) for obj in params["highlight"]["objects"]]
+                has_obj_highlights = 1
+            if("color" in params["highlight"]):
+                highlight_color = params["highlight"]["color"]
+
         x_stat = stats_names[0]
         y_stat = stats_names[1]
-        stats = [ { "object" : obj, x_stat : obj.statistic(x_stat), y_stat : obj.statistic(y_stat) } for obj in objs ]
+        z_stat = None
+        if(len(stats_names) > 2):
+            z_stat = stats_names[2]
+            
+        stats = []
+        for obj in objs:
+            stat = { "object" : obj }
 
+            if(x_stat == "Market Value"):
+                stat[x_stat] = obj.market_value()
+            else:
+                val = obj.statistic(x_stat)
+                if(str(type(val)) == "<class 'int'>"):
+                    stat[x_stat] = 0
+                else:
+                    stat[x_stat] = val.value
+
+            if(y_stat == "Market Value"):
+                stat[y_stat] = obj.market_value()
+            else:
+                val = obj.statistic(y_stat)
+                if(str(type(val)) == "<class 'int'>"):
+                    stat[y_stat] = 0
+                else:
+                    stat[y_stat] = val.value
+
+            if(z_stat):
+                if(z_stat == "Market Value"):
+                    stat[z_stat] = obj.market_value()
+                else:
+                    val = obj.statistic(z_stat)
+                    if(str(type(val)) == "<class 'int'>"):
+                        stat[z_stat] = 0
+                    else:
+                        stat[z_stat] = val.value
+
+            stats.append(stat)
+            
         x = []
         y = []
+        z = []
+        c = []
         labels = []
         for stat in stats:
-            if( stat[x_stat] and stat[x_stat] ):
-                x.append(stat[x_stat].value)
-                y.append(stat[y_stat].value)
+            if( stat[x_stat] and stat[y_stat] ):
+                if has_obj_highlights:
+                    print(str(stat["object"].id))
+                    if(str(stat["object"].id) in obj_highlight):
+                        c.append(highlight_color)
+                    else:
+                        c.append(color)
+                else:
+                    c.append(color)
+
+                x.append(stat[x_stat])
+                y.append(stat[y_stat])
                 labels.append(stat["object"].name())
+                if z_stat:
+                    z.append(stat[z_stat])
+        
+        if(len(z) == 0):
+            z = None
+        else:
+            z = normalize(z)
 
-        c = 'blue'
-        if( params and "color" in params):
-            c = params["color"]
+        if(params and "highlight" in params):
+            if("kmeans" in params["highlight"]):
+                c = kmeans(x, y, params["highlight"]["kmeans"])
+            else:
+                if("max" in params["highlight"]):
+                    idx = get_max_idx(x, y)
+                    c[idx] = highlight_color
+                if("min" in params["highlight"]):
+                    idx = get_min_idx(x, y)
+                    c[idx] = highlight_color
+                if("median" in params["highlight"]):
+                    idx = get_median_idx(x, y)
+                    c[idx] = highlight_color
+                if("top_quartile" in params["highlight"]):
+                    idxs = get_top_quartile_idx(x, y)
+                    for idx in idxs:
+                        c[idx] = highlight_color
+                
 
-        plt.scatter(x, y, color=c, marker='o', facecolors='none')
+        plt.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
         plt.grid(True, alpha=0.2)
         plt.gca().spines['top'].set_visible(False)
         plt.gca().spines['right'].set_visible(False)

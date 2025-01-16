@@ -1,4 +1,5 @@
 from SoccerAPI.obj.fixture import Fixture
+from SoccerAPI.obj.statistic import Statistic
 from SoccerAPI.lib.utils import key_to_name, name_to_key
 from datetime import datetime
 
@@ -156,7 +157,7 @@ class Team:
         stats = self.statistics()
         if stat_key and stat_key in stats:
             return stats[stat_key]
-        return 0
+        return Statistic({ "key" : stat_key, "value" : 0 })
 
     def opponent_statistics(self):
         stats = self.opps_stats_cache

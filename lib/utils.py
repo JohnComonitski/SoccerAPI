@@ -1,3 +1,9 @@
+import numpy as np
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+
+
 def key_to_name(key):
     mapping = {
         'aerials_lost': 'Aerials Lost',
@@ -365,3 +371,65 @@ def name_to_key(name):
         return mapping[name]
     else:
         return None
+
+def normalize(numbers, min_new=20, max_new=100):
+    min_old = min(numbers)
+    max_old = max(numbers)
+    
+    normalized_numbers = [
+        min_new + ( (num - min_old) / (max_old - min_old) ) * (max_new - min_new)
+        for num in numbers
+    ]
+    
+    return normalized_numbers
+
+def get_max_idx(x, y):
+    max_product = max([a * b for a, b in zip(x, y)])
+    for i in range(len(x)):
+        if( (x[i] * y[i]) == max_product ):
+            return i
+        
+def get_min_idx(x, y):
+    max_product = min([a * b for a, b in zip(x, y)])
+    for i in range(len(x)):
+        if( (x[i] * y[i]) == max_product ):
+            return i
+
+def get_median_idx(x, y):
+    products = [a * b for a, b in zip(x, y)]
+    sorted_values = sorted(products)
+    
+    n = len(products)
+    if n % 2 == 1:
+        median = sorted_values[n // 2]
+    else:
+        median = sorted_values[(n // 2) - 1]
+    
+    return products.index(median)
+
+def get_top_quartile_idx(x, y):
+    products = [a * b for a, b in zip(x, y)]
+    sorted_values = sorted(products, reverse=True)
+    cutoff_index = len(products) // 4
+    threshold_value = sorted_values[cutoff_index]
+    top_25_indexes = [i for i, value in enumerate(products) if value >= threshold_value]
+    
+    return top_25_indexes
+
+def kmeans(x, y, n_clusters):
+    points = np.array(list(zip(x, y)))
+
+    kmeans = KMeans(n_clusters=n_clusters)
+    kmeans.fit(points)
+
+    labels = kmeans.labels_
+
+    colors = list(mcolors.TABLEAU_COLORS.values())
+
+    if n_clusters > len(colors):
+        color_map = plt.cm.get_cmap('tab20', n_clusters)
+        colors = [mcolors.rgb2hex(color_map(i)) for i in range(n_clusters)]
+
+    point_colors = [colors[label] for label in labels]
+
+    return point_colors

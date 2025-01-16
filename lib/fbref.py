@@ -7,7 +7,7 @@ import re
 
 class FBRef:
     def __init__(self):
-        self.limiter = RateLimiter(max_calls=10, interval=60)
+        self.limiter = RateLimiter(max_calls=5, interval=60)
 
     def make_request(self, url):
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
@@ -138,6 +138,9 @@ class FBRef:
 
         #Get Stats
         if(doc):
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+    
             info = doc.find("div", id="info")
             if(info):
                 info = info.find_all("p")
@@ -162,6 +165,10 @@ class FBRef:
     def get_player_image_url(self, player):
         endpoint = 'https://fbref.com/en/players/' + player.fbref_id + "/name"
         doc = self.limiter.call(self.make_request, endpoint)
+        if doc:
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+    
         return  { "success" : 1, "res" : doc.find('div', class_='media-item').find('img').attrs['src'], "error_string" : "" }
 
     def get_scouting_data(self, player):
@@ -173,6 +180,11 @@ class FBRef:
         version = "365_m2"
         endpoint = "https://fbref.com/en/players/" + player.fbref_id + "/scout/" + version + "/Name"
         doc = self.limiter.call(self.make_request, endpoint)
+        
+        if doc:
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+    
         bs_scout = doc.find('div', {'id': re.compile(r'div_scout_full_')})
         
         if( not bs_scout ):
@@ -222,6 +234,9 @@ class FBRef:
         endpoint = 'https://fbref.com/en/players/' + player.fbref_id + "/name"
         doc = self.limiter.call(self.make_request, endpoint)
         if doc:
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+    
             info_box = doc.find("div", id="meta")
             if info_box:
                 elements = info_box.find_all("p")
@@ -243,6 +258,9 @@ class FBRef:
 
         #Get Stats
         if(doc):
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+            
             tables = ["stats_keeper", "stats_keeper", "stats_standard", "stats_shooting", "stats_passing", "stats_passing_types", "stats_defense", "stats_possession", "stats_playing_time", "stats_misc"]
             for table in tables:
                 stats = self.dynamic_scrape_table_footer(doc, table, stats)
@@ -263,6 +281,9 @@ class FBRef:
 
         #Get Stats
         if(doc):
+            if("Rate Limited Request (429 error)" in doc.text):
+                return  { "success" : 0, "res" : {}, "error_string" : "Error: We've been temporarily blocked by FBRef" }
+            
             tables = ["stats_keeper", "stats_keeper", "stats_standard", "stats_shooting", "stats_passing", "stats_passing_types", "stats_defense", "stats_possession", "stats_playing_time", "stats_misc"]
             for table in tables:
                 stats = self.dynamic_scrape_table_footer(doc, table, stats, opponent=1)
