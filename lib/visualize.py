@@ -474,12 +474,14 @@ class Visualize:
         z = []
         c = []
         labels = []
+        to_highlight = []
+        idx = 0
         for stat in stats:
             if( stat[x_stat] and stat[y_stat] ):
                 if has_obj_highlights:
-                    print(str(stat["object"].id))
                     if(str(stat["object"].id) in obj_highlight):
                         c.append(highlight_color)
+                        to_highlight.append(idx)
                     else:
                         c.append(color)
                 else:
@@ -490,6 +492,7 @@ class Visualize:
                 labels.append(stat["object"].name())
                 if z_stat:
                     z.append(stat[z_stat])
+            idx += 1
         
         if(len(z) == 0):
             z = None
@@ -503,16 +506,20 @@ class Visualize:
                 if("max" in params["highlight"]):
                     idx = get_max_idx(x, y)
                     c[idx] = highlight_color
+                    to_highlight.append(idx)
                 if("min" in params["highlight"]):
                     idx = get_min_idx(x, y)
                     c[idx] = highlight_color
+                    to_highlight.append(idx)
                 if("median" in params["highlight"]):
                     idx = get_median_idx(x, y)
                     c[idx] = highlight_color
+                    to_highlight.append(idx)
                 if("top_quartile" in params["highlight"]):
                     idxs = get_top_quartile_idx(x, y)
                     for idx in idxs:
                         c[idx] = highlight_color
+                        to_highlight.append(idx)
                 
 
         plt.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
@@ -520,9 +527,10 @@ class Visualize:
         plt.gca().spines['top'].set_visible(False)
         plt.gca().spines['right'].set_visible(False)
 
-        if( params and "label_data" in params):
+        if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
-                plt.annotate(text, (x[i] + .7, y[i] + .4))
+                if i in to_highlight:
+                    plt.annotate(text, (x[i] + .7, y[i] + .4))
 
         #X Label
         if( params and "x_label" in params):
