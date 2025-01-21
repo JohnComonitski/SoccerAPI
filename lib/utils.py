@@ -4,6 +4,30 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
 
+def traverse_dict(d, parent_key=""):
+    new_dict = {}
+    for key, value in d.items():
+        full_key = f"{parent_key}.{key}" if parent_key else key
+        if isinstance(value, list):
+            new_dict[key] = [ val.to_json() for val in value ]
+        elif isinstance(value, dict):
+            # Recursively process nested dictionary
+            new_dict[key] = traverse_dict(value, full_key)
+        elif( str(type(value)) == "<class 'SoccerAPI.obj.statistic.Statistic'>" ):
+            new_dict[key] = value.to_json()
+        elif( str(type(value)) == "<class 'SoccerAPI.obj.player.Player'>" ):
+            new_dict[key] = value.to_json()
+        elif( str(type(value)) == "<class 'SoccerAPI.obj.team.Team'>" ):
+            new_dict[key] = value.to_json()
+        elif( str(type(value)) == "<class 'SoccerAPI.obj.league.League'>" ):
+            new_dict[key] = value.to_json()
+        elif( str(type(value)) == "<class 'SoccerAPI.obj.fixture.Fixture'>" ):
+            new_dict[key] = value.to_json()
+        else:
+            # Directly copy other values
+            new_dict[key] = value
+    return new_dict
+
 def key_to_name(key):
     mapping = {
         'aerials_lost': 'Aerials Lost',

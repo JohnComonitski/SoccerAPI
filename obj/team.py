@@ -1,6 +1,7 @@
+import json
 from SoccerAPI.obj.fixture import Fixture
 from SoccerAPI.obj.statistic import Statistic
-from SoccerAPI.lib.utils import key_to_name, name_to_key
+from SoccerAPI.lib.utils import key_to_name, name_to_key, traverse_dict
 from datetime import datetime
 
 class Team:
@@ -34,6 +35,27 @@ class Team:
     
     def name(self):
         return self.team_name
+    
+    def export(self):
+        data = self.to_json()
+
+        file_name = "team_" + str(self.id) + ".json"
+        with open(file_name, "w") as file:
+            json.dump(data, file, indent=4)
+
+    def to_json(self):
+        return traverse_dict({
+            "object" : "team",
+            "team_name" : self.team_name,
+            "team_country" : self.team_country,
+            "id" : self.id,
+            "fbref_id" : self.fbref_id,
+            "tm_id" : self.tm_id,
+            "fapi_id" : self.fapi_id,
+            "fapi_profile" : self.fapi_profile,
+            "statistics" : self.stats_cache,
+            "opp_statistics" : self.opps_stats_cache
+        })
     
     def profile(self):
         if self.fapi_profile:

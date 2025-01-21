@@ -1,4 +1,6 @@
+from SoccerAPI.lib.utils import traverse_dict
 from SoccerAPI.obj.statistic import Statistic
+import json
 
 class Fixture:
     def __init__(self, match_data, db):
@@ -11,6 +13,7 @@ class Fixture:
         self.score_history = match_data["score"]
 
         #Inflate League
+        self.league = None
         league_id = match_data["league"]["id"]
         db_league = db.search("leagues", { "fapi_league_id" : league_id })
         if(len(db_league) > 0):
@@ -19,6 +22,7 @@ class Fixture:
             self.league = match_data["league"]
 
         #Inflate Home Team
+        self.home_team = None
         home_id = match_data["teams"]["home"]["id"]
         db_team = db.search("teams", { "fapi_team_id" : home_id })
         if(len(db_team) > 0):
@@ -27,6 +31,7 @@ class Fixture:
             self.home_team = match_data["teams"]["home"]
 
         #Inflate Away Team
+        self.away_team = None
         away_id = match_data["teams"]["away"]["id"]
         db_team = db.search("teams", { "fapi_team_id" : away_id })
         if(len(db_team) > 0):
@@ -52,6 +57,28 @@ class Fixture:
     def __repr__(self):
         return f"Fixture({self.home_team.name()} vs {self.away_team.name()})"
     
+    def export(self):
+        data = self.to_json()
+
+        file_name = "fixture_" + str(self.id) + ".json"
+        print(file_name)
+        with open(file_name, "w") as file:
+            json.dump(data, file, indent=4)
+
+    def to_json(self):
+        return traverse_dict({
+            "object" : "fixture",
+            "match_data" : self.match_data,
+            "id" : self.id,
+            "fixture_details" : self.fixture_details,
+            "home_goals" : self.home_goals,
+            "away_goals" : self.away_goals,
+            "score_history" : self.score_history,
+            "league" : self.league,
+            "home_team" : self.home_team,
+            "away_team" : self.away_team
+        }) 
+
     def __get_players_from_lineup(self, lineup, team_id, lineup_type):
         players = []
         if(lineup[0]["team"]["id"] == team_id):

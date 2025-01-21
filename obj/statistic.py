@@ -3,6 +3,7 @@ from SoccerAPI.lib.utils import key_to_name
 class Statistic:
     def __init__(self, stat_data):
         self.key = stat_data["key"]
+        self.percentile = None
         name = key_to_name(stat_data["key"])
         if(name):
             self.name = name
@@ -36,3 +37,12 @@ class Statistic:
     
     def __repr__(self):
         return str(self.value)
+    
+    def to_json(self):
+        return {
+            "object" : "statistic",
+            "key" : self.key,
+            "name" : self.name,
+            "value" : self.value,
+            "percentile" : self.percentile
+        }

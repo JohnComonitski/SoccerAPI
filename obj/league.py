@@ -1,4 +1,6 @@
+from SoccerAPI.lib.utils import traverse_dict
 from datetime import datetime
+import json
 
 class League:
     def __init__(self, league_data, db):
@@ -28,6 +30,26 @@ class League:
     def __repr__(self):
         return f"League({self.league_name} - {self.country})"
     
+    def export(self):
+        data = self.to_json()
+
+        file_name = "league_" + str(self.id) + ".json"
+        print(file_name)
+        with open(file_name, "w") as file:
+            json.dump(data, file, indent=4)
+
+    def to_json(self):
+        return traverse_dict({
+            "object" : "league",
+            "league_name" : self.league_name,
+            "id" : self.id,
+            "fbref_id" : self.fbref_id,
+            "tm_id" : self.tm_id,
+            "fapi_id" : self.fapi_id,
+            "fapi_profile" : self.fapi_profile,
+            "teams" : self.teams_cache,
+        }) 
+
     def name(self):
         return self.league_name
     
