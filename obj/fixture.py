@@ -61,7 +61,6 @@ class Fixture:
         data = self.to_json()
 
         file_name = "fixture_" + str(self.id) + ".json"
-        print(file_name)
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 

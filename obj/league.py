@@ -34,7 +34,6 @@ class League:
         data = self.to_json()
 
         file_name = "league_" + str(self.id) + ".json"
-        print(file_name)
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
