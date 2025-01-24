@@ -30,7 +30,10 @@ class Statistic:
             self.value = float(val)
 
         if("percentile" in stat_data):
-            self.percentile = float(stat_data["percentile"])
+            if(stat_data["percentile"]):
+                self.percentile = float(stat_data["percentile"])
+            else:
+                self.percentile = 0
     
     def __str__(self):
         return str(self.value)

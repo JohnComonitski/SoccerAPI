@@ -55,10 +55,50 @@ class Player:
             "fapi_id" : self.fapi_id,
             "understat_id" : self.understat_id,
             "fapi_profile" : self.fapi_profile,
-            "country" : self.player_country,
+            "player_country" : self.player_country,
             "team" : self.team,
             "statistics" : self.stats_cache
         })
+    
+    def import_data(self, data):
+        if "fapi_profile" in data:
+            self.fapi_profile = data["fapi_profile"]
+
+        if "player_country" in data:
+            self.player_country = data["player_country"]
+
+        if "team" in data and data["team"]:
+            team = self.db.get("teams", data["team"]["id"])
+            team.import_data(data["team"])
+            self.team = team
+        
+        if "statistics" in data and data["statistics"]:
+            stats = {}
+            has_years = 0 
+            first_key = next(iter(data["statistics"]))
+            if "20" in first_key:
+                has_years = 1
+
+            if(has_years):
+                for year in data["statistics"]:
+                    if year not in stats:
+                        stats[year] = {}
+                    for key in data["statistics"][year]:
+                        stat_data = data["statistics"][year][key]
+                        if "key" in stat_data:
+                            stats[year][key] = Statistic(stat_data)
+                        else:
+                            stats[year][key] = data["statistics"][year]
+            else:
+                for key in data["statistics"]:
+                    stat_data = data["statistics"][key]
+                    if "key" in stat_data:
+                        stats[key] = Statistic(stat_data)
+                    else:
+                        stats[key] = data["statistics"]
+
+            self.stats_cache = stats
+
 
     def profile(self):
         if self.fapi_profile:

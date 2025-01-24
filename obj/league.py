@@ -48,6 +48,19 @@ class League:
             "fapi_profile" : self.fapi_profile,
             "teams" : self.teams_cache,
         }) 
+    
+    def import_data(self, data):
+        if "fapi_profile" in data:
+            self.fapi_profile = data["fapi_profile"]
+
+        if "team" in data and data["teams"]:
+            teams = []
+            for team in data["teams"]:
+                team = self.db.get("teams", team["id"])
+                team.import_data(data["team"])
+                teams.append(team)
+            self.team = teams
+        
 
     def name(self):
         return self.league_name
@@ -74,7 +87,6 @@ class League:
                 year = str(current_date.year)
 
         if year in teams:
-            print("cache hit")
             return teams[year]
 
         teams_list = []

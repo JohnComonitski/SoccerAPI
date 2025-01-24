@@ -57,6 +57,31 @@ class Team:
             "opp_statistics" : self.opps_stats_cache
         })
     
+    def import_data(self, data):
+        if "fapi_profile" in data:
+            self.fapi_profile = data["fapi_profile"]
+
+        if "statistics" in data and data["statistics"]:
+            stats = {}
+            for key in data["statistics"]:
+                stat_data = data["statistics"][key]
+                if "key" in stat_data:
+                    stats[key] = Statistic(stat_data)
+                else:
+                    stats[key] = data["statistics"]
+            
+            self.stats_cache = stats
+
+        if "opp_statistics" in data and data["opp_statistics"]:
+            stats = {}
+            for key in data["opp_statistics"]:
+                stat_data = data["opp_statistics"][key]
+                if "key" in stat_data:
+                    stats[key] = Statistic(stat_data)
+                else:
+                    stats[key] = data["opp_statistics"]
+            self.opps_stats_cache = stats
+            
     def profile(self):
         if self.fapi_profile:
             return self.fapi_profile
@@ -157,7 +182,6 @@ class Team:
 
         if stats:
             return stats
-
         res = self.fbref.get_team_stats(self)
         if(res["success"]):
             stats = res["res"]["stats"]

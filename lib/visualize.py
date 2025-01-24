@@ -1,4 +1,4 @@
-from SoccerAPI.lib.utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans
+from SoccerAPI.lib.utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans, get_top_n_idx, get_stat_top_n_idx
 import matplotlib.pyplot as plt
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
@@ -515,6 +515,23 @@ class Visualize:
                     idx = get_median_idx(x, y)
                     c[idx] = highlight_color
                     to_highlight.append(idx)
+                if("top_n" in params["highlight"]):
+                    idxs = get_top_n_idx(x, y, params["highlight"]["top_n"])
+                    for idx in idxs:
+                        c[idx] = highlight_color
+                        to_highlight.append(idx)
+                if("stat_top_n" in params["highlight"]):
+                    n = params["highlight"]["stat_top_n"]["n"]
+                    stat = params["highlight"]["stat_top_n"]["stat"]
+                    stats = []
+                    if(stat == x_stat):
+                        stats = x
+                    elif( stat == y_stat):
+                        stats = y
+                    idxs = get_stat_top_n_idx(stats, n)
+                    for idx in idxs:
+                        c[idx] = highlight_color
+                        to_highlight.append(idx)
                 if("top_quartile" in params["highlight"]):
                     idxs = get_top_quartile_idx(x, y)
                     for idx in idxs:

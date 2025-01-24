@@ -3,7 +3,6 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
-
 def traverse_dict(d, parent_key=""):
     new_dict = {}
     for key, value in d.items():
@@ -439,6 +438,21 @@ def get_top_quartile_idx(x, y):
     top_25_indexes = [i for i, value in enumerate(products) if value >= threshold_value]
     
     return top_25_indexes
+
+def get_top_n_idx(x, y, n):
+    products = [a * b for a, b in zip(x, y)]
+    sorted_values = sorted(products, reverse=True)
+    threshold_value = sorted_values[n - 1]
+    top_n_indexes = [i for i, value in enumerate(products) if value >= threshold_value]
+    
+    return top_n_indexes
+
+def get_stat_top_n_idx(stat, n):
+    sorted_values = sorted(stat, reverse=True)
+    threshold_value = sorted_values[n - 1]
+    top_indexes = [i for i, value in enumerate(stat) if value >= threshold_value]
+    
+    return top_indexes
 
 def kmeans(x, y, n_clusters):
     points = np.array(list(zip(x, y)))
