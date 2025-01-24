@@ -99,7 +99,6 @@ class Player:
 
             self.stats_cache = stats
 
-
     def profile(self):
         if self.fapi_profile:
             return self.fapi_profile
@@ -180,8 +179,11 @@ class Player:
 
         res = self.fbref.get_player_stats(self, year)
         if(res["success"]):
-            fbref_team_id = list(res["res"]["stats"][year].keys())[0]
-            stats[year] = res["res"]["stats"][year][fbref_team_id]
+            if(year in res["res"]["stats"]):
+                fbref_team_id = list(res["res"]["stats"][year].keys())[0]
+                stats[year] = res["res"]["stats"][year][fbref_team_id]
+            else:
+                stats[year] = {}
         else:
             if(self.debug):
                 print(res["error_string"])
