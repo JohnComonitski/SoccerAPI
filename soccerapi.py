@@ -8,14 +8,19 @@ from SoccerAPI.obj.fixture import Fixture
 import json
 
 class SoccerAPI():
-    def __init__(self, debug=0):
+    def __init__(self, config={}):
+        debug = 0
+        if "debug" in config:
+            debug = config["debug"]
+
         app = {
-            "fbref" : FBRef(),
+            "debug" : debug,
+            "config" : config,
+            "fbref" : FBRef(config=config),
             "tm" : TM(),
             "understat" : Understat(),
             "visualize" : Visualize(),
-            "fapi" : FAPI(),
-            "debug" : debug
+            "fapi" : FAPI(config=config),
         }
         self.db = PostgreSQL(app) 
         self.visualize = Visualize()

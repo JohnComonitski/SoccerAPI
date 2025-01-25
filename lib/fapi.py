@@ -1,16 +1,14 @@
-from SoccerAPI.lib.env import Env
 from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
 import re
 
 class FAPI:
-    def __init__(self):
-        env = Env()
+    def __init__(self, config={}):
         self.url = "https://api-football-v1.p.rapidapi.com/v3"
         self.fapi_headers = {
-            "X-RapidAPI-Key": env.fapi_key,
-            "X-RapidAPI-Host": env.fapi_host
+            "X-RapidAPI-Key": config["fapi_key"],
+            "X-RapidAPI-Host": config["fapi_host"]
         }
     
     def is_valid_date(self, date_string):

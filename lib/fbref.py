@@ -6,8 +6,16 @@ import requests
 import re
 
 class FBRef:
-    def __init__(self):
-        self.limiter = RateLimiter(max_calls=5, interval=60)
+    def __init__(self, config={}):
+        max_calls = 5
+        if "rate_limit_max_calls" in config:
+            max_calls = config["rate_limit_max_calls"]
+
+        interval = 60
+        if "rate_limit_call_interval" in config:
+            interval = config["rate_limit_call_interval"]
+
+        self.limiter = RateLimiter(max_calls=max_calls, interval=interval)
 
     def make_request(self, url):
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}

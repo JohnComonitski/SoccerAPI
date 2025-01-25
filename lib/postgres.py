@@ -2,20 +2,29 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 from SoccerAPI.lib.schema import Schema
-from SoccerAPI.lib.env import Env
 
 class PostgreSQL:
     def __init__(self, app):
-        env = Env()
-        self.connection_params = {
-            "host": env.db_host,
-            "port": env.db_port,
-            "database": env.db_database,
-            "user": env.db_user,
-            "password": env.db_password
-        }
         self.app = app
+        config = app["config"]
         self.schema = Schema()
+
+        self.has_connection = 1
+        connection_keys = [ "db_host", "db_port", "db_database", "db_user", "db_password" ]
+        for key in connection_keys:
+            if key not in config:
+                self.has_connection = 0
+
+
+        if(self.has_connection):
+            self.connection_params = {
+                "host": config["db_host"],
+                "port": config["db_port"],
+                "database": config["db_database"],
+                "user": config["db_user"],
+                "password": config["db_password"]
+            }
+
         #Cache
         mapping_cache = {}
         tables = ["players", "teams", "leagues"]
@@ -61,6 +70,10 @@ class PostgreSQL:
         return psycopg2.connect(**self.connection_params)
 
     def create(self, table_name, data):
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         if not data or not isinstance(data, list) or not data[0]:
             print("Error: Data list is empty or does not contain dictionaries.")
             return
@@ -99,6 +112,12 @@ class PostgreSQL:
 
     def get_all(self, table_name, dont_inflate=None):
         schema = self.get_schema(table_name)
+
+        #TODO: Build Cache Check
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         connection = self.create_connection()
         res = []
 
@@ -128,6 +147,12 @@ class PostgreSQL:
 
     def get(self, table_name, primary_key):
         schema = self.get_schema(table_name)
+
+        #TODO: Build Cache Check
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         connection = self.create_connection()
         res = {}
 
@@ -180,13 +205,18 @@ class PostgreSQL:
     def search(self, table_name, query):
         schema = self.get_schema(table_name)
 
-        #Check Cache
+        #TODO: Expand Cache Check
+        #Check Cache 
         if( len(query.keys()) == 1):
             key = list(query.keys())[0]
             if(key in ["fapi_team_id", "fapi_league_id", "fapi_player_id" ]):
                 if str(query[key]) in self.cache[table_name].keys():
                     db_data = self.cache[table_name][str(query[key])]
                     return [ schema["class"](db_data, self)]
+
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
 
         #Cache Fail Make Search
         connection = self.create_connection()
@@ -219,6 +249,10 @@ class PostgreSQL:
             return res
 
     def update(self, table_name, primary_key, data):
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         connection = self.create_connection()
         try:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
@@ -249,6 +283,10 @@ class PostgreSQL:
             connection.close()
 
     def delete(self, table_name, primary_key):
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         schema = self.get_schema(table_name)
         connection = self.create_connection()
         try:
@@ -270,6 +308,10 @@ class PostgreSQL:
             connection.close()
 
     def raw_query(self, query):
+        if not self.has_connection:
+            print("Error: No database connection")
+            return
+
         connection = self.create_connection()
         res = []
 
