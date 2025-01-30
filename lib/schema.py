@@ -71,6 +71,12 @@ class Schema:
                     "sql" : "fbref_league_id",
                     "label" : "FBRef League ID",
                     "type" : "text"
+                },
+                {
+                    "sql" : "fbref_stat_detail_level",
+                    "label" : "FBRef Stat Detail Level",
+                    "type" : "text",
+                    "options" : [ "detailed", "limited", "none" ]
                 }
             ]  
         }  

@@ -6,6 +6,7 @@ from SoccerAPI.lib.understat import Understat
 from SoccerAPI.lib.visualize import Visualize
 from SoccerAPI.obj.fixture import Fixture
 import json
+import csv
 
 class SoccerAPI():
     def __init__(self, config={}):
@@ -43,9 +44,39 @@ class SoccerAPI():
 
             if(table_name):
                 object = self.db.get(table_name, obj_id)
-                object.import_data(obj_data)
+                if(object):
+                    object.import_data(obj_data)
             else:
                 if(obj_type == "fixture"):
                     return Fixture(obj_data["match_data"], self.db)
 
         return object
+    
+    def export_csv(self, objects, filename="soccer_api_objects.csv"):
+        data = []
+        for object in objects:
+            data.append({
+                "ID" : str(object.id),
+                "Table" : object.table,
+                "Name" : object.name(),
+            })
+
+        with open(filename, mode="w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=[ "ID", "Name", "Table" ])
+            writer.writeheader() 
+            writer.writerows(data)
+
+    def import_csv(self, path):
+        objects = []
+
+        with open(path, mode='r') as file:
+            reader = list(csv.reader(file))
+            reader = reader[1:]
+
+            for row in reader:
+                id = row[0]
+                table = row[2]
+                if(table in [ "teams", "leagues", "players" ]):
+                    objects.append(self.db.get(table, str(id)))
+
+        return objects

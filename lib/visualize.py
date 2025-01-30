@@ -414,7 +414,7 @@ class Visualize:
         plt.savefig(file_name, format="png", bbox_inches="tight")
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def stat_comparison(self, objs, stats_names, params = None):
+    def plot_statistics(self, objs, stats_names, params = None):
         color = '#0e13ad'
         if( params and "color" in params):
             color = params["color"]
@@ -489,10 +489,11 @@ class Visualize:
 
                 x.append(stat[x_stat])
                 y.append(stat[y_stat])
+                idx += 1
                 labels.append(stat["object"].name())
                 if z_stat:
                     z.append(stat[z_stat])
-            idx += 1
+
         
         if(len(z) == 0):
             z = None
@@ -538,7 +539,7 @@ class Visualize:
                         c[idx] = highlight_color
                         to_highlight.append(idx)
                 
-
+        plt.clf()
         plt.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
         plt.grid(True, alpha=0.2)
         plt.gca().spines['top'].set_visible(False)
@@ -547,7 +548,8 @@ class Visualize:
         if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
                 if i in to_highlight:
-                    plt.annotate(text, (x[i] + .7, y[i] + .4))
+                    #plt.annotate(text, (x[i], y[i]))
+                    plt.annotate(text, (x[i], y[i]), xytext=(5, 5), textcoords='offset points')
 
         #X Label
         if( params and "x_label" in params):
@@ -568,7 +570,7 @@ class Visualize:
             plt.title(x_stat + " vs " + y_stat, fontweight='bold')
 
         #filename
-        file_name = x_stat + "_vs_" + y_stat + "_shots.png"
+        file_name = x_stat + "_vs_" + y_stat + ".png"
         if( params and "filename" in params):
             file_name = params["filename"]
 

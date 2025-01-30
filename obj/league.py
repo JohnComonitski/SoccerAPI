@@ -5,10 +5,12 @@ import json
 class League:
     def __init__(self, league_data, db):
         #From League Data
+        self.table = "leagues"
         self.league_name = league_data["league_name"]
         self.id = league_data["league_id"]
         self.country = league_data["country_code"]
         self.fbref_id = league_data["fbref_league_id"]
+        self.fbref_stat_detail_level = league_data["fbref_stat_detail_level"]
         self.tm_id = league_data["tm_league_id"]
         self.fapi_id = league_data["fapi_league_id"]
         #Cached Data

@@ -1,7 +1,11 @@
+import requests
+import json
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 from SoccerAPI.lib.schema import Schema
+import zlib
+import base64
 
 class PostgreSQL:
     def __init__(self, app):
@@ -15,7 +19,6 @@ class PostgreSQL:
             if key not in config:
                 self.has_connection = 0
 
-
         if(self.has_connection):
             self.connection_params = {
                 "host": config["db_host"],
@@ -26,6 +29,7 @@ class PostgreSQL:
             }
 
         #Cache
+        '''
         mapping_cache = {}
         tables = ["players", "teams", "leagues"]
         for table in tables:
@@ -34,7 +38,43 @@ class PostgreSQL:
                 mapping[team["fapi_" + table[0:-1] + "_id"]] = team
             mapping_cache[table] = mapping
         self.cache = mapping_cache
+        '''
+        self.cache = self.build_cache()
+
+    def build_cache(self):
+        data = self.get_cache_data()
+        cache = {
+            "players" : { "fbref_player_id" : {}, "tm_player_id" : {}, "fapi_player_id" : {}, "player_id" : {} },
+            "teams" : { "fbref_team_id" : {}, "tm_team_id" : {}, "fapi_team_id" : {}, "team_id" : {} },
+            "leagues" : { "fbref_league_id" : {}, "tm_league_id" : {}, "fapi_league_id" : {}, "league_id" : {} }
+        }
+        for table in data:
+            singular = table[0:-1]
+            table_data = data[table]
+            for record in table_data:
+                row = {}
+                for key in record.keys():
+                    row[key] = record[key]
+                    
+                for key in record.keys():
+                    if key == "fbref_" + singular + "_id":
+                        cache[table]["fbref_" + singular + "_id"][str(row[key])] = row
+                    elif key == "tm_" + singular + "_id":
+                        cache[table]["tm_" + singular + "_id"][str(row[key])] = row
+                    elif key == "fapi_" + singular + "_id":
+                        cache[table]["fapi_" + singular + "_id"][str(row[key])] = row
+                    elif key == singular + "_id":
+                        cache[table][singular + "_id"][str(row[key])] = row
+        return cache
         
+    def get_cache_data(self):
+        endpoint = "https://njlx0v4vjl.execute-api.us-west-2.amazonaws.com/v1/soccerapi"
+        headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
+        res = requests.get(endpoint, headers=headers)
+        decompressed = zlib.decompress(base64.b64decode(res.text)).decode('utf-8')
+        data = json.loads(decompressed)
+        return data
+
     def build_schema(self):
         for k,table_info in vars(self.schema).items():
             if(table_info):
@@ -113,7 +153,6 @@ class PostgreSQL:
     def get_all(self, table_name, dont_inflate=None):
         schema = self.get_schema(table_name)
 
-        #TODO: Build Cache Check
         if not self.has_connection:
             print("Error: No database connection")
             return
@@ -148,7 +187,10 @@ class PostgreSQL:
     def get(self, table_name, primary_key):
         schema = self.get_schema(table_name)
 
-        #TODO: Build Cache Check
+        if str(primary_key) in self.cache[table_name][schema["primary_key"]]:
+            data = self.cache[table_name][schema["primary_key"]][str(primary_key)]
+            return schema["class"](data, self)
+
         if not self.has_connection:
             print("Error: No database connection")
             return
@@ -175,6 +217,9 @@ class PostgreSQL:
         finally:
             # Close the connection
             connection.close()
+            if primary_key not in res:
+                return None
+            
             return schema["class"](res, self)
         
     def build_query(self, query, use_or):
@@ -205,14 +250,13 @@ class PostgreSQL:
     def search(self, table_name, query):
         schema = self.get_schema(table_name)
 
-        #TODO: Expand Cache Check
         #Check Cache 
-        if( len(query.keys()) == 1):
+        if( len(query.keys()) == 1 ):
             key = list(query.keys())[0]
-            if(key in ["fapi_team_id", "fapi_league_id", "fapi_player_id" ]):
-                if str(query[key]) in self.cache[table_name].keys():
-                    db_data = self.cache[table_name][str(query[key])]
-                    return [ schema["class"](db_data, self)]
+            if( "_id" in key ):
+                if str(query[key]) in self.cache[table_name][key]:
+                    data = self.cache[table_name][key][str(query[key])]
+                    return [ schema["class"](data, self) ]
 
         if not self.has_connection:
             print("Error: No database connection")

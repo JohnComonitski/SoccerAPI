@@ -7,6 +7,7 @@ from datetime import datetime
 class Team:
     def __init__(self, team_data, db):
         #From Team Data
+        self.table = "teams"
         self.team_name = team_data["team_name"]
         self.team_country = team_data["country_code"]
         self.id = team_data["team_id"]

@@ -6,6 +6,7 @@ from SoccerAPI.lib.utils import key_to_name, name_to_key, traverse_dict
 class Player:
     def __init__(self, player_data, db):
         #From Player Data
+        self.table = "players"
         self.first_name = player_data["first_name"]
         self.last_name = player_data["last_name"]
         self.id = player_data["player_id"]
