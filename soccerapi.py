@@ -25,6 +25,7 @@ class SoccerAPI():
         }
         self.db = PostgreSQL(app) 
         self.visualize = Visualize()
+        self.app = app
 
     def import_object(self, path):
         object = None

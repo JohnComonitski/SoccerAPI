@@ -29,16 +29,6 @@ class PostgreSQL:
             }
 
         #Cache
-        '''
-        mapping_cache = {}
-        tables = ["players", "teams", "leagues"]
-        for table in tables:
-            mapping = {}
-            for team in self.get_all(table, dont_inflate=True):
-                mapping[team["fapi_" + table[0:-1] + "_id"]] = team
-            mapping_cache[table] = mapping
-        self.cache = mapping_cache
-        '''
         self.cache = self.build_cache()
 
     def build_cache(self):
@@ -72,8 +62,7 @@ class PostgreSQL:
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
         res = requests.get(endpoint, headers=headers)
         decompressed = zlib.decompress(base64.b64decode(res.text)).decode('utf-8')
-        data = json.loads(decompressed)
-        return data
+        return json.loads(decompressed)
 
     def build_schema(self):
         for k,table_info in vars(self.schema).items():
@@ -137,7 +126,7 @@ class PostgreSQL:
                 for tuple_values in values:
                     for tuple_value in tuple_values:
                         values_to_insert.append(tuple_value)
-
+                
                 cursor.execute(insert_query, values_to_insert)
 
             # Commit the changes
@@ -249,7 +238,6 @@ class PostgreSQL:
 
     def search(self, table_name, query):
         schema = self.get_schema(table_name)
-
         #Check Cache 
         if( len(query.keys()) == 1 ):
             key = list(query.keys())[0]
@@ -264,8 +252,8 @@ class PostgreSQL:
 
         #Cache Fail Make Search
         connection = self.create_connection()
+
         res = []
-        
         try:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 query_params = self.build_query(query, 0)
