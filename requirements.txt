@@ -1,0 +1,7 @@
+datetime
+json
+matplotlib
+mplsoccer
+scikit-learn
+beautifulsoup4
+requests
