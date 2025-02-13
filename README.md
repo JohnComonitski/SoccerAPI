@@ -3,6 +3,14 @@
 
 A simple to use Python library that connects [API-Football](https://www.api-football.com/) to several online football data providers and allow for the easier collection of league, team and player data for use by amature football data analysts.
 
+# Data Sources
+
+Soccer API is powered by a database mapping the IDs of over 82,000 players, 4200 teams, and 200 leagues. This allows for the seamless programatic access and combination of data across the following sites: 
+ - API-Football
+ - FBRef
+ - Transfermarkt
+ - Understat
+
 # Getting Started
 
 ## 1. Install from Git
@@ -28,7 +36,7 @@ config = {
 
 > **NOTE:** Many features in this library require API-Football API tokens. Get started with API-Footballs free tier **[here](https://www.api-football.com/pricing)**, however it is recommended serious analysis or data collection be performed using a paid tier, otherwise you will be limited to 100 requests per day.
 
-## 4. Instantiate Football API
+## 4. Instantiate Soccer API
 
 ```py
 api = SoccerAPI(config)
@@ -40,4 +48,4 @@ api = SoccerAPI(config)
 haaland = api.db.get("players", "82172")
 stat = Haaland.statistic("shots")
 ```
-> Collects Haaland's number of shots this season.
+> Collects Erling Haaland's number of shots this season.
