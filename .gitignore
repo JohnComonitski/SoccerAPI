@@ -1,10 +1,10 @@
 lib/env.py
 lib/__pycache__
 lib/__pycache__/*
+lib/.DS_Store
 obj/env.py
 obj/__pycache__
 obj/__pycache__/*
-.DS_Store
-lib/.DS_Store
 obj/.DS_Store
+.DS_Store
 __pycache__/*
