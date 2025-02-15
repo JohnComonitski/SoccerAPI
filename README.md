@@ -13,19 +13,19 @@ Soccer API is powered by a database mapping the IDs of over 82,000 players, 4200
 
 # Getting Started
 
-## 1. Install from Git
+### 1. Install from Git
 
 ```bash
 git install https://github.com/JohnComonitski/SoccerAPI
 ```
 
-## 2. Install Dependencies
+### 2. Install Dependencies
 
 ```py
 !pip install -r ./SoccerAPI/requirements.txt
 ```
 
-## 3. Set Up Config
+### 3. Set Up Config
 
 ```py
 config = {
@@ -36,13 +36,13 @@ config = {
 
 > **NOTE:** Many features in this library require a API-Football API key. You can get started with by using API-Football's free tier **[here](https://www.api-football.com/pricing)**, btu it is recommended for serious analysis or larger data collection projects you use a paid tier, otherwise you will be limited to 100 requests per day.
 
-## 4. Instantiate Soccer API
+### 4. Instantiate Soccer API
 
 ```py
 api = SoccerAPI(config)
 ```
 
-## 5. Begin Data Collection or Analysis
+### 5. Begin Data Collection or Analysis
 
 ```py
 haaland = api.db.get("players", "82172")
