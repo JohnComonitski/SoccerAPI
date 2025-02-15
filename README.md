@@ -25,6 +25,8 @@ git install https://github.com/JohnComonitski/SoccerAPI
 !pip install -r ./SoccerAPI/requirements.txt
 ```
 
+> **NOTE:** Psycopg2 may give you trouble installing. Consider installing from it's **[binary](https://pypi.org/project/psycopg2-binary/)**.
+
 ### 3. Set Up Config
 
 ```py
