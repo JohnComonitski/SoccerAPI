@@ -1,5 +1,3 @@
-datetime
-json
 matplotlib
 mplsoccer
 scikit-learn
