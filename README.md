@@ -1,53 +1,75 @@
-
 # Soccer API
 
-A Python library that connects [API-Football](https://www.api-football.com/) to several online football data providers and allow for the easier collection of league, team and player data for use by amature football data analysts.
+A Python library that connects [API-Football](https://www.api-football.com/)
+to several online football data providers and allow for the easier collection
+of league, team and player data for use by amature football data analysts.
 
-# Data Sources
+<!--TOC-->
 
-Soccer API is powered by a database mapping the IDs of over 82,000 players, 4200 teams, and 200 leagues. This allows for the seamless programatic access and combination of data across the following sites: 
- - API-Football
- - FBRef
- - Transfermarkt
- - Understat
+## Data Sources
 
-# Getting Started
+Soccer API is powered by a database mapping the IDs of over 82,000 players,
+4200 teams, and 200 leagues. This allows for the seamless programatic access
+and combination of data across the following sites: 
 
-### 1. Install from Git
+- [API-Football](https://www.api-football.com/)
+- [FBRef](https://fbref.com)
+- [Transfermarkt](https://www.transfermarkt.com/)
+- [Understat](https://understat.com/)
 
-```bash
-git install https://github.com/JohnComonitski/SoccerAPI
-```
+## Getting Started
 
-### 2. Install Dependencies
+1. clone the repository
 
-```py
-!pip install -r ./SoccerAPI/requirements.txt
-```
+   ```shell
+   git clone https://github.com/JohnComonitski/SoccerAPI.git
+   ```
 
-> **NOTE:** Psycopg2 may give you trouble installing. Consider installing from it's **[binary](https://pypi.org/project/psycopg2-binary/)**.
+2. move to the project directory
 
-### 3. Set Up Config
+   ```shell
+   cd SoccerAPI
+   ```
 
-```py
-config = {
-    "fapi_host" : "api-football-v1.p.rapidapi.com",
-    "fapi_key" : "API-FOOTBALL API KEY",
-}
-```
+3. create and acrivate a Python
+   [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments)
+4. install the Python dependencies
 
-> **NOTE:** Many features in this library require a API-Football API key. You can get started with by using API-Football's free tier **[here](https://www.api-football.com/pricing)**, btu it is recommended for serious analysis or larger data collection projects you use a paid tier, otherwise you will be limited to 100 requests per day.
+   ```shell
+   pip install -r requirements.txt
+   ```
 
-### 4. Instantiate Soccer API
+   > [!NOTE]
+   > Psycopg2 may give you trouble installing. Consider installing from its
+   > [binary](https://pypi.org/project/psycopg2-binary/).
 
-```py
-api = SoccerAPI(config)
-```
+5. Set Up Config
 
-### 5. Begin Data Collection or Analysis
+   ```python
+   config = {
+       "fapi_host" : "api-football-v1.p.rapidapi.com",
+       "fapi_key" : "API-FOOTBALL API KEY",
+   }
+   ```
 
-```py
-haaland = api.db.get("players", "82172")
-stat = Haaland.statistic("shots")
-```
-> Collects Erling Haaland's number of shots this season.
+   > [!NOTE]
+   > Many features in this library require a API-Football API key. You can get
+   > started with by using API-Football's free tier
+   > **[here](https://www.api-football.com/pricing)**. For serious analysis, or
+   > for larger data collection projects, it is recommended you use a paid tier,
+   > otherwise you will be limited to 100 requests per day.
+
+6. Instantiate Soccer API
+
+   ```python
+   api = SoccerAPI(config)
+   ```
+
+7. Begin Data Collection or Analysis
+
+   ```python
+   haaland = api.db.get("players", "82172")
+   stat = Haaland.statistic("shots")
+   ```
+
+   > Collects Erling Haaland's number of shots this season.
