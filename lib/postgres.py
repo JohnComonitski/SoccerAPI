@@ -198,17 +198,16 @@ class PostgreSQL:
                 cursor.execute(query)
 
                 record = cursor.fetchone()
-                for key in record.keys():
-                    res[key] = record[key]
-
+                if(record):
+                    for key in record.keys():
+                        res[key] = record[key]
         except Exception as e:
             print(f"Error: {e}")
         finally:
             # Close the connection
             connection.close()
-            if primary_key not in res:
+            if schema["primary_key"] not in res:
                 return None
-            
             return schema["class"](res, self)
         
     def build_query(self, query, use_or):
