@@ -43,9 +43,11 @@ and combination of data across the following sites:
    > Psycopg2 may give you trouble installing. Consider installing from its
    > [binary](https://pypi.org/project/psycopg2-binary/).
 
-5. Set Up Config
+5. create a new Python file and set up the configuration
 
    ```python
+   import soccerapi.soccerapi
+
    config = {
        "fapi_host" : "api-football-v1.p.rapidapi.com",
        "fapi_key" : "API-FOOTBALL API KEY",
@@ -62,7 +64,7 @@ and combination of data across the following sites:
 6. Instantiate Soccer API
 
    ```python
-   api = SoccerAPI(config)
+   api = soccerapi.soccerapi.SoccerAPI(config)
    ```
 
 7. Begin Data Collection or Analysis

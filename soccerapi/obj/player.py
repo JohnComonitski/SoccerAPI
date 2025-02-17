@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
-from SoccerAPI.obj.statistic import Statistic 
-from SoccerAPI.lib.utils import key_to_name, name_to_key, traverse_dict
+from soccerapi.obj.statistic import Statistic 
+from soccerapi.lib.utils import key_to_name, name_to_key, traverse_dict
 
 class Player:
     def __init__(self, player_data, db):

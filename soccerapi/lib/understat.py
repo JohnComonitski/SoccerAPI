@@ -1,4 +1,4 @@
-from SoccerAPI.obj.statistic import Statistic
+from soccerapi.obj.statistic import Statistic
 from datetime import datetime
 from bs4 import BeautifulSoup
 import json

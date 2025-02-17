@@ -1,4 +1,4 @@
-from SoccerAPI.lib.utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans, get_top_n_idx, get_stat_top_n_idx
+from soccerapi.lib.utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans, get_top_n_idx, get_stat_top_n_idx
 import matplotlib.pyplot as plt
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps

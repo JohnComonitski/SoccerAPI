@@ -1,4 +1,4 @@
-from SoccerAPI.lib.utils import key_to_name
+from soccerapi.lib.utils import key_to_name
 
 class Statistic:
     def __init__(self, stat_data):

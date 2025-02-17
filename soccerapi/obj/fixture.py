@@ -1,5 +1,5 @@
-from SoccerAPI.lib.utils import traverse_dict
-from SoccerAPI.obj.statistic import Statistic
+from soccerapi.lib.utils import traverse_dict
+from soccerapi.obj.statistic import Statistic
 import json
 
 class Fixture:

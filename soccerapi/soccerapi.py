@@ -1,10 +1,10 @@
-from SoccerAPI.lib.postgres import PostgreSQL
-from SoccerAPI.lib.tm import TM
-from SoccerAPI.lib.fapi import FAPI
-from SoccerAPI.lib.fbref import FBRef
-from SoccerAPI.lib.understat import Understat
-from SoccerAPI.lib.visualize import Visualize
-from SoccerAPI.obj.fixture import Fixture
+from soccerapi.lib.postgres import PostgreSQL
+from soccerapi.lib.tm import TM
+from soccerapi.lib.fapi import FAPI
+from soccerapi.lib.fbref import FBRef
+from soccerapi.lib.understat import Understat
+from soccerapi.lib.visualize import Visualize
+from soccerapi.obj.fixture import Fixture
 import json
 import csv
 
