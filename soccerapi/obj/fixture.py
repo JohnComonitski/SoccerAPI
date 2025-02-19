@@ -1,5 +1,5 @@
-from soccerapi.lib.utils import traverse_dict
-from soccerapi.obj.statistic import Statistic
+from ..lib.utils import traverse_dict
+from .statistic import Statistic
 import json
 
 class Fixture:

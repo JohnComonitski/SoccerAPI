@@ -1,6 +1,6 @@
-from soccerapi.obj.player import Player
-from soccerapi.obj.league import League
-from soccerapi.obj.team import Team
+from ..obj.player import Player
+from ..obj.league import League
+from ..obj.team import Team
 
 class Schema:
     def __init__(self):

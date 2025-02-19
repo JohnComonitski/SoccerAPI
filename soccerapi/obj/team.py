@@ -1,7 +1,7 @@
 import json
-from soccerapi.obj.fixture import Fixture
-from soccerapi.obj.statistic import Statistic
-from soccerapi.lib.utils import key_to_name, name_to_key, traverse_dict
+from .fixture import Fixture
+from .statistic import Statistic
+from ..lib.utils import key_to_name, name_to_key, traverse_dict
 from datetime import datetime
 
 class Team:

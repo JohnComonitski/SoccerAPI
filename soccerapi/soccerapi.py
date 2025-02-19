@@ -1,14 +1,22 @@
-from soccerapi.lib.postgres import PostgreSQL
-from soccerapi.lib.tm import TM
-from soccerapi.lib.fapi import FAPI
-from soccerapi.lib.fbref import FBRef
-from soccerapi.lib.understat import Understat
-from soccerapi.lib.visualize import Visualize
-from soccerapi.obj.fixture import Fixture
+from .lib.postgres import PostgreSQL
+from .lib.tm import TM
+from .lib.fapi import FAPI
+from .lib.fbref import FBRef
+from .lib.understat import Understat
+from .lib.visualize import Visualize
+from .obj.fixture import Fixture
 import json
 import csv
 
+
 class SoccerAPI():
+    """Docstring for class Foo.
+
+       :ivar db: Database initalization.
+       :ivar visualize: test
+       :ivar app: App data.
+    """
+
     def __init__(self, config={}):
         debug = 0
         if "debug" in config:
@@ -28,6 +36,8 @@ class SoccerAPI():
         self.app = app
 
     def import_object(self, path):
+        r"""Import a JSON object.
+        """
         object = None
         with open(path, 'r') as file:
             obj_data = json.load(file)
@@ -54,6 +64,7 @@ class SoccerAPI():
         return object
     
     def export_csv(self, objects, filename="soccer_api_objects.csv"):
+        r"""Export objects to a CSV file."""
         data = []
         for object in objects:
             data.append({
@@ -68,6 +79,7 @@ class SoccerAPI():
             writer.writerows(data)
 
     def import_csv(self, path):
+        r"""Import data from a CSV file into an object."""
         objects = []
 
         with open(path, mode='r') as file:
@@ -81,3 +93,7 @@ class SoccerAPI():
                     objects.append(self.db.get(table, str(id)))
 
         return objects
+
+
+if __name__ == '__main__':
+    pass

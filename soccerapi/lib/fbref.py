@@ -1,5 +1,5 @@
 from soccerapi.lib.ratelimiter import RateLimiter
-from soccerapi.obj.statistic import Statistic
+from ..obj.statistic import Statistic
 from bs4 import BeautifulSoup
 import unicodedata
 import requests
