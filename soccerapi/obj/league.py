@@ -1,4 +1,4 @@
-from SoccerAPI.lib.utils import traverse_dict
+from soccerapi.lib.utils import traverse_dict
 from datetime import datetime
 import json
 

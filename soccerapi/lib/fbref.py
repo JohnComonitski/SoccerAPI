@@ -1,5 +1,5 @@
-from SoccerAPI.lib.ratelimiter import RateLimiter
-from SoccerAPI.obj.statistic import Statistic
+from soccerapi.lib.ratelimiter import RateLimiter
+from soccerapi.obj.statistic import Statistic
 from bs4 import BeautifulSoup
 import unicodedata
 import requests

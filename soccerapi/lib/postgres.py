@@ -3,7 +3,7 @@ import json
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
-from SoccerAPI.lib.schema import Schema
+from soccerapi.lib.schema import Schema
 import zlib
 import base64
 

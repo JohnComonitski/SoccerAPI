@@ -1,7 +1,7 @@
 import json
-from SoccerAPI.obj.fixture import Fixture
-from SoccerAPI.obj.statistic import Statistic
-from SoccerAPI.lib.utils import key_to_name, name_to_key, traverse_dict
+from soccerapi.obj.fixture import Fixture
+from soccerapi.obj.statistic import Statistic
+from soccerapi.lib.utils import key_to_name, name_to_key, traverse_dict
 from datetime import datetime
 
 class Team:

@@ -1,7 +1,7 @@
-datetime
-json
 matplotlib
 mplsoccer
 scikit-learn
 beautifulsoup4
 requests
+# psycopg2
+psycopg2-binary
