@@ -74,7 +74,7 @@ and combination of data across the following sites:
 
    ```python
    haaland = api.db.get("players", "82172")
-   stat = Haaland.statistic("shots")
+   stat = haaland.statistic("shots")
    ```
 
    > Collects Erling Haaland's number of shots this season.

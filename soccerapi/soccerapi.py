@@ -17,7 +17,15 @@ class SoccerAPI():
        :ivar visualize: initialize a player data object.
        :ivar app: app data configuration.
        :type var: dict
-    """
+
+       Example:
+           Import the ``soccerapi.soccerapi`` module, then:
+
+           >>> config = {"fapi_host" : "api-football-v1.p.rapidapi.com", "fapi_key" : "API-FOOTBALL API KEY"}
+           >>> api = soccerapi.soccerapi.SoccerAPI(config)
+           >>> haaland = api.db.get("players", "82172")
+           >>> stat = haaland.statistic("shots")
+        """
 
     def __init__(self, config: dict={}):
         r"""Create a new instance.
