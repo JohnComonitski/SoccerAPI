@@ -7,17 +7,24 @@ from .lib.visualize import Visualize
 from .obj.fixture import Fixture
 import json
 import csv
+from typing import Any
 
 
 class SoccerAPI():
-    """Docstring for class Foo.
+    """The main object.
 
-       :ivar db: Database initalization.
-       :ivar visualize: test
-       :ivar app: App data.
+       :ivar db: PostgreSQL database initalization.
+       :ivar visualize: initialize a player data object.
+       :ivar app: app data configuration.
+       :type var: dict
     """
 
-    def __init__(self, config={}):
+    def __init__(self, config: dict={}):
+        r"""Create a new instance.
+
+        :param config: some configuration.
+        :type config: dict
+        """
         debug = 0
         if "debug" in config:
             debug = config["debug"]
@@ -35,8 +42,13 @@ class SoccerAPI():
         self.visualize = Visualize()
         self.app = app
 
-    def import_object(self, path):
+    def import_object(self, path: str) -> Any:
         r"""Import a JSON object.
+
+        :param path: the name of the JSON file.
+        :type path: str
+        :returns: an object from the database.
+        :rtype: Any
         """
         object = None
         with open(path, 'r') as file:
@@ -64,7 +76,13 @@ class SoccerAPI():
         return object
     
     def export_csv(self, objects, filename="soccer_api_objects.csv"):
-        r"""Export objects to a CSV file."""
+        r"""Export objects to a CSV file.
+
+        :param objects: a list of objects.
+        :param filename: the output file name. Defaults to ``soccer_api_objects.csv``.
+        :type objects: list[Any]
+        :type filename: str
+        """
         data = []
         for object in objects:
             data.append({
@@ -78,9 +96,15 @@ class SoccerAPI():
             writer.writeheader() 
             writer.writerows(data)
 
-    def import_csv(self, path):
-        r"""Import data from a CSV file into an object."""
-        objects = []
+    def import_csv(self, path) -> list:
+        r"""Import data from a CSV file into an object.
+
+        :param path: the input file name.
+        :type filename: str
+        :returns: a list of objects.
+        :rtype: list[Any]
+        """
+        objects: list = []
 
         with open(path, mode='r') as file:
             reader = list(csv.reader(file))
