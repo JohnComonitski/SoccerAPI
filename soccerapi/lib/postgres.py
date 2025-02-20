@@ -58,7 +58,7 @@ class PostgreSQL:
         return cache
         
     def get_cache_data(self):
-        endpoint = "https://njlx0v4vjl.execute-api.us-west-2.amazonaws.com/v1/soccerapi"
+        endpoint = "https://3juig81jql.execute-api.us-west-2.amazonaws.com/v1/soccerapi"
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
         res = requests.get(endpoint, headers=headers)
         decompressed = zlib.decompress(base64.b64decode(res.text)).decode('utf-8')
