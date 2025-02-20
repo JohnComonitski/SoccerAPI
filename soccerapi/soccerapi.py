@@ -30,7 +30,52 @@ class SoccerAPI():
     def __init__(self, config: dict={}):
         r"""Create a new instance.
 
-        :param config: some configuration.
+        :param config: This object has a few values and defaults:
+
+            - **debug** (*int*): if set to ``1`` print errors out to the console.
+              If set to ``0`` it will not. Defaults to ``0``.
+            - **fapi_host** (*str*): the hostname used to make requests to API-Football.
+            - **fapi_key** (*str*): API-Football API Key used for authentication.
+            - **rate_limit_call_interval** (*int*): rate limit interval in seconds.
+
+              .. admonition:: Purpose
+                 :class: purposeAdmonition
+
+                 Help avoiding rate limiting FBRef puts in place that prevents
+                 data scraping. Too many requests to FBRef can
+                 trigger a 24 hour IP Block.
+
+              .. admonition:: Recommended value
+                 :class: recommendedValueAdmonition
+
+                 60
+
+            - **rate_limit_max_calls** (*int*): number of rate limited calls Soccer API
+              can make over the time set by ``rate_limit_call_interval``.
+
+              .. admonition:: Purpose
+                 :class: purposeAdmonition
+
+                 Helps avoid rate limiting FBRef puts in place that prevents
+                 data scraping.
+
+              .. admonition:: Recommended value
+                 :class: recommendedValueAdmonition
+
+                 5
+
+            Example:
+        
+            .. code-block:: python
+
+               config = {
+                   'debug': 1,
+                   'fapi_host': 'api-football-v1.p.rapidapi.com',
+                   'fapi_key': 'API KEY',
+                   'rate_limit_call_interval': 60,
+                   'rate_limit_max_calls': 5,
+               }
+
         :type config: dict
         """
         debug = 0

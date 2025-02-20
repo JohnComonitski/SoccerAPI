@@ -1,0 +1,9 @@
+.admonition.recommendedvalueadmonition {    /*Lowercase class name*/
+    background-color: #595959;
+    color: white;
+    /* options as needed */
+
+    .admonition-title {
+        background-color: black;
+    };
+}
