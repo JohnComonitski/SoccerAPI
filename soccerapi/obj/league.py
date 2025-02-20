@@ -1,4 +1,4 @@
-from soccerapi.lib.utils import traverse_dict
+from ..lib.utils import traverse_dict
 from datetime import datetime
 import json
 

@@ -1,15 +1,38 @@
-from soccerapi.lib.postgres import PostgreSQL
-from soccerapi.lib.tm import TM
-from soccerapi.lib.fapi import FAPI
-from soccerapi.lib.fbref import FBRef
-from soccerapi.lib.understat import Understat
-from soccerapi.lib.visualize import Visualize
-from soccerapi.obj.fixture import Fixture
+from .lib.postgres import PostgreSQL
+from .lib.tm import TM
+from .lib.fapi import FAPI
+from .lib.fbref import FBRef
+from .lib.understat import Understat
+from .lib.visualize import Visualize
+from .obj.fixture import Fixture
 import json
 import csv
+from typing import Any
+
 
 class SoccerAPI():
-    def __init__(self, config={}):
+    """The main object.
+
+       :ivar db: PostgreSQL database initalization.
+       :ivar visualize: initialize a player data object.
+       :ivar app: app data configuration.
+       :type var: dict
+
+       Example:
+           Import the ``soccerapi.soccerapi`` module, then:
+
+           >>> config = {"fapi_host" : "api-football-v1.p.rapidapi.com", "fapi_key" : "API-FOOTBALL API KEY"}
+           >>> api = soccerapi.soccerapi.SoccerAPI(config)
+           >>> haaland = api.db.get("players", "82172")
+           >>> stat = haaland.statistic("shots")
+        """
+
+    def __init__(self, config: dict={}):
+        r"""Create a new instance.
+
+        :param config: some configuration.
+        :type config: dict
+        """
         debug = 0
         if "debug" in config:
             debug = config["debug"]
@@ -27,7 +50,14 @@ class SoccerAPI():
         self.visualize = Visualize()
         self.app = app
 
-    def import_object(self, path):
+    def import_object(self, path: str) -> Any:
+        r"""Import a JSON object.
+
+        :param path: the name of the JSON file.
+        :type path: str
+        :returns: an object from the database.
+        :rtype: Any
+        """
         object = None
         with open(path, 'r') as file:
             obj_data = json.load(file)
@@ -54,6 +84,13 @@ class SoccerAPI():
         return object
     
     def export_csv(self, objects, filename="soccer_api_objects.csv"):
+        r"""Export objects to a CSV file.
+
+        :param objects: a list of objects.
+        :param filename: the output file name. Defaults to ``soccer_api_objects.csv``.
+        :type objects: list[Any]
+        :type filename: str
+        """
         data = []
         for object in objects:
             data.append({
@@ -67,8 +104,15 @@ class SoccerAPI():
             writer.writeheader() 
             writer.writerows(data)
 
-    def import_csv(self, path):
-        objects = []
+    def import_csv(self, path) -> list:
+        r"""Import data from a CSV file into an object.
+
+        :param path: the input file name.
+        :type filename: str
+        :returns: a list of objects.
+        :rtype: list[Any]
+        """
+        objects: list = []
 
         with open(path, mode='r') as file:
             reader = list(csv.reader(file))
@@ -81,3 +125,7 @@ class SoccerAPI():
                     objects.append(self.db.get(table, str(id)))
 
         return objects
+
+
+if __name__ == '__main__':
+    pass

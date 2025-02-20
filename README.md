@@ -6,6 +6,8 @@ of league, team and player data for use by amature football data analysts.
 
 <!--TOC-->
 
+## Features
+
 ## Data Sources
 
 Soccer API is powered by a database mapping the IDs of over 82,000 players,
@@ -40,8 +42,9 @@ and combination of data across the following sites:
    ```
 
    > [!NOTE]
-   > Psycopg2 may give you trouble installing. Consider installing from its
-   > [binary](https://pypi.org/project/psycopg2-binary/).
+   > Psycopg2 may give you trouble installing. For this reason the project uses
+   > the [binary](https://pypi.org/project/psycopg2-binary/) version of the
+   > library.
 
 5. create a new Python file and set up the configuration
 
@@ -71,7 +74,9 @@ and combination of data across the following sites:
 
    ```python
    haaland = api.db.get("players", "82172")
-   stat = Haaland.statistic("shots")
+   stat = haaland.statistic("shots")
    ```
 
    > Collects Erling Haaland's number of shots this season.
+
+## License
