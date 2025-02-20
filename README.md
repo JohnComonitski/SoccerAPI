@@ -80,3 +80,6 @@ and combination of data across the following sites:
    > Collects Erling Haaland's number of shots this season.
 
 ## License
+
+MIT License
+Copyright (c) 2025 Jason Zielinski
