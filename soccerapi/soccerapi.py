@@ -11,12 +11,11 @@ from typing import Any
 
 
 class SoccerAPI():
-    """The main object.
+    r"""The main object.
 
        :ivar db: PostgreSQL database initalization.
        :ivar visualize: initialize a player data object.
        :ivar app: app data configuration.
-       :type var: dict
 
        Example:
            Import the ``soccerapi.soccerapi`` module, then:
