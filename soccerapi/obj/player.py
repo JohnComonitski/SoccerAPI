@@ -2,9 +2,12 @@ import json
 from datetime import datetime
 from .statistic import Statistic 
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
+from ..obj.team import Team
+from typing import Optional
+
 
 class Player:
-    r"""The soccer player object.
+    r"""The soccer Player object.
 
     :ivar table: the object type. This value cannot be changed and is fixed to
       ``player``.
@@ -62,7 +65,7 @@ class Player:
         return f"Player({self.name()})"
 
     def name(self) -> str:
-        r"""Get the name of the player.
+        r"""Get the name of the Player.
 
         :returns: the first and last names.
         :rtype: str
@@ -205,7 +208,13 @@ class Player:
                 self.player_country = res[0]["country_code"]
             return self.player_country
     
-    def current_team(self):
+    def current_team(self) -> Team:
+        r"""Get the current team of the Player object.
+
+        :ivar team: the player's team.
+        :returns: the team.
+        :rtype: Team
+        """
         if self.team:
             return self.team
         else:
@@ -217,7 +226,14 @@ class Player:
                     self.team = db_team[0]
             return self.team
 
-    def market_value(self, year = None):
+    def market_value(self, year: Optional[str] = None) -> int:
+        r"""Get the Player's Transfermarkt Market Value for a given year.
+
+        :param year: the year to be selected. If this parameter is not set, get
+          the current value.
+        :type year: Optional[str]
+        :rtype: int
+        """
         if(year):
             res = self.tm.get_player_value_by_year(self, year)
         else:
@@ -230,7 +246,16 @@ class Player:
                 print(res["error_string"])
             return 0
 
-    def statistics(self, year = None):
+    def statistics(self, year = None) -> Statistic:
+        r"""Returns the Player object FBRef Statistics for a given year.
+
+        :param year: desired year for the statistics. If not set get the
+          previous year if the current month is between January and June, or
+          the current year otherwise.
+        :type year: Optional[str]
+        :returns: a hash of Statistic objects
+        :rtype: Statistic
+        """
         stats = self.stats_cache
 
         if not year:
@@ -259,7 +284,17 @@ class Player:
 
         return self.stats_cache[year]
 
-    def statistic(self, stat, year = None):
+    def statistic(self, stat, year: Optional[str]  = None) -> str | int:
+        r"""Get the Player object FBRef statistics for a given year and statistic.
+
+        :param stat: internal or display name of a statistic.
+        :type stat: str
+        :param year: desired year for the statistics. See the ``statistic``
+          method for more information.
+        :type year: Optional[str]
+        :returns: a statistic object or ``0``
+        :rtype: str | int
+        """
         stat_key = None
         if(key_to_name(stat)):
             stat_key = stat
@@ -271,7 +306,12 @@ class Player:
             return stats[stat_key]
         return 0
 
-    def fbref_image(self):
+    def fbref_image(self) -> str:
+        r"""Get a URL of the Player object FBRef image.
+
+        :returns: a URL
+        :rtype: str
+        """
         res = self.fbref.get_player_image_url(self)
 
         if(res["success"]):
@@ -281,13 +321,24 @@ class Player:
                 print(res["error_string"])
             return 0
 
-    def image(self):
+    def image(self) -> str:
+        r"""Get a URL to the Player object API-Football image.
+
+        :returns: a URL
+        :rtype: str
+        """
         if not self.fapi_profile:
             return self.profile()['photo']
         else:
             return self.fapi_profile['photo']
 
-    def scouting_data(self):
+    def scouting_data(self) -> dict[Statistic] | int:
+        r"""Get the Player object FBRef scouting profile.
+
+        :returns: an dictionary of of Statistic objects or ``0`` in case of an
+          error.
+        :rtype: dict[Statistic] | int
+        """
         res = self.fbref.get_scouting_data(self)
         
         if(res["success"]):
@@ -305,7 +356,12 @@ class Player:
                 print(res["error_string"])
         return
 
-    def shots_over_season(self):
+    def shots_over_season(self) -> list:
+        r"""Get the raw Player object Understat shooting data over a season.
+
+        :returns: a list of data, or an empty list in case of error.
+        :rtype: list
+        """
         res = self.understat.get_player_shots(self)
         
         if(res["success"]):
@@ -315,7 +371,12 @@ class Player:
                 print(res["error_string"])
             return []
 
-    def analyze_shots(self, shots):
+    def analyze_shots(self, shots) -> dict[Statistic]:
+        r"""Get the analysis of a Player object Understat shooting data.
+
+        :returns: a dictionary of Statistic Objects. In case of an error
+        :rtype: dict[Statistic]
+        """
         res = self.understat.analyze_shot_data(shots)
         
         if(res["success"]):
