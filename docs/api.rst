@@ -28,3 +28,15 @@ Obj
 
 .. automodule:: soccerapi.obj.player
    :members:
+
+.. automodule:: soccerapi.obj.team
+   :members:
+
+.. automodule:: soccerapi.obj.league
+   :members:
+
+.. automodule:: soccerapi.obj.statistic
+   :members:
+
+.. automodule:: soccerapi.obj.fixture
+   :members:

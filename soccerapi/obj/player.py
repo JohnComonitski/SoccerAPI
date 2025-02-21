@@ -83,7 +83,7 @@ class Player:
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
-    def to_json(self):
+    def to_json(self) -> dict:
         r"""Get a JSON representation of the Player object.
 
         :rtype: dict
@@ -104,7 +104,7 @@ class Player:
         })
     
     def import_data(self, data: dict[str]):
-        r"""Populate Player object data based on a player JSON file.
+        r"""Populate Player object data based on a Player JSON file.
 
         :param data: JSON representation of the Player object.
         :ivar fapi_profile:
@@ -189,7 +189,7 @@ class Player:
             return []
 
     def country(self) -> str:
-        r"""Get the country the player is from.
+        r"""Get the country the Player object is from.
 
         :ivar player_country: a country code.
         :type player_country: str
