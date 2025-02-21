@@ -5,7 +5,7 @@ import re
 
 class FAPI:
     def __init__(self, config={}):
-        self.url = "https://api-football-v1.p.rapidapi.com/v3"
+        self.url = "https://" + config["fapi_host"]
         self.fapi_headers = {
             "X-RapidAPI-Key": config["fapi_key"],
             "X-RapidAPI-Host": config["fapi_host"]
@@ -22,7 +22,11 @@ class FAPI:
         end_point = self.url + end_point
         response = requests.get(end_point, headers=self.fapi_headers, params=query)
 
-        return response.json()
+        res = response.json()
+        if(res and "errors" in res):
+            return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] }
+        
+        return res
     
     def get_players_on_team(self, team):
         res = {}

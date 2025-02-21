@@ -1,4 +1,4 @@
-from soccerapi.lib.ratelimiter import RateLimiter
+from ..lib.ratelimiter import RateLimiter
 from ..obj.statistic import Statistic
 from bs4 import BeautifulSoup
 import unicodedata
