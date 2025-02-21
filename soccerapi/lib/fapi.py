@@ -5,7 +5,7 @@ import re
 
 class FAPI:
     def __init__(self, config={}):
-        self.url = "https://api-football-v1.p.rapidapi.com/v3"
+        self.url = "https:/" + config["fapi_host"]
         self.fapi_headers = {
             "X-RapidAPI-Key": config["fapi_key"],
             "X-RapidAPI-Host": config["fapi_host"]
