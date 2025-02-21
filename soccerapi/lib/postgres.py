@@ -6,9 +6,29 @@ from psycopg2.extras import RealDictCursor
 from .schema import Schema
 import zlib
 import base64
+from typing import Any
+
 
 class PostgreSQL:
+    r"""The main database object.
+
+       :ivar app: app data configuration. This value is usually passed from the
+                  main ``SoccerAPI`` object.
+       :ivar schema: a class containing data in the form of dictionaries
+       :ivar has_connection: tells if database connection is possible. If one
+                             or more of the connection parameters are missing
+                             this value is set to ``0``, otherwise it is set to
+                             ``1``.
+       :ivar connection_params: PostgreSQL connection settings.
+       :ivar cache: cache data.
+       :type has_connection: int
+    """
     def __init__(self, app):
+        r"""Create a new instance.
+
+        :param app: see previous description.
+        :type app: dict
+        """
         self.app = app
         config = app["config"]
         self.schema = Schema()
@@ -235,7 +255,25 @@ class PostgreSQL:
         else:
             return " ( " + " AND ".join(query_params) + " ) "
 
-    def search(self, table_name, query):
+    def search(self, table_name: str, query: dict) -> list[Any]:
+        r"""Find and return objects.
+
+        :param table_name: database table to search on. possible values are
+                           ``players``, ``teams`` or ``leagues``.
+        :param query: key-value pair for the ID type to be searched.
+
+          Examples:
+
+          >>> api.db.search(table_name=players, {'player_id': '12345'})
+          >>> api.db.search(table_name=players, {'player_fapi_id': '12345'})
+          >>> api.db.search(table_name=players, {'player_tm_id': '12345'})
+          >>> api.db.search(table_name=players, {'player_fbref_id' : '12345'})
+
+        :type table_name: str
+        :type query: dict[str]
+        :returns: a list of objects that the search yields.
+        :rtype: list[Any]
+        """
         schema = self.get_schema(table_name)
         #Check Cache 
         if( len(query.keys()) == 1 ):

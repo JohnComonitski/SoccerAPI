@@ -4,12 +4,38 @@ from .statistic import Statistic
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
 
 class Player:
-    def __init__(self, player_data, db):
+    r"""The soccer player object.
+
+    :ivar table: the object type. This value cannot be changed and is fixed to
+      ``player``.
+    :ivar first_name: player's first name.
+    :type first_name: str
+    :ivar last_name: player's last name.
+    :type last_name: str
+    :ivar id: player's Soccer API ID.
+    :type id: str
+    :ivar tm_id: player's Transfermarkt ID.
+    :type tm_id: str
+    :ivar fpai_id: player's API-Football ID.
+    :type fpai_id: str
+    :ivar understat_id: player's Understat ID.
+    :type understat_id: str
+    :ivar db: a database instance.
+    :type db: Any
+    """
+    def __init__(self, player_data: dict, db):
+        r"""Create a new instance.
+
+        :param player_data: an object containing the player's data as strings
+        :param db: a database instance.
+        :type player_data: dict
+        :type db: Any
+        """
         #From Player Data
-        self.table = "players"
-        self.first_name = player_data["first_name"]
-        self.last_name = player_data["last_name"]
-        self.id = player_data["player_id"]
+        self.table: str = "players"
+        self.first_name: str = player_data["first_name"]
+        self.last_name: str = player_data["last_name"]
+        self.id: str = player_data["player_id"]
         self.fbref_id = player_data["fbref_player_id"]
         self.tm_id = player_data["tm_player_id"]
         self.fapi_id = player_data["fapi_player_id"]
@@ -35,10 +61,19 @@ class Player:
     def __repr__(self):
         return f"Player({self.name()})"
 
-    def name(self):
+    def name(self) -> str:
+        r"""Get the name of the player.
+
+        :returns: the first and last names.
+        :rtype: str
+        """
         return self.first_name + " " + self.last_name
     
     def export(self):
+        r"""Export the Player object as a JSON file.
+
+        .. note:: The output filename is in the format ``player_{self.id}.json``.
+        """
         data = self.to_json()
 
         file_name = "player_" + str(self.id) + ".json"
@@ -46,6 +81,8 @@ class Player:
             json.dump(data, file, indent=4)
 
     def to_json(self):
+        r"""Get a JSON representation of the Player object.
+        """
         return traverse_dict({
             "object" : "player",
             "first_name" : self.first_name,
