@@ -82,6 +82,8 @@ class Player:
 
     def to_json(self):
         r"""Get a JSON representation of the Player object.
+
+        :rtype: dict
         """
         return traverse_dict({
             "object" : "player",
@@ -98,7 +100,16 @@ class Player:
             "statistics" : self.stats_cache
         })
     
-    def import_data(self, data):
+    def import_data(self, data: dict[str]):
+        r"""Populate Player object data based on a player JSON file.
+
+        :param data: JSON representation of the Player object.
+        :ivar fapi_profile:
+        :ivar player_country:
+        :ivar team:
+        :ivar stats_cache:
+        :type data: dict[str]
+        """
         if "fapi_profile" in data:
             self.fapi_profile = data["fapi_profile"]
 
@@ -138,6 +149,12 @@ class Player:
             self.stats_cache = stats
 
     def profile(self):
+        r"""Return the API-Football profile of the Player object.
+
+        :ivar fapi_profile:
+        :returns: the FAPI profile.
+        :rtype: Any
+        """
         if self.fapi_profile:
             return self.fapi_profile
         else:
@@ -147,7 +164,12 @@ class Player:
                 return self.fapi_profile 
         return None
     
-    def positions(self):
+    def positions(self) -> list[str]:
+        r"""Get a list of positions the player is known to play.
+
+        :returns: A list of positions in the form of two letter abbreviations.
+        :rtype: list[str]
+        """
         position_list = ["FB", "CB", "AM", "MF", "FW", "DM", "WM", "GK", "CM", "DF" ]
         
         res = self.fbref.player_positions(self)
@@ -163,7 +185,14 @@ class Player:
                 print(res["error_string"])
             return []
 
-    def country(self):
+    def country(self) -> str:
+        r"""Get the country the player is from.
+
+        :ivar player_country: a country code.
+        :type player_country: str
+        :returns: a country code.
+        :rtype: str
+        """
         if self.player_country:
             return self.player_country
         else:
