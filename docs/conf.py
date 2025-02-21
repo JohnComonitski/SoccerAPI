@@ -10,8 +10,8 @@ from pathlib import Path
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'SoccerAPI'
-copyright = '2025, Jason Zielinski'
-author = 'Jason Zielinski'
+copyright = '2025, John Comonitski'
+author = 'John Comonitski'
 release = '0.0.0'
 
 # -- General configuration ---------------------------------------------------

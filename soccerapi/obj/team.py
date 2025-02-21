@@ -3,9 +3,33 @@ from .fixture import Fixture
 from .statistic import Statistic
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
 from datetime import datetime
+from typing import Optional
+
 
 class Team:
+    r"""The team object.
+
+      :ivar id: team's Soccer API ID.
+      :type id: str
+      :ivar fbref_id: teams's FBRef ID.
+      :type fbref_id: str
+      :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for this league.
+      :type fbref_stat_detail_level: str
+      :ivar tm_id: team's Transfermarkt ID.
+      :type tm_id: str
+      :ivar fpai_id: team's API-Football ID
+      :type fpai_id: str
+      :ivar db: PostgreSQL database initalization object.
+      :type db: PostgreSQL
+    """
     def __init__(self, team_data, db):
+        r"""Create a new instance.
+
+        :param team_data:
+        :param db: PostgreSQL database initalization object.
+        :type team_data:
+        :type db: PostgreSQL
+        """
         #From Team Data
         self.table = "teams"
         self.team_name = team_data["team_name"]
@@ -34,17 +58,30 @@ class Team:
     def __repr__(self):
         return f"Team({self.team_name} - {self.country()})"
     
-    def name(self):
+    def name(self) -> str:
+        r"""Get the name of the Team object.
+
+        :returns: the name.
+        :rtype: str
+        """
         return self.team_name
     
     def export(self):
+        r"""Export the Team object as a JSON file.
+
+        .. note:: The output filename is in the format ``team_{self.id}.json``.
+        """
         data = self.to_json()
 
         file_name = "team_" + str(self.id) + ".json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
-    def to_json(self):
+    def to_json(self) -> dict:
+        r"""Get a JSON representation of the Team object.
+
+        :rtype: dict
+        """
         return traverse_dict({
             "object" : "team",
             "team_name" : self.team_name,
@@ -58,7 +95,15 @@ class Team:
             "opp_statistics" : self.opps_stats_cache
         })
     
-    def import_data(self, data):
+    def import_data(self, data: dict[str]):
+        r"""Populate Team object data based on a Team JSON file.
+
+        :param data: JSON representation of the Team object.
+        :type data: dict[str]
+        :ivar fapi_profile:
+        :ivar stats_cache:
+        :ivar opps_stats_cache:
+        """
         if "fapi_profile" in data:
             self.fapi_profile = data["fapi_profile"]
 
@@ -83,7 +128,14 @@ class Team:
                     stats[key] = data["opp_statistics"]
             self.opps_stats_cache = stats
             
-    def profile(self):
+    def profile(self) -> dict | None:
+        r"""Return the API-Football profile of the Team object.
+
+        :ivar fapi_profile:
+        :returns: the API-Foorball profile or ``None`` in case the response is
+          empty.
+        :rtype: dict | None
+        """
         if self.fapi_profile:
             return self.fapi_profile
         else:
@@ -93,10 +145,20 @@ class Team:
                 return self.fapi_profile 
         return None
     
-    def country(self):
+    def country(self) -> str:
+        r"""Get the country the Team object is from.
+
+        :returns: a country code.
+        :rtype: str
+        """
         return self.team_country
     
-    def players(self):
+    def players(self) -> list:
+        r"""Get the current Team object players.
+
+        :returns: a list of players or an empty list
+        :rtype: list
+        """
         players = []
         res = self.fapi.get_players_on_team(self)
 
@@ -134,7 +196,16 @@ class Team:
                 print(res["error_string"]) 
             return None
 
-    def leagues(self):
+    def leagues(self) -> list:
+        r"""Returns the Leagues a team is competing in currently.
+
+        :returns: a list of Leagues, or an uninitialized list if the response
+          is empty.
+        :rtype: list
+
+        .. important:: Get info from the previous year if the current month is
+           between January and June, or the current year otherwise.
+        """
         year = ""
         current_date = datetime.now()
         if 1 <= current_date.month <= 6:
@@ -158,7 +229,14 @@ class Team:
             
         return leagues
     
-    def market_value(self, year = None):
+    def market_value(self, year: Optional[str] = None):
+        r"""Get the Teams's Transfermarkt Market Value for a given year.
+
+        :param year: the year to be selected. If this parameter is not set, get
+          the current value.
+        :type year: Optional[str]
+        :rtype: int
+        """
         res = self.tm.get_team_value(self, year)
 
         if(res["success"]):
@@ -168,7 +246,12 @@ class Team:
                 print(res["error_string"]) 
             return 0
         
-    def market_value_over_time(self):
+    def market_value_over_time(self) -> dict[int] | int:
+        r"""Get the Teams's Transfermarkt Market Value over time.
+
+        :returns: an object or ``0`` in case of error.
+        :rtype: dict[int]
+        """
         res = self.tm.get_team_value_over_time(self)
 
         if(res["success"]):
@@ -179,6 +262,11 @@ class Team:
             return 0
 
     def statistics(self):
+        r"""Returns the Team object FBRef Statistics for a given year.
+
+        :returns: a hash of Statistic objects.
+        :rtype: Statistic
+        """
         stats = self.stats_cache
 
         if stats:

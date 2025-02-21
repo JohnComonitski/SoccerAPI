@@ -152,7 +152,7 @@ class SoccerAPI():
         r"""Import data from a CSV file into an object.
 
         :param path: the input file name.
-        :type filename: str
+        :type path: str
         :returns: a list of objects.
         :rtype: list[Any]
         """
