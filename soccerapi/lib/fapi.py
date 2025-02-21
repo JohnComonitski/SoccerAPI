@@ -22,7 +22,11 @@ class FAPI:
         end_point = self.url + end_point
         response = requests.get(end_point, headers=self.fapi_headers, params=query)
 
-        return response.json()
+        res = response.json()
+        if(res and "errors" in res):
+            return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] }
+        
+        return res
     
     def get_players_on_team(self, team):
         res = {}
