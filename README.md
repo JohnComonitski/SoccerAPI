@@ -82,4 +82,4 @@ and combination of data across the following sites:
 ## License
 
 MIT License
-Copyright (c) 2025 Jason Zielinski
+Copyright (c) 2025 John Comonitski
