@@ -23,10 +23,10 @@ class FAPI:
         response = requests.get(end_point, headers=self.fapi_headers, params=query)
 
         res = response.json()
-        if(res and "errors" in res):
+        if(res and "errors" in res and len(res["errors"]) > 0):
             return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] }
         
-        return res
+        return { "success" : 1, "res" : res , "error_string" : "" }
     
     def get_players_on_team(self, team):
         res = {}
