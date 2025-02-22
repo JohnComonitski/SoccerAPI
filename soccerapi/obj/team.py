@@ -7,17 +7,17 @@ from typing import Optional
 
 
 class Team:
-    r"""The team object.
+    r"""The Team object.
 
-      :ivar id: team's Soccer API ID.
+      :ivar id: Team's Soccer API ID.
       :type id: str
-      :ivar fbref_id: teams's FBRef ID.
+      :ivar fbref_id: Teams's FBRef ID.
       :type fbref_id: str
       :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for this league.
       :type fbref_stat_detail_level: str
-      :ivar tm_id: team's Transfermarkt ID.
+      :ivar tm_id: Team's Transfermarkt ID.
       :type tm_id: str
-      :ivar fpai_id: team's API-Football ID
+      :ivar fpai_id: Team's API-Football ID
       :type fpai_id: str
       :ivar db: PostgreSQL database initalization object.
       :type db: PostgreSQL

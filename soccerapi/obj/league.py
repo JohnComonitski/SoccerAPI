@@ -1,6 +1,9 @@
 from ..lib.utils import traverse_dict
+from .team import Team
+from .fixture import Fixture
 from datetime import datetime
 import json
+from typing import Any, Optional
 
 class League:
     r"""The soccer League object.
