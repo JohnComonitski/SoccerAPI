@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 from .statistic import Statistic 
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
-from ..obj.team import Team
 from typing import Optional
 
 
@@ -12,19 +11,19 @@ class Player:
     :ivar table: the object type. This value cannot be changed and is fixed to
       ``player``.
     :ivar first_name: player's first name.
-    :type first_name: str
+    :vartype first_name: str
     :ivar last_name: player's last name.
-    :type last_name: str
+    :vattype last_name: str
     :ivar id: player's Soccer API ID.
-    :type id: str
+    :vartype id: str
     :ivar tm_id: player's Transfermarkt ID.
-    :type tm_id: str
+    :vartype tm_id: str
     :ivar fpai_id: player's API-Football ID.
-    :type fpai_id: str
+    :vartype fpai_id: str
     :ivar understat_id: player's Understat ID.
-    :type understat_id: str
+    :vartype understat_id: str
     :ivar db: a database instance.
-    :type db: Any
+    :vartype db: Any
     """
     def __init__(self, player_data: dict, db):
         r"""Create a new instance.
@@ -219,7 +218,7 @@ class Player:
                         print(country["error_string"])
         return None
     
-    def current_team(self) -> Team:
+    def current_team(self) -> 'Team':
         r"""Get the current team of the Player object.
 
         :ivar team: the player's team.

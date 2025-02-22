@@ -14,6 +14,7 @@ class SoccerAPI():
     r"""The main object.
 
        :ivar db: PostgreSQL database initalization.
+       :vartype: PostgreSQL
        :ivar visualize: initialize a player data object.
        :ivar app: app data configuration.
 

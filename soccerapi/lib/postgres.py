@@ -12,18 +12,18 @@ from typing import Any
 class PostgreSQL:
     r"""The main database object.
 
-       :ivar app: app data configuration. This value is usually passed from the
-                  main ``SoccerAPI`` object.
-       :ivar schema: a class containing data in the form of dictionaries
-       :ivar has_connection: tells if database connection is possible. If one
-                             or more of the connection parameters are missing
-                             this value is set to ``0``, otherwise it is set to
-                             ``1``.
-       :ivar connection_params: PostgreSQL connection settings.
-       :ivar cache: cache data.
-       :type has_connection: int
+    :ivar app: app data configuration. This value is usually passed from the
+      main ``SoccerAPI`` object.
+    :vartype app: dict
+    :ivar schema: a class containing data in the form of dictionaries
+    :ivar has_connection: tells if database connection is possible. If one
+      or more of the connection parameters are missing this value is set to
+      ``0``, otherwise it is set to ``1``.
+    :vatype has_connection: int
+    :ivar connection_params: PostgreSQL connection settings.
+    :ivar cache: cache data.
     """
-    def __init__(self, app):
+    def __init__(self, app: dict):
         r"""Create a new instance.
 
         :param app: see previous description.

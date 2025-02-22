@@ -1,6 +1,4 @@
 from ..lib.utils import traverse_dict
-from .team import Team
-from .fixture import Fixture
 from datetime import datetime
 import json
 from typing import Any, Optional
@@ -10,21 +8,22 @@ class League:
 
     :ivar table: the object type. This value cannot be changed and is fixed to
       ``leagues``.
-    :ivar id: League's Soccer API ID.
+    :vartype table: str
+    :varivar id: League's Soccer API ID.
     :type id: str
     :ivar country: League's country.
-    :type country: str
+    :vartype country: str
     :ivar tm_id: Leagues's Transfermarkt ID.
-    :type tm_id: str
+    :vattype tm_id: str
     :ivar fpai_id: League's API-Football ID.
-    :type fpai_id: str
+    :vartype fpai_id: str
     :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for
       this League object.
-    :type fbref_stat_detail_level: str
+    :vartype fbref_stat_detail_level: str
     :ivar understat_id: Leagues's Understat ID.
-    :type understat_id: str
+    :vartype understat_id: str
     :ivar db: a database instance.
-    :type db: Postgresql
+    :vartype db: PostgreSQL
     """
     def __init__(self, league_data, db):
         r"""Create a new instance.
@@ -32,7 +31,7 @@ class League:
         :param league_data: an object containing the League's data as strings.
         :param db: a database instance.
         :type player_data: dict
-        :type db: Postgresql
+        :type db: PostgreSQL
         """
         #From League Data
         self.table = "leagues"
@@ -133,7 +132,7 @@ class League:
                 return self.fapi_profile 
         return None
 
-    def teams(self, year = None) -> list[Team]:
+    def teams(self, year = None) -> list['Team']:
         r"""Return the League's object teams for a given year.
 
         :ivar teams_cache:
@@ -175,7 +174,7 @@ class League:
         self.teams_cache = teams
         return self.teams_cache[year]
 
-    def fixtures(self, date: Optional[str] = None) -> list[Fixture]:
+    def fixtures(self, date: Optional[str] = None) -> list['Fixture']:
         r"""Get a list of League objects Fixtures for a given date.
 
         :param date: the date to be selected. If this parameter is not set, get
@@ -196,7 +195,7 @@ class League:
                 print(res["error_string"]) 
             return []
 
-    def fixture_list(self, year: Optional[str] = None) -> list[Fixture]:
+    def fixture_list(self, year: Optional[str] = None) -> list['Fixture']:
         r"""Get a list of League objects Fixtures for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get

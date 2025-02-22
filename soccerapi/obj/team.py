@@ -10,17 +10,17 @@ class Team:
     r"""The Team object.
 
       :ivar id: Team's Soccer API ID.
-      :type id: str
+      :vartype id: str
       :ivar fbref_id: Teams's FBRef ID.
-      :type fbref_id: str
+      :vartype fbref_id: str
       :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for this league.
-      :type fbref_stat_detail_level: str
+      :vartype fbref_stat_detail_level: str
       :ivar tm_id: Team's Transfermarkt ID.
-      :type tm_id: str
+      :vartype tm_id: str
       :ivar fpai_id: Team's API-Football ID
-      :type fpai_id: str
+      :vartype fpai_id: str
       :ivar db: PostgreSQL database initalization object.
-      :type db: PostgreSQL
+      :vartype db: PostgreSQL
     """
     def __init__(self, team_data, db):
         r"""Create a new instance.
