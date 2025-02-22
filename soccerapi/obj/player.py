@@ -13,7 +13,7 @@ class Player:
     :ivar first_name: player's first name.
     :vartype first_name: str
     :ivar last_name: player's last name.
-    :vattype last_name: str
+    :vartype last_name: str
     :ivar id: player's Soccer API ID.
     :vartype id: str
     :ivar tm_id: player's Transfermarkt ID.

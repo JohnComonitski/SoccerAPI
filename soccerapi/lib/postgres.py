@@ -19,7 +19,7 @@ class PostgreSQL:
     :ivar has_connection: tells if database connection is possible. If one
       or more of the connection parameters are missing this value is set to
       ``0``, otherwise it is set to ``1``.
-    :vatype has_connection: int
+    :vartype has_connection: int
     :ivar connection_params: PostgreSQL connection settings.
     :ivar cache: cache data.
     """

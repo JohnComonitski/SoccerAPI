@@ -9,12 +9,12 @@ class League:
     :ivar table: the object type. This value cannot be changed and is fixed to
       ``leagues``.
     :vartype table: str
-    :varivar id: League's Soccer API ID.
-    :type id: str
+    :ivar id: League's Soccer API ID.
+    :vartype id: str
     :ivar country: League's country.
     :vartype country: str
     :ivar tm_id: Leagues's Transfermarkt ID.
-    :vattype tm_id: str
+    :vartype tm_id: str
     :ivar fpai_id: League's API-Football ID.
     :vartype fpai_id: str
     :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for
@@ -132,7 +132,7 @@ class League:
                 return self.fapi_profile 
         return None
 
-    def teams(self, year = None) -> list['Team']:
+    def teams(self, year: Optional[str] = None) -> list['Team']:
         r"""Return the League's object teams for a given year.
 
         :ivar teams_cache:
