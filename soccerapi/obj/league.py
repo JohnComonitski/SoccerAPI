@@ -3,7 +3,34 @@ from datetime import datetime
 import json
 
 class League:
+    r"""The soccer League object.
+
+    :ivar table: the object type. This value cannot be changed and is fixed to
+      ``leagues``.
+    :ivar id: League's Soccer API ID.
+    :type id: str
+    :ivar country: League's country.
+    :type country: str
+    :ivar tm_id: Leagues's Transfermarkt ID.
+    :type tm_id: str
+    :ivar fpai_id: League's API-Football ID.
+    :type fpai_id: str
+    :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for
+      this League object.
+    :type fbref_stat_detail_level: str
+    :ivar understat_id: Leagues's Understat ID.
+    :type understat_id: str
+    :ivar db: a database instance.
+    :type db: Postgresql
+    """
     def __init__(self, league_data, db):
+        r"""Create a new instance.
+
+        :param league_data: an object containing the League's data as strings.
+        :param db: a database instance.
+        :type player_data: dict
+        :type db: Postgresql
+        """
         #From League Data
         self.table = "leagues"
         self.league_name = league_data["league_name"]
@@ -33,13 +60,21 @@ class League:
         return f"League({self.league_name} - {self.country})"
     
     def export(self):
+        r"""Export the League object as a JSON file.
+
+        .. note:: The output filename is in the format ``league_{self.id}.json``.
+        """
         data = self.to_json()
 
         file_name = "league_" + str(self.id) + ".json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
-    def to_json(self):
+    def to_json(self) -> dict:
+        r"""Get a JSON representation of the Player object.
+
+        :rtype: dict
+        """
         return traverse_dict({
             "object" : "league",
             "league_name" : self.league_name,
@@ -51,7 +86,14 @@ class League:
             "teams" : self.teams_cache,
         }) 
     
-    def import_data(self, data):
+    def import_data(self, data: dict[str]):
+        r"""Populate Leage object data based on a League JSON file.
+
+        :param data: JSON representation of the League object.
+        :ivar fapi_profile:
+        :ivar team: A list of Team objects belonging to the League object.
+        :type data: dict[str]
+        """
         if "fapi_profile" in data:
             self.fapi_profile = data["fapi_profile"]
 
@@ -64,10 +106,21 @@ class League:
             self.team = teams
         
 
-    def name(self):
+    def name(self) -> str:
+        r"""Get the name of the League.
+
+        :returns: the League name.
+        :rtype: str
+        """
         return self.league_name
     
-    def profile(self):
+    def profile(self) -> Any | None:
+        r"""Return the API-Football profile of the League object.
+
+        :ivar fapi_profile:
+        :returns: the FAPI profile, or ``None`` in case of error.
+        :rtype: Any | None
+        """
         if self.fapi_profile:
             return self.fapi_profile
         else:
@@ -77,7 +130,18 @@ class League:
                 return self.fapi_profile 
         return None
 
-    def teams(self, year = None):
+    def teams(self, year = None) -> list[Team]:
+        r"""Return the League's object teams for a given year.
+
+        :ivar teams_cache:
+        :param year: desired year for the information. Defaults to ``None``.
+        :type year: Optional[str]
+        :returns: the list of Team objects, or an empty list in case of error.
+        :rtype: List[Team]
+
+        .. important:: Gets info from the previous year if the current month is
+           between January and June, or the current year otherwise.
+        """
         teams = self.teams_cache
 
         if not year:
@@ -108,7 +172,15 @@ class League:
         self.teams_cache = teams
         return self.teams_cache[year]
 
-    def fixtures(self, date = None):
+    def fixtures(self, date: Optional[str] = None) -> list[Fixture]:
+        r"""Get a list of League objects Fixtures for a given date.
+
+        :param date: the date to be selected. If this parameter is not set, get
+          the current local timezone timestamp. Defaults to ``None``.
+        :type date: Optional[str]
+        :returns: a list of Fixture, or an empty list in case of error.
+        :rtype: list[Fixture] | list
+        """
         if(date is None):
             date = datetime.now().strftime("%Y-%m-%d")
 
@@ -121,7 +193,15 @@ class League:
                 print(res["error_string"]) 
             return []
 
-    def fixture_list(self, year = None):
+    def fixture_list(self, year: Optional[str] = None) -> list[Fixture]:
+        r"""Get a list of League objects Fixtures for a given year.
+
+        :param year: the year to be selected. If this parameter is not set, get
+          the current value.
+        :type year: Optional[str]
+        :returns: a list of Fixture, or an empty list in case of error.
+        :rtype: list[Fixture] | list
+        """
         res = self.fapi.get_league_schedule(self, year)
 
         if(res["success"]):
@@ -131,7 +211,14 @@ class League:
                 print(res["error_string"]) 
             return []
 
-    def market_value(self, year = None):
+    def market_value(self, year: Optional[str] = None) -> int:
+        r"""Get the League's Transfermarkt Market Value for a given year.
+
+        :param year: the year to be selected. If this parameter is not set, get
+          the current value.
+        :type year: Optional[str]
+        :rtype: int
+        """
         res = self.tm.get_league_value(self, year)
 
         if(res["success"]):
@@ -141,7 +228,12 @@ class League:
                 print(res["error_string"]) 
             return 0
         
-    def market_value_over_time(self):
+    def market_value_over_time(self) -> dict[int]:
+        r"""Get the League's Transfermarkt Market Value over time.
+
+        :returns: an object or ``0`` in case of error.
+        :rtype: dict[int]
+        """
         res = self.tm.get_league_value_over_time(self)
 
         if(res["success"]):
