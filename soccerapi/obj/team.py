@@ -173,7 +173,18 @@ class Team:
                 print(res["error_string"]) 
         return players
     
-    def fixtures(self, year = None):
+    def fixtures(self, year: Optional[str] = None) -> list[Fixture] | list:
+        r"""Get a list of Team objects Fixtures for a given year.
+
+        :param year: the year to be selected. If this parameter is not set, get
+          the current value.
+        :type year: Optional[str]
+        :returns: a list of Fixture, or an empty list in case of error.
+        :rtype: list[Fixture] | list
+
+        .. important:: Gets info from the previous year if the current month is
+           between January and June, or the current year otherwise.
+        """
         res = self.fapi.get_team_schedule(self, year)
 
         if(res["success"]):
@@ -183,7 +194,18 @@ class Team:
                 print(res["error_string"]) 
             return []
         
-    def fixture(self, date = None):
+    def fixture(self, date: str = None) -> Fixture | None:
+        r"""Get a Team object Fixture for a given date.
+
+        :param date: the date to be selected.
+        :type date: str
+        :returns: a Fixture object, or ``None`` in case of error.
+        :rtype: Fixture | None
+
+        .. important:: In contrast to the ``fixtures`` method, the ``date``
+           parameter is required here!
+        """
+
         res = self.fapi.get_team_fixtures_on_date(self, date)
 
         if(res["success"]):
@@ -203,7 +225,7 @@ class Team:
           is empty.
         :rtype: list
 
-        .. important:: Get info from the previous year if the current month is
+        .. important:: Gets info from the previous year if the current month is
            between January and June, or the current year otherwise.
         """
         year = ""
@@ -261,11 +283,11 @@ class Team:
                 print(res["error_string"]) 
             return 0
 
-    def statistics(self):
+    def statistics(self) -> str:
         r"""Returns the Team object FBRef Statistics for a given year.
 
         :returns: a hash of Statistic objects.
-        :rtype: Statistic
+        :rtype: str
         """
         stats = self.stats_cache
 
@@ -282,7 +304,14 @@ class Team:
 
         return self.stats_cache
 
-    def statistic(self, stat):
+    def statistic(self, stat) -> Statistic:
+        r"""Get the Team object FBRef statistics for a given year and Statistic.
+
+        :param stat: internal or display name of a statistic.
+        :type stat: str
+        :returns: a Statistic object.
+        :rtype: Statistic
+        """
         stat_key = None
         if(key_to_name(stat)):
             stat_key = stat
@@ -294,7 +323,14 @@ class Team:
             return stats[stat_key]
         return Statistic({ "key" : stat_key, "value" : 0 })
 
-    def opponent_statistics(self):
+    def opponent_statistics(self) -> str:
+        r"""Get the Team object Opposition FBRef statistics for a given year.
+
+        :returns: a Statistic object.
+        :rtype: Statistic
+        :returns: a hash of Statistic objects.
+        :rtype: str
+        """
         stats = self.opps_stats_cache
 
         if stats:
