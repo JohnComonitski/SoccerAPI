@@ -228,27 +228,33 @@ class Fixture:
             }
             endpoint = "/fixtures/players?fixture=" + self.id
             res = self.fapi.make_request(endpoint, {})
-            stats = {}
-            player_found = None
-            if(len(res["response"]) > 0 ):
-                for team in res["response"]:
-                    for fapi_player in team["players"]:
-                        if(str(fapi_player["player"]["id"]) == player.fapi_id):
-                            player_found = fapi_player
+            stats = []
+            if(res["success"]):
+                res = res["res"]
+                stats = {}
+                player_found = None
+                if(len(res["response"]) > 0 ):
+                    for team in res["response"]:
+                        for fapi_player in team["players"]:
+                            if(str(fapi_player["player"]["id"]) == player.fapi_id):
+                                player_found = fapi_player
+                                break
+                        if player_found:
                             break
-                    if player_found:
-                        break
-            if(player_found):
-                statistic = player_found["statistics"][0]
-                for key1 in statistic:
-                    if(statistic[key1]):
-                        for key2 in statistic[key1]:
-                            key = key1 + "_" + key2
-                            if key in mapping:
-                                val = statistic[key1][key2]
-                                if val is None:
-                                    val = 0
-                                stats[mapping[key]] = Statistic({ "key" : mapping[key], "value" : val })  
+                if(player_found):
+                    statistic = player_found["statistics"][0]
+                    for key1 in statistic:
+                        if(statistic[key1]):
+                            for key2 in statistic[key1]:
+                                key = key1 + "_" + key2
+                                if key in mapping:
+                                    val = statistic[key1][key2]
+                                    if val is None:
+                                        val = 0
+                                    stats[mapping[key]] = Statistic({ "key" : mapping[key], "value" : val })  
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
             return stats
         else:
             mapping = {
@@ -271,20 +277,26 @@ class Fixture:
             
             endpoint = "/fixtures/statistics?fixture=" + self.id
             res = self.fapi.make_request(endpoint, {})
-            stats = [ { "team" : self.home_team, "statistics" : {} }, { "team" : self.away_team, "statistics" : {} } ]
-            if(len(res["response"]) > 0 ):
-                idx = 0
-                for team in res["response"]:
-                    fapi_team_id = str(team["team"]["id"])
-                    if stats[0]["team"].fapi_id == fapi_team_id:
-                        idx = 0
-                    elif stats[1]["team"].fapi_id == fapi_team_id:
-                        idx = 1
+            stats = []
+            if(res["success"]):
+                res = res["res"]
+                stats = [ { "team" : self.home_team, "statistics" : {} }, { "team" : self.away_team, "statistics" : {} } ]
+                if(len(res["response"]) > 0 ):
+                    idx = 0
+                    for team in res["response"]:
+                        fapi_team_id = str(team["team"]["id"])
+                        if stats[0]["team"].fapi_id == fapi_team_id:
+                            idx = 0
+                        elif stats[1]["team"].fapi_id == fapi_team_id:
+                            idx = 1
 
-                    stats[idx]["statistics"] = {}
-                    for stat in team["statistics"]:
-                        if stat["type"] in mapping:
-                            key = mapping[stat["type"]]
-                            stats[idx]["statistics"][key] = Statistic({ "key" : key, "value" : stat["value"] })   
+                        stats[idx]["statistics"] = {}
+                        for stat in team["statistics"]:
+                            if stat["type"] in mapping:
+                                key = mapping[stat["type"]]
+                                stats[idx]["statistics"][key] = Statistic({ "key" : key, "value" : stat["value"] })   
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
 
             return stats

@@ -139,10 +139,15 @@ class Team:
         if self.fapi_profile:
             return self.fapi_profile
         else:
-            player = self.fapi.make_request("/teams?id=" + self.fapi_id, {})
-            if(len(player["response"]) > 0):
-                self.fapi_profile = player["response"][0]["team"]
-                return self.fapi_profile 
+            res = self.fapi.make_request("/teams?id=" + self.fapi_id, {})
+            if(res["success"]):
+                profile = res["res"]
+                if(len(profile["response"]) > 0):
+                    self.fapi_profile = profile["response"][0]["team"]
+                    return self.fapi_profile
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
         return None
     
     def country(self) -> str:
@@ -188,7 +193,10 @@ class Team:
         res = self.fapi.get_team_schedule(self, year)
 
         if(res["success"]):
-            return res["res"]["matches"]
+            fixtures = []
+            for fixture in res["res"]["matches"]:
+                fixtures.append(Fixture(fixture, self.db))
+            return fixtures
         else:
             if( self.debug ):
                 print(res["error_string"]) 
@@ -242,12 +250,17 @@ class Team:
         })
 
         leagues = []
-        if(len(res["response"]) > 0):
-            for league in res["response"]:
-                fapi_league_id = league["league"]["id"]
-                db_league = self.db.search("leagues", { "fapi_league_id" : fapi_league_id })
-                if(len(db_league) > 0):
-                    leagues.append(db_league[0])
+        if(res["success"]):
+            if(len(res["res"]) > 0):
+                fapi_leagues = res["res"]
+                for league in fapi_leagues["response"]:
+                    fapi_league_id = league["league"]["id"]
+                    db_league = self.db.search("leagues", { "fapi_league_id" : fapi_league_id })
+                    if(len(db_league) > 0):
+                        leagues.append(db_league[0])
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
             
         return leagues
     

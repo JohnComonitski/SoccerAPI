@@ -1,4 +1,5 @@
 from ..lib.utils import traverse_dict
+from .fixture import Fixture
 from datetime import datetime
 import json
 from typing import Any, Optional
@@ -126,10 +127,15 @@ class League:
         if self.fapi_profile:
             return self.fapi_profile
         else:
-            player = self.fapi.make_request("/leagues?id=" + self.fapi_id, {})
-            if(len(player["response"]) > 0):
-                self.fapi_profile = player["response"][0]["league"]
-                return self.fapi_profile 
+            res = self.fapi.make_request("/leagues?id=" + self.fapi_id, {})
+            if(res["success"]):
+                profile = res["res"]
+                if(len(profile["response"]) > 0):
+                    self.fapi_profile = profile["response"][0]["league"]
+                    return self.fapi_profile 
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
         return None
 
     def teams(self, year: Optional[str] = None) -> list['Team']:
@@ -189,7 +195,10 @@ class League:
         res = self.fapi.get_league_fixtures_on_date(self, date)
 
         if(res["success"]):
-            return res["res"]["matches"][0]
+            fixtures = []
+            for fixture in res["res"]["matches"]:
+                fixtures.append(Fixture(fixture, self.db))
+            return fixtures
         else:
             if(1 or self.debug ):
                 print(res["error_string"]) 
@@ -207,7 +216,10 @@ class League:
         res = self.fapi.get_league_schedule(self, year)
 
         if(res["success"]):
-            return res["res"]["matches"][0]
+            fixtures = []
+            for fixture in res["res"]["matches"]:
+                fixtures.append(Fixture(fixture, self.db))
+            return fixtures
         else:
             if(1 or self.debug ):
                 print(res["error_string"]) 
