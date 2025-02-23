@@ -1,7 +1,24 @@
 from ..lib.utils import key_to_name
 
+
 class Statistic:
-    def __init__(self, stat_data):
+    r"""Statistics object.
+
+      :ivar key: internal name for a Statistic object.
+      :vartype key: str
+      :ivar value: numeric value of the Statistic object.
+      :vartype value: float
+      :ivar percentile: percentile representation of a Statistics value.
+      :vartype percentile: float
+      :ivar name: display name for a Statistic object.
+      :vartype name: str
+    """
+    def __init__(self, stat_data: dict):
+        r"""Create a new instance.
+
+        :param stat_data: The data to be populated into a Statistic object.
+        :type stat_data: dict
+        """
         self.key = stat_data["key"]
         self.percentile = None
         name = key_to_name(stat_data["key"])
@@ -41,7 +58,11 @@ class Statistic:
     def __repr__(self):
         return str(self.value)
     
-    def to_json(self):
+    def to_json(self) -> dict:
+        r"""Get a JSON representation of the Statistic object.
+
+        :rtype: dict
+        """
         return {
             "object" : "statistic",
             "key" : self.key,

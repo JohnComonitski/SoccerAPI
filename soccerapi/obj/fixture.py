@@ -1,8 +1,30 @@
 from ..lib.utils import traverse_dict
 from .statistic import Statistic
 import json
+from typing import Optional
 
 class Fixture:
+    r"""The Fixture object.
+
+    :ivar id: API-Football Fixture ID.
+    :vartype id: str
+    :ivar fixture-details: API-Football Fixture description.
+    :vartype fixture-details: dict
+    :ivar home_goals: goals scored by the home team.
+    :vartype home_goals: int
+    :ivar away_goals: goals scored by the away team.
+    :vartype away_goals: int
+    :ivar score_history: history of Goals scored in match.
+    :vartype score_history: dict
+    :ivar league: League the Fixture is from.
+    :vartype league: League
+    :ivar home_team: home Team in Fixture.
+    :vartype home_team: Team
+    :ivar away_team: away Team in Fixture.
+    :vartype away_team: Team
+    :ivar db: a database instance.
+    :vartype db: PostgreSQL
+    """
     def __init__(self, match_data, db):
         #From Team Data
         self.match_data = match_data
@@ -58,13 +80,21 @@ class Fixture:
         return f"Fixture({self.home_team.name()} vs {self.away_team.name()})"
     
     def export(self):
+        r"""Export the Fixture object as a JSON file.
+
+        .. note:: The output filename is in the format ``ficture_{self.id}.json``.
+        """
         data = self.to_json()
 
         file_name = "fixture_" + str(self.id) + ".json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
-    def to_json(self):
+    def to_json(self) -> dict:
+        r"""Get a JSON representation of the Fixture object.
+
+        :rtype: dict
+        """
         return traverse_dict({
             "object" : "fixture",
             "match_data" : self.match_data,
@@ -92,7 +122,12 @@ class Fixture:
                 players.append(player["player"])
         return players
 
-    def home_starting_xi(self):
+    def home_starting_xi(self) -> list['Team']:
+        r"""Get the home Team's starting XI.
+
+        :returns: a list of Team objects, or an empty list in case of errors.
+        :rtype: list[Team]
+        """
         res = self.fapi.get_line_up(self)
         team_id = self.home_team.fapi_id
         lineup_type = "startXI"
@@ -104,7 +139,12 @@ class Fixture:
                 print(res["error_string"]) 
             return []
 
-    def away_starting_xi(self):
+    def away_starting_xi(self) -> list['Team']:
+        r"""Get the away Team's starting XI.
+
+        :returns: a list of Team objects, or an empty list in case of errors.
+        :rtype: list[Team]
+        """
         res = self.fapi.get_line_up(self)
         team_id = self.away_team.fapi_id
         lineup_type = "startXI"
@@ -116,7 +156,12 @@ class Fixture:
                 print(res["error_string"]) 
             return []
     
-    def home_team_sheet(self):
+    def home_team_sheet(self) -> list['Team']:
+        r"""Get the home Team's entire team sheet.
+
+        :returns: a list of Team objects, or an empty list in case of errors.
+        :rtype: list[Team]
+        """
         res = self.fapi.get_line_up(self)
         team_id = self.home_team.fapi_id
 
@@ -130,7 +175,12 @@ class Fixture:
                 print(res["error_string"]) 
             return []
     
-    def away_team_sheet(self):
+    def away_team_sheet(self) -> list['Team']:
+        r"""Get the away Team's entire team sheet.
+
+        :returns: a list of Team objects, or an empty list in case of errors.
+        :rtype: list[Team]
+        """
         res = self.fapi.get_line_up(self)
         team_id = self.away_team.fapi_id
 
@@ -144,7 +194,14 @@ class Fixture:
                 print(res["error_string"]) 
             return []
 
-    def statistics(self, player = None):
+    def statistics(self, player: Optional['Player'] = None) -> list:
+        r"""Get the API-Football statistics from a Fixture for both teams or a given player.
+
+        :param player: Player object you want the statistics of.
+        :type player: Optional[Player]
+        :returns: a hash of Statistic objects.
+        :rtype: dict
+        """
         if(player):
             mapping = {
                 "cards_red" : "cards_red",
