@@ -271,127 +271,127 @@ Scrape a player's FBRef statistics from a previous season.
    # Returns statistics organized by team
    >>> import pprint
    >>> pprint.pprint(haaland.statistics("2023"))
-      {'aerials_lost': 42.0,
-       'aerials_won': 39.0,
-       'aerials_won_pct': 48.1,
-       'assisted_shots': 29.0,
-       'assists': 5.0,
-       'assists_per90': 0.18,
-       'average_shot_distance': 11.9,
-       'ball_recoveries': 47.0,
-       'blocked_passes': 10.0,
-       'blocked_shots': 1.0,
-       'blocks': 11.0,
-       'cards_yellow': 1.0,
-       'carries': 357.0,
-       'carries_distance': 1628.0,
-       'carries_into_final_third': 13.0,
-       'carries_into_penalty_area': 22.0,
-       'carries_progressive_distance': 728.0,
-       'challenge_tackles': 2.0,
-       'challenge_tackles_pct': 66.7,
-       'challenges': 3.0,
-       'challenges_lost': 1.0,
-       'clearances': 16.0,
-       'crosses': 5.0,
-       'dispossessed': 19.0,
-       'fbref_league_id': '9',
-       'fouled': 31.0,
-       'fouls': 18.0,
-       'games': 31.0,
-       'games_complete': 20.0,
-       'games_starts': 29.0,
-       'games_subs': 2.0,
-       'goals': 27.0,
-       'goals_assists': 32.0,
-       'goals_assists_pens_per90': 0.88,
-       'goals_assists_per90': 1.13,
-       'goals_pens': 20.0,
-       'goals_pens_per90': 0.71,
-       'goals_per90': 0.95,
-       'goals_per_shot': 0.18,
-       'goals_per_shot_on_target': 0.4,
-       'interceptions': 2.0,
-       'minutes': 2552.0,
-       'minutes_90s': 28.4,
-       'minutes_pct': 74.6,
-       'minutes_per_game': 82.0,
-       'minutes_per_start': 86.0,
-       'minutes_per_sub': 25.0,
-       'miscontrols': 41.0,
-       'npxg': 22.9,
-       'npxg_net': -2.9,
-       'npxg_per90': 0.81,
-       'npxg_per_shot': 0.2,
-       'npxg_xg_assist': 27.2,
-       'npxg_xg_assist_per90': 0.96,
-       'offsides': 6.0,
-       'on_goals_against': 25.0,
-       'on_goals_for': 65.0,
-       'on_xg_against': 26.2,
-       'on_xg_for': 59.5,
-       'pass_xa': 2.2,
-       'passes': 388.0,
-       'passes_blocked': 17.0,
-       'passes_completed': 295.0,
-       'passes_completed_long': 5.0,
-       'passes_completed_medium': 56.0,
-       'passes_completed_short': 197.0,
-       'passes_dead': 12.0,
-       'passes_free_kicks': 1.0,
-       'passes_into_final_third': 16.0,
-       'passes_into_penalty_area': 11.0,
-       'passes_live': 375.0,
-       'passes_long': 8.0,
-       'passes_medium': 70.0,
-       'passes_offsides': 1.0,
-       'passes_pct': 76.0,
-       'passes_pct_long': 62.5,
-       'passes_pct_medium': 80.0,
-       'passes_pct_short': 81.4,
-       'passes_progressive_distance': 567.0,
-       'passes_received': 489.0,
-       'passes_short': 242.0,
-       'passes_total_distance': 3234.0,
-       'pens_att': 8.0,
-       'pens_made': 7.0,
-       'pens_won': 2.0,
-       'progressive_carries': 35.0,
-       'progressive_passes': 26.0,
-       'progressive_passes_received': 126.0,
-       'shots': 113.0,
-       'shots_free_kicks': 1.0,
-       'shots_on_target': 50.0,
-       'shots_on_target_pct': 44.2,
-       'shots_on_target_per90': 1.76,
-       'shots_per90': 3.99,
-       'tackles': 6.0,
-       'tackles_att_3rd': 3.0,
-       'tackles_interceptions': 8.0,
-       'tackles_mid_3rd': 3.0,
-       'tackles_won': 3.0,
-       'take_ons': 30.0,
-       'take_ons_tackled': 16.0,
-       'take_ons_tackled_pct': 53.3,
-       'take_ons_won': 12.0,
-       'take_ons_won_pct': 40.0,
-       'through_balls': 2.0,
-       'throw_ins': 1.0,
-       'touches': 636.0,
-       'touches_att_3rd': 398.0,
-       'touches_att_pen_area': 183.0,
-       'touches_def_3rd': 36.0,
-       'touches_def_pen_area': 15.0,
-       'touches_live_ball': 628.0,
-       'touches_mid_3rd': 206.0,
-       'unused_subs': 1.0,
-       'xg': 29.2,
-       'xg_assist': 4.3,
-       'xg_assist_net': 0.7,
-       'xg_assist_per90': 0.15,
-       'xg_net': -2.2,
-       'xg_per90': 1.03,
-       'xg_xg_assist_per90': 1.18}
+   {'aerials_lost': 42.0,
+    'aerials_won': 39.0,
+    'aerials_won_pct': 48.1,
+    'assisted_shots': 29.0,
+    'assists': 5.0,
+    'assists_per90': 0.18,
+    'average_shot_distance': 11.9,
+    'ball_recoveries': 47.0,
+    'blocked_passes': 10.0,
+    'blocked_shots': 1.0,
+    'blocks': 11.0,
+    'cards_yellow': 1.0,
+    'carries': 357.0,
+    'carries_distance': 1628.0,
+    'carries_into_final_third': 13.0,
+    'carries_into_penalty_area': 22.0,
+    'carries_progressive_distance': 728.0,
+    'challenge_tackles': 2.0,
+    'challenge_tackles_pct': 66.7,
+    'challenges': 3.0,
+    'challenges_lost': 1.0,
+    'clearances': 16.0,
+    'crosses': 5.0,
+    'dispossessed': 19.0,
+    'fbref_league_id': '9',
+    'fouled': 31.0,
+    'fouls': 18.0,
+    'games': 31.0,
+    'games_complete': 20.0,
+    'games_starts': 29.0,
+    'games_subs': 2.0,
+    'goals': 27.0,
+    'goals_assists': 32.0,
+    'goals_assists_pens_per90': 0.88,
+    'goals_assists_per90': 1.13,
+    'goals_pens': 20.0,
+    'goals_pens_per90': 0.71,
+    'goals_per90': 0.95,
+    'goals_per_shot': 0.18,
+    'goals_per_shot_on_target': 0.4,
+    'interceptions': 2.0,
+    'minutes': 2552.0,
+    'minutes_90s': 28.4,
+    'minutes_pct': 74.6,
+    'minutes_per_game': 82.0,
+    'minutes_per_start': 86.0,
+    'minutes_per_sub': 25.0,
+    'miscontrols': 41.0,
+    'npxg': 22.9,
+    'npxg_net': -2.9,
+    'npxg_per90': 0.81,
+    'npxg_per_shot': 0.2,
+    'npxg_xg_assist': 27.2,
+    'npxg_xg_assist_per90': 0.96,
+    'offsides': 6.0,
+    'on_goals_against': 25.0,
+    'on_goals_for': 65.0,
+    'on_xg_against': 26.2,
+    'on_xg_for': 59.5,
+    'pass_xa': 2.2,
+    'passes': 388.0,
+    'passes_blocked': 17.0,
+    'passes_completed': 295.0,
+    'passes_completed_long': 5.0,
+    'passes_completed_medium': 56.0,
+    'passes_completed_short': 197.0,
+    'passes_dead': 12.0,
+    'passes_free_kicks': 1.0,
+    'passes_into_final_third': 16.0,
+    'passes_into_penalty_area': 11.0,
+    'passes_live': 375.0,
+    'passes_long': 8.0,
+    'passes_medium': 70.0,
+    'passes_offsides': 1.0,
+    'passes_pct': 76.0,
+    'passes_pct_long': 62.5,
+    'passes_pct_medium': 80.0,
+    'passes_pct_short': 81.4,
+    'passes_progressive_distance': 567.0,
+    'passes_received': 489.0,
+    'passes_short': 242.0,
+    'passes_total_distance': 3234.0,
+    'pens_att': 8.0,
+    'pens_made': 7.0,
+    'pens_won': 2.0,
+    'progressive_carries': 35.0,
+    'progressive_passes': 26.0,
+    'progressive_passes_received': 126.0,
+    'shots': 113.0,
+    'shots_free_kicks': 1.0,
+    'shots_on_target': 50.0,
+    'shots_on_target_pct': 44.2,
+    'shots_on_target_per90': 1.76,
+    'shots_per90': 3.99,
+    'tackles': 6.0,
+    'tackles_att_3rd': 3.0,
+    'tackles_interceptions': 8.0,
+    'tackles_mid_3rd': 3.0,
+    'tackles_won': 3.0,
+    'take_ons': 30.0,
+    'take_ons_tackled': 16.0,
+    'take_ons_tackled_pct': 53.3,
+    'take_ons_won': 12.0,
+    'take_ons_won_pct': 40.0,
+    'through_balls': 2.0,
+    'throw_ins': 1.0,
+    'touches': 636.0,
+    'touches_att_3rd': 398.0,
+    'touches_att_pen_area': 183.0,
+    'touches_def_3rd': 36.0,
+    'touches_def_pen_area': 15.0,
+    'touches_live_ball': 628.0,
+    'touches_mid_3rd': 206.0,
+    'unused_subs': 1.0,
+    'xg': 29.2,
+    'xg_assist': 4.3,
+    'xg_assist_net': 0.7,
+    'xg_assist_per90': 0.15,
+    'xg_net': -2.2,
+    'xg_per90': 1.03,
+    'xg_xg_assist_per90': 1.18}
 
 Get a Player's Number of Shots from this season
 ```````````````````````````````````````````````
@@ -426,11 +426,11 @@ Using the year parameter when scraping a player's TM Market Value
    >>> from datetime import datetime
 
    >>> haaland = api.db.get("players", "82172")
-   
+
    # Get last five years.
    >>> current_year = datetime.now().year
    >>> last_five_years = [str(year) for year in range(current_year - 4, current_year + 1)]
-   
+
    # Iterate over years and get market values
    >>> market_values = []
    >>> for year in last_five_years:
@@ -463,7 +463,7 @@ Scrape a Team TM Market Value of every player on a team.
 .. code-block:: python
 
    >>> man_city = api.db.get("teams", "5874")
-   
+
    # Iterate over each player in the squad and return their market value in a list of integers
    >>> [player.market_value() for player in man_city.players()]
    soccerapi/lib/fapi.py, line 27, in make_request return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] } TypeError: list indices must be integers or slices, not str
@@ -476,7 +476,7 @@ Scrape a League's TM Market Value.
 .. code-block:: python
 
    >>> premier_league = api.db.get("leagues", "12")
-   
+
    # Returns market value as an integer.
    >>> premier_league.market_value()
    9312660002.45
@@ -491,7 +491,7 @@ value.
 .. code-block:: python
 
    >>> premier_league = api.db.get("leagues", "12")
-   
+
    # Iterate over each player in the league and return their market value in
    # a dictionary.
    >>> market_values = { player.id: player.market_value() for team in premier_league.teams() for player in team.players() }
@@ -509,7 +509,7 @@ starting XI of that team.
    >>> wolves = api.db.search("teams", { "fapi_team_id" : "39"})[0]
    >>> fixture = wolves.fixture("2024-11-30")
    soccerapi/lib/fapi.py, line 27, in make_request return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] } KeyError: 'requests'
-   
+
    # Iterate over each player in the starting XI and store their market value
    # to a dictionary.
    >>> { player.id : { "player" : player, "market_value" : player.market_value() } for player in fixture.home_starting_xi() }
@@ -536,14 +536,14 @@ from that match.
 
 .. code-block:: python
 
-   # Get a team's fixture from a given date 
+   # Get a team's fixture from a given date
    >>> wolves = api.db.search("teams", { "fapi_team_id" : "39"})[0]
    >>> fixture = wolves.fixture("2024-11-30")
    soccerapi/lib/fapi.py, line 27, in make_request return { "success" : 0, "res" : None , "error_string" : "Error: " + res["errors"]["requests"] } KeyError: 'requests'
-   
+
    # Get the starting XI.
    >>> xi = fixture.home_starting_xi()
-   
+
    # Grab a player and get their statistics
    >>> kepa = xi[0]
    >>> fixture.statistics(kepa)
@@ -558,11 +558,11 @@ this season.
 .. code-block:: python
 
    >>> man_city = api.db.get("teams", "5874")
-   
+
    # Get team stats and opposition stats.
    >>> city_stats = man_city.statistics()
    >>> city_opps_stats = man_city.opponent_statistics()
-   
+
    # Find the shots taken and shots allows this season.
    >>> print(man_city.name() + " had " + str(city_stats["shots"].value) + " shots this season.")
    Manchester City had 427.0 shots this season.
