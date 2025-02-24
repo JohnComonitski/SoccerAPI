@@ -160,15 +160,15 @@ class Player:
         if self.fapi_profile:
             return self.fapi_profile
         else:
-            player = self.fapi.make_request("/players/profiles?player=" + self.fapi_id, {})
+            res = self.fapi.make_request("/players/profiles?player=" + self.fapi_id, {})
             
-            if(player["success"]):
-                if(len(player["response"]) > 0):
-                    self.fapi_profile = player["response"][0]["player"]
-                    return self.fapi_profile 
+            if(res["success"]):
+                player = res["res"]
+                self.fapi_profile = player["response"][0]["player"]
+                return self.fapi_profile 
             else:
                 if( self.debug ):
-                    print(player["error_string"])
+                    print(res["error_string"])
         return None
     
     def positions(self) -> list[str]:
@@ -206,8 +206,9 @@ class Player:
             profile = self.profile()
             if(profile):
                 fapi_country = profile["nationality"]
-                country = self.fapi.make_request("/countries?name=" + fapi_country, {})
-                if(country["success"]):
+                res = self.fapi.make_request("/countries?name=" + fapi_country, {})
+                if(res["success"]):
+                    country = res["res"]
                     country_code = country["response"][0]["code"]
                     res = self.db.search("countries", { "fapi_country_code" : country_code })
                     if(len(res) > 0):
@@ -215,7 +216,7 @@ class Player:
                     return self.player_country
                 else:
                     if( self.debug ):
-                        print(country["error_string"])
+                        print(res["error_string"])
         return None
     
     def current_team(self) -> 'Team':
@@ -228,8 +229,9 @@ class Player:
         if self.team:
             return self.team
         else:
-            fapi_player = self.fapi.make_request("/players/teams?player=" + self.fapi_id, {})
-            if(fapi_player["success"]):
+            res = self.fapi.make_request("/players/teams?player=" + self.fapi_id, {})
+            if(res["success"]):
+                fapi_player = res["res"]
                 if(fapi_player["response"][0]):
                     fapi_team_id = fapi_player["response"][0]["team"]["id"]
                     db_team = self.db.search("teams", { "fapi_team_id" : fapi_team_id })
@@ -237,7 +239,7 @@ class Player:
                         self.team = db_team[0]
             else:
                 if( self.debug ):
-                    print(fapi_player["error_string"])
+                    print(res["error_string"])
             return self.team
 
     def market_value(self, year: Optional[str] = None) -> int:
