@@ -6,13 +6,31 @@ of league, team and player data for use by amature football data analysts.
 
 <!--TOC-->
 
+- [Soccer API](#soccer-api)
+  - [Documentation](#documentation)
+  - [Features](#features)
+  - [Data Sources](#data-sources)
+  - [Getting Started](#getting-started)
+  - [License](#license)
+
+<!--TOC-->
+
+## Documentation
+
+The documentation covers practical examples with tutorials, quickstart and
+object classes API.
+
+[Link to Sphinx docs](TODO)
+
 ## Features
+
+TODO
 
 ## Data Sources
 
 Soccer API is powered by a database mapping the IDs of over 82,000 players,
 4200 teams, and 200 leagues. This allows for the seamless programatic access
-and combination of data across the following sites: 
+and combination of data across the following sites:
 
 - [API-Football](https://www.api-football.com/)
 - [FBRef](https://fbref.com)
@@ -33,18 +51,26 @@ and combination of data across the following sites:
    cd SoccerAPI
    ```
 
-3. create and acrivate a Python
-   [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments)
+3. create and activate a Python
+   [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
+   On GNU/Linux systems this is as easy as:
+
+   ```shell
+   python3 -m venv .venv
+   . .venv/bin/activate
+   # Work inside the environment.
+   ```
+
 4. install the Python dependencies
 
    ```shell
    pip install -r requirements.txt
    ```
 
-   > [!NOTE]
-   > Psycopg2 may give you trouble installing. For this reason the project uses
-   > the [binary](https://pypi.org/project/psycopg2-binary/) version of the
-   > library.
+> [!NOTE]
+> The standard Psycopg2 Python package may give you trouble installing. For
+> this reason the project uses the [binary](https://pypi.org/project/psycopg2-binary/)
+> version of that library.
 
 5. create a new Python file and set up the configuration
 
@@ -57,27 +83,28 @@ and combination of data across the following sites:
    }
    ```
 
-   > [!NOTE]
-   > Many features in this library require a API-Football API key. You can get
-   > started with by using API-Football's free tier
-   > **[here](https://www.api-football.com/pricing)**. For serious analysis, or
-   > for larger data collection projects, it is recommended you use a paid tier,
-   > otherwise you will be limited to 100 requests per day.
+> [!NOTE]
+> Many features in this library require a API-Football API key. You can get
+> started with by using API-Football's free tier
+> **[here](https://www.api-football.com/pricing)**.
+> For serious analysis, or for larger data collection projects, it is
+> recommended you use a paid tier, otherwise you will be limited to 100
+> requests per day.
 
-6. Instantiate Soccer API
+6. instantiate a SoccerAPI object
 
    ```python
    api = soccerapi.soccerapi.SoccerAPI(config)
    ```
 
-7. Begin Data Collection or Analysis
+7. begin data collection or analysis
 
    ```python
    haaland = api.db.get("players", "82172")
    stat = haaland.statistic("shots")
    ```
 
-   > Collects Erling Haaland's number of shots this season.
+   In this example we collect Erling Haaland's number of shots this season.
 
 ## License
 
