@@ -6,13 +6,28 @@ of league, team and player data for use by amature football data analysts.
 
 <!--TOC-->
 
+- [Soccer API](#soccer-api)
+  - [Documentation](#documentation)
+  - [Features](#features)
+  - [Data Sources](#data-sources)
+  - [Getting Started](#getting-started)
+  - [License](#license)
+
+<!--TOC-->
+
+## Documentation
+
+The documentation covers practical examples with tutorials, quickstart and API.
+
+[Link to Sphinx docs](TODO)
+
 ## Features
 
 ## Data Sources
 
 Soccer API is powered by a database mapping the IDs of over 82,000 players,
 4200 teams, and 200 leagues. This allows for the seamless programatic access
-and combination of data across the following sites: 
+and combination of data across the following sites:
 
 - [API-Football](https://www.api-football.com/)
 - [FBRef](https://fbref.com)
