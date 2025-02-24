@@ -41,10 +41,10 @@ and combination of data across the following sites:
    pip install -r requirements.txt
    ```
 
-   > [!NOTE]
-   > Psycopg2 may give you trouble installing. For this reason the project uses
-   > the [binary](https://pypi.org/project/psycopg2-binary/) version of the
-   > library.
+> [!NOTE]
+> The standard Psycopg2 Python pcakage may give you trouble installing. For
+> this reason the project uses the [binary](https://pypi.org/project/psycopg2-binary/)
+> version of that library.
 
 5. create a new Python file and set up the configuration
 
@@ -73,7 +73,7 @@ and combination of data across the following sites:
    stat = haaland.statistic("shots")
    ```
 
-   > Collects Erling Haaland's number of shots this season.
+   In this example we collect Erling Haaland's number of shots this season.
 
 ## License
 
