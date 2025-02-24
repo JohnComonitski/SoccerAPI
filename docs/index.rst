@@ -3,19 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-SoccerAPI documentation
-=======================
+SoccerAPI
+=========
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+SoccerAPI is a tool to aggregate football data from several sources and perform
+data analysis.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 6
    :caption: Contents:
 
-   install
    quickstart
    tutorials
    api
