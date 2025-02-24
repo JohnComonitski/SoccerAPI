@@ -58,11 +58,7 @@ and combination of data across the following sites:
    ```
 
    > [!NOTE]
-   > Many features in this library require a API-Football API key. You can get
-   > started with by using API-Football's free tier
-   > **[here](https://www.api-football.com/pricing)**. For serious analysis, or
-   > for larger data collection projects, it is recommended you use a paid tier,
-   > otherwise you will be limited to 100 requests per day.
+   > Many features in this library require a API-Football API key. You can get started with by using API-Football's free tier **[here](https://www.api-football.com/pricing)**. For serious analysis, or for larger data collection projects, it is recommended you use a paid tier, otherwise you will be limited to 100 requests per day.
 
 6. Instantiate Soccer API
 
