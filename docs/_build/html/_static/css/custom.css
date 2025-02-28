@@ -1,0 +1,20 @@
+.admonition.recommendedvalueadmonition {    /*Lowercase class name*/
+    background-color: #595959;
+    color: white;
+    /* options as needed */
+
+    .admonition-title {
+        background-color: black;
+    };
+}
+
+.admonition.purposeadmonition {    /*Lowercase class name*/
+    background-color: #ffff00;
+    color: black;
+    /* options as needed */
+
+    .admonition-title {
+        color: black;
+        background-color: #cccc00;
+    };
+}
