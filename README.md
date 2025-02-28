@@ -20,7 +20,7 @@ of league, team and player data for use by amature football data analysts.
 The documentation covers practical examples with tutorials, quickstart and
 object classes API.
 
-[Link to Sphinx docs](TODO)
+[http://johncomonitski.com/soccerapi/docs](Documentation)
 
 ## Features
 
