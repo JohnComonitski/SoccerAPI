@@ -2,7 +2,7 @@
 
 A Python library that connects [API-Football](https://www.api-football.com/)
 to several online football data providers and allow for the easier collection
-of league, team and player data for use by amature football data analysts.
+of league, team and player data for use by amateur football data analysts.
 
 <!--TOC-->
 
