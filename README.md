@@ -24,7 +24,17 @@ object classes API.
 
 ## Features
 
-TODO
+- 🏃 Access to the cross-site ID mapping of over 82,000 players
+- 🛡️ Access to the cross-site ID mapping of over 4200 teams
+- 🏆 Access to the cross-site ID mapping of over 200 leagues
+- 💰 Get the latest market values of players, teams and leagues 
+- 📊 Collect players, teams and match statistics
+- ⚽ Access to near real-time fixture results and statistics
+- 📅 Access to thousands of club's fixture lists and results & statistics from previous fixtures
+- 🔎 Programmatically combine data from multiple sources to perform data driven scouting (*[Example](https://medium.com/@johncomonitski/data-driven-scouting-with-python-and-soccer-api-88570c59f592)*)
+ 
+# Features Coming Soon
+- 📈 Generate data visualizations using player, club and league statistics
 
 ## Data Sources
 
@@ -36,6 +46,8 @@ and combination of data across the following sites:
 - [FBRef](https://fbref.com)
 - [Transfermarkt](https://www.transfermarkt.com/)
 - [Understat](https://understat.com/)
+
+*Note: Data collected by this library belongs to its respective rights holders. Data collected using this library should only be used for private projects/research and not commercial purposes.*
 
 ## Getting Started
 
@@ -78,7 +90,7 @@ and combination of data across the following sites:
    import soccerapi.soccerapi
 
    config = {
-       "fapi_host" : "api-football-v1.p.rapidapi.com",
+       "fapi_host" : "API-FOOTBALL HOST",
        "fapi_key" : "API-FOOTBALL API KEY",
    }
    ```

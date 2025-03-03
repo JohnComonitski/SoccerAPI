@@ -74,7 +74,7 @@ Here is a full Python program you can try:
    import soccerapi.soccerapi
 
    config = {
-       'fapi_host' : 'v3.football.api-sports.io',
+       'fapi_host' : 'API-FOOTBALL HOST',
        'fapi_key' : 'API-FOOTBALL API KEY',
    }
    api = soccerapi.soccerapi.SoccerAPI(config)
