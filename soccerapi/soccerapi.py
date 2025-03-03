@@ -21,7 +21,7 @@ class SoccerAPI():
        Example:
            Import the ``soccerapi.soccerapi`` module, then:
 
-           >>> config = {"fapi_host" : "api-football-v1.p.rapidapi.com", "fapi_key" : "API-FOOTBALL API KEY"}
+           >>> config = {"fapi_host" : "API-FOOTBALL HOST", "fapi_key" : "API-FOOTBALL API KEY"}
            >>> api = soccerapi.soccerapi.SoccerAPI(config)
            >>> haaland = api.db.get("players", "82172")
            >>> stat = haaland.statistic("shots")
@@ -70,7 +70,7 @@ class SoccerAPI():
 
                config = {
                    'debug': 1,
-                   'fapi_host': 'api-football-v1.p.rapidapi.com',
+                   'fapi_host': 'API-FOOTBALL HOST',
                    'fapi_key': 'API KEY',
                    'rate_limit_call_interval': 60,
                    'rate_limit_max_calls': 5,

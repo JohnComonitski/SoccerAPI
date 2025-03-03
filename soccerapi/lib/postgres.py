@@ -265,9 +265,9 @@ class PostgreSQL:
           Examples:
 
           >>> api.db.search(table_name=players, {'player_id': '12345'})
-          >>> api.db.search(table_name=players, {'player_fapi_id': '12345'})
-          >>> api.db.search(table_name=players, {'player_tm_id': '12345'})
-          >>> api.db.search(table_name=players, {'player_fbref_id' : '12345'})
+          >>> api.db.search(table_name=players, {'fapi_player_id': '12345'})
+          >>> api.db.search(table_name=players, {'tm_player_id': '12345'})
+          >>> api.db.search(table_name=players, {'fbref_player_id' : '12345'})
 
         :type table_name: str
         :type query: dict[str]

@@ -13,7 +13,6 @@ class Team:
       :vartype id: str
       :ivar fbref_id: Teams's FBRef ID.
       :vartype fbref_id: str
-      :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for this league.
       :vartype fbref_stat_detail_level: str
       :ivar tm_id: Team's Transfermarkt ID.
       :vartype tm_id: str
