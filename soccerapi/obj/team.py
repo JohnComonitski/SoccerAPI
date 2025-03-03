@@ -17,8 +17,8 @@ class Team:
       :vartype fbref_stat_detail_level: str
       :ivar tm_id: Team's Transfermarkt ID.
       :vartype tm_id: str
-      :ivar fpai_id: Team's API-Football ID
-      :vartype fpai_id: str
+      :ivar fapi_id: Team's API-Football ID
+      :vartype fapi_id: str
       :ivar db: PostgreSQL database initalization object.
       :vartype db: PostgreSQL
     """

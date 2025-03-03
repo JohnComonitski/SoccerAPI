@@ -18,8 +18,8 @@ class Player:
     :vartype id: str
     :ivar tm_id: player's Transfermarkt ID.
     :vartype tm_id: str
-    :ivar fpai_id: player's API-Football ID.
-    :vartype fpai_id: str
+    :ivar fapi_id: player's API-Football ID.
+    :vartype fapi_id: str
     :ivar understat_id: player's Understat ID.
     :vartype understat_id: str
     :ivar db: a database instance.

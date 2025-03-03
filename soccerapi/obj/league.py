@@ -16,8 +16,8 @@ class League:
     :vartype country: str
     :ivar tm_id: Leagues's Transfermarkt ID.
     :vartype tm_id: str
-    :ivar fpai_id: League's API-Football ID.
-    :vartype fpai_id: str
+    :ivar fapi_id: League's API-Football ID.
+    :vartype fapi_id: str
     :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for
       this League object.
     :vartype fbref_stat_detail_level: str

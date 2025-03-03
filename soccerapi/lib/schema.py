@@ -63,7 +63,7 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "fpai_league_id",
+                    "sql" : "fapi_league_id",
                     "label" : "FAPI League ID",
                     "type" : "text"
                 },
@@ -112,7 +112,7 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "fpai_player_id",
+                    "sql" : "fapi_player_id",
                     "label" : "FAPI Player ID",
                     "type" : "text"
                 },
@@ -155,7 +155,7 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "fpai_team_id",
+                    "sql" : "fapi_team_id",
                     "label" : "FAPI Team ID",
                     "type" : "text"
                 },
