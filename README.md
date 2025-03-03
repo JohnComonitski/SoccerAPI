@@ -24,17 +24,17 @@ object classes API.
 
 ## Features
 
-🏃 Access to the cross-site ID mapping of over 82,000 players
-🛡️ Access to the cross-site ID mapping of over 4200 teams
-🏆 Access to the cross-site ID mapping of over 200 leagues
-💰 Get the latest market values of players, teams and leagues 
-📊 Collect players, teams and match statistics
-⚽ Access to near real-time fixture results and statistics
-📅 Access to thousands of club's fixture lists and results & statistics from previous fixtures
-🔎 Programmatically combine data from multiple sources to perform data driven scouting ([Example](https://medium.com/@johncomonitski/data-driven-scouting-with-python-and-soccer-api-88570c59f592))
+- 🏃 Access to the cross-site ID mapping of over 82,000 players
+- 🛡️ Access to the cross-site ID mapping of over 4200 teams
+- 🏆 Access to the cross-site ID mapping of over 200 leagues
+- 💰 Get the latest market values of players, teams and leagues 
+- 📊 Collect players, teams and match statistics
+- ⚽ Access to near real-time fixture results and statistics
+- 📅 Access to thousands of club's fixture lists and results & statistics from previous fixtures
+- 🔎 Programmatically combine data from multiple sources to perform data driven scouting ([Example](https://medium.com/@johncomonitski/data-driven-scouting-with-python-and-soccer-api-88570c59f592))
  
 Features Coming Soon:
-📈 Generate data visualizations using player, club and league statistics
+- 📈 Generate data visualizations using player, club and league statistics
 
 ## Data Sources
 
