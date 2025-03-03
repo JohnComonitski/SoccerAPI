@@ -117,12 +117,13 @@ class League:
         """
         return self.league_name
     
-    def profile(self) -> Any | None:
+    def profile(self) -> dict | None:
         r"""Return the API-Football profile of the League object.
 
         :ivar fapi_profile:
-        :returns: the FAPI profile, or ``None`` in case of error.
-        :rtype: Any | None
+        :returns: the API-Football profile or ``None`` in case the response is
+          empty.
+        :rtype: dict | None
         """
         if self.fapi_profile:
             return self.fapi_profile

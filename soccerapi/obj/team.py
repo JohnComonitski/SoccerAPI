@@ -131,7 +131,7 @@ class Team:
         r"""Return the API-Football profile of the Team object.
 
         :ivar fapi_profile:
-        :returns: the API-Foorball profile or ``None`` in case the response is
+        :returns: the API-Football profile or ``None`` in case the response is
           empty.
         :rtype: dict | None
         """
@@ -157,11 +157,11 @@ class Team:
         """
         return self.team_country
     
-    def players(self) -> list:
+    def players(self) -> list['Player']:
         r"""Get the current Team object players.
 
         :returns: a list of players or an empty list
-        :rtype: list
+        :rtype: list['Player']
         """
         players = []
         res = self.fapi.get_players_on_team(self)
@@ -225,12 +225,12 @@ class Team:
                 print(res["error_string"]) 
             return None
 
-    def leagues(self) -> list:
+    def leagues(self) -> list['League']:
         r"""Returns the Leagues a team is competing in currently.
 
         :returns: a list of Leagues, or an uninitialized list if the response
           is empty.
-        :rtype: list
+        :rtype: list['League']
 
         .. important:: Gets info from the previous year if the current month is
            between January and June, or the current year otherwise.
@@ -263,7 +263,7 @@ class Team:
             
         return leagues
     
-    def market_value(self, year: Optional[str] = None):
+    def market_value(self, year: Optional[str] = None) -> int:
         r"""Get the Teams's Transfermarkt Market Value for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get
@@ -295,11 +295,11 @@ class Team:
                 print(res["error_string"]) 
             return 0
 
-    def statistics(self) -> str:
+    def statistics(self) -> dict[Statistic]:
         r"""Returns the Team object FBRef Statistics for a given year.
 
         :returns: a hash of Statistic objects.
-        :rtype: str
+        :rtype: dict[Statistic]
         """
         stats = self.stats_cache
 
@@ -335,13 +335,13 @@ class Team:
             return stats[stat_key]
         return Statistic({ "key" : stat_key, "value" : 0 })
 
-    def opponent_statistics(self) -> str:
+    def opponent_statistics(self) -> dict[Statistic]:
         r"""Get the Team object Opposition FBRef statistics for a given year.
 
         :returns: a Statistic object.
         :rtype: Statistic
         :returns: a hash of Statistic objects.
-        :rtype: str
+        :rtype: dict[Statistic]
         """
         stats = self.opps_stats_cache
 

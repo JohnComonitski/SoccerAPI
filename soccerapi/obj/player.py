@@ -150,12 +150,13 @@ class Player:
 
             self.stats_cache = stats
 
-    def profile(self):
+    def profile(self) -> dict | None:
         r"""Return the API-Football profile of the Player object.
 
         :ivar fapi_profile:
-        :returns: the FAPI profile.
-        :rtype: Any
+        :returns: the API-Football profile or ``None`` in case the response is
+          empty.
+        :rtype: dict | None
         """
         if self.fapi_profile:
             return self.fapi_profile
@@ -262,7 +263,7 @@ class Player:
                 print(res["error_string"])
             return 0
 
-    def statistics(self, year = None) -> Statistic:
+    def statistics(self, year = None) -> dict[Statistic]:
         r"""Returns the Player object's FBRef Statistics for a given year.
 
         :param year: desired year for the statistics. If not set get the
@@ -270,7 +271,7 @@ class Player:
           the current year otherwise.
         :type year: Optional[str]
         :returns: a hash of Statistic objects
-        :rtype: Statistic
+        :rtype: dict[Statistic]
         """
         stats = self.stats_cache
 
@@ -300,7 +301,7 @@ class Player:
 
         return self.stats_cache[year]
 
-    def statistic(self, stat, year: Optional[str]  = None) -> str | int:
+    def statistic(self, stat, year: Optional[str]  = None) -> Statistic:
         r"""Get the Player object's FBRef statistics for a given year and statistic.
 
         :param stat: internal or display name of a statistic.
@@ -308,8 +309,8 @@ class Player:
         :param year: desired year for the statistics. See the ``statistic``
           method for more information.
         :type year: Optional[str]
-        :returns: a statistic object or ``0``
-        :rtype: str | int
+        :returns: a Statistic object.
+        :rtype: Statistic
         """
         stat_key = None
         if(key_to_name(stat)):
