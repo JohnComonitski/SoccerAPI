@@ -11,8 +11,8 @@ What follows is a table of the important terms used in this document.
 | **Parameters** | Parameters passed to methods                |
 +----------------+---------------------------------------------+
 
-The main SoccerAPI module is used for data retrieval, while by using the
-classes in the **Obj** it is possible to query the data. 
+The main SoccerAPI module is used for object retrieval, while the
+classes in the **Obj** dir are used to scrape & collected individual object data. 
 
 Main module
 -----------

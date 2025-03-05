@@ -178,8 +178,8 @@
 </tr>
 </tbody>
 </table>
-<p>The main SoccerAPI module is used for data retrieval, while by using the
-classes in the <strong>Obj</strong> it is possible to query the data.</p>
+<p>The main SoccerAPI module is used for object retrieval, while the
+classes in the <strong>Obj</strong> dir are used to scrape &amp; collected individual object data.</p>
 <section id="module-soccerapi.soccerapi">
 <span id="main-module"></span><h2>Main module<a class="headerlink" href="#module-soccerapi.soccerapi" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -190,7 +190,6 @@ classes in the <strong>Obj</strong> it is possible to query the data.</p>
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>db</strong> – PostgreSQL database initalization.</p></li>
-<li><p><strong>visualize</strong> – initialize a player data object.</p></li>
 <li><p><strong>app</strong> – app data configuration.</p></li>
 </ul>
 </dd>
@@ -200,7 +199,7 @@ classes in the <strong>Obj</strong> it is possible to query the data.</p>
 </dl>
 <dl>
 <dt>Example:</dt><dd><p>Import the <code class="docutils literal notranslate"><span class="pre">soccerapi.soccerapi</span></code> module, then:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fapi_host&quot;</span> <span class="p">:</span> <span class="s2">&quot;api-football-v1.p.rapidapi.com&quot;</span><span class="p">,</span> <span class="s2">&quot;fapi_key&quot;</span> <span class="p">:</span> <span class="s2">&quot;API-FOOTBALL API KEY&quot;</span><span class="p">}</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fapi_host&quot;</span> <span class="p">:</span> <span class="s2">&quot;API-FOOTBALL HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;fapi_key&quot;</span> <span class="p">:</span> <span class="s2">&quot;API-FOOTBALL API KEY&quot;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">api</span> <span class="o">=</span> <span class="n">soccerapi</span><span class="o">.</span><span class="n">soccerapi</span><span class="o">.</span><span class="n">SoccerAPI</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82172&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stat</span> <span class="o">=</span> <span class="n">haaland</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="s2">&quot;shots&quot;</span><span class="p">)</span>
@@ -245,7 +244,7 @@ data scraping.</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;fapi_host&#39;</span><span class="p">:</span> <span class="s1">&#39;api-football-v1.p.rapidapi.com&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fapi_host&#39;</span><span class="p">:</span> <span class="s1">&#39;API-FOOTBALL HOST&#39;</span><span class="p">,</span>
     <span class="s1">&#39;fapi_key&#39;</span><span class="p">:</span> <span class="s1">&#39;API KEY&#39;</span><span class="p">,</span>
     <span class="s1">&#39;rate_limit_call_interval&#39;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
     <span class="s1">&#39;rate_limit_max_calls&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
@@ -344,9 +343,9 @@ or more of the connection parameters are missing this value is set to
 <li><p><strong>query</strong> (<em>dict</em><em>[</em><em>str</em><em>]</em>) – <p>key-value pair for the ID type to be searched.</p>
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;player_id&#39;</span><span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;player_fapi_id&#39;</span><span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;player_tm_id&#39;</span><span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;player_fbref_id&#39;</span> <span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;fapi_player_id&#39;</span><span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;tm_player_id&#39;</span><span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;fbref_player_id&#39;</span> <span class="p">:</span> <span class="s1">&#39;12345&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </p></li>
@@ -369,7 +368,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py class">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">soccerapi.obj.player.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.obj.player.Player" title="Link to this definition"></a></dt>
-<dd><p>The soccer Player object.</p>
+<dd><p>The Player object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -379,7 +378,7 @@ or more of the connection parameters are missing this value is set to
 <li><p><strong>last_name</strong> (<em>str</em>) – player’s last name.</p></li>
 <li><p><strong>id</strong> (<em>str</em>) – player’s Soccer API ID.</p></li>
 <li><p><strong>tm_id</strong> (<em>str</em>) – player’s Transfermarkt ID.</p></li>
-<li><p><strong>fpai_id</strong> (<em>str</em>) – player’s API-Football ID.</p></li>
+<li><p><strong>fapi_id</strong> (<em>str</em>) – player’s API-Football ID.</p></li>
 <li><p><strong>understat_id</strong> (<em>str</em>) – player’s Understat ID.</p></li>
 <li><p><strong>db</strong> (<em>Any</em>) – a database instance.</p></li>
 </ul>
@@ -397,7 +396,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.analyze_shots">
 <span class="sig-name descname"><span class="pre">analyze_shots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shots</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.analyze_shots" title="Link to this definition"></a></dt>
-<dd><p>Get the analysis of a Player object Understat shooting data.</p>
+<dd><p>Get the analysis of a Player’s Understat shooting data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a dictionary of Statistic Objects. In case of an error</p>
@@ -411,7 +410,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.country">
 <span class="sig-name descname"><span class="pre">country</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.country" title="Link to this definition"></a></dt>
-<dd><p>Get the country the Player object is from.</p>
+<dd><p>Get the country the Player is from.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>player_country</strong> – a country code.</p>
@@ -428,7 +427,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.current_team">
 <span class="sig-name descname"><span class="pre">current_team</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.current_team" title="Link to this definition"></a></dt>
-<dd><p>Get the current team of the Player object.</p>
+<dd><p>Get the current team of the Player.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>team</strong> – the player’s team.</p>
@@ -455,7 +454,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.fbref_image">
 <span class="sig-name descname"><span class="pre">fbref_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.fbref_image" title="Link to this definition"></a></dt>
-<dd><p>Get a URL of the Player object FBRef image.</p>
+<dd><p>Get a URL of the Player’s FBRef image.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a URL</p>
@@ -469,7 +468,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.image">
 <span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.image" title="Link to this definition"></a></dt>
-<dd><p>Get a URL to the Player object API-Football image.</p>
+<dd><p>Get a URL to the Player’s API-Football image.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a URL</p>
@@ -483,7 +482,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.import_data">
 <span class="sig-name descname"><span class="pre">import_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.obj.player.Player.import_data" title="Link to this definition"></a></dt>
-<dd><p>Populate Player object data based on a Player JSON file.</p>
+<dd><p>Populate Player object’s data based on a Player JSON file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>[</em><em>str</em><em>]</em>) – JSON representation of the Player object.</p>
@@ -506,7 +505,7 @@ or more of the connection parameters are missing this value is set to
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get
-the current value.</p>
+the current year.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
@@ -544,17 +543,18 @@ the current value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.profile">
-<span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.obj.player.Player.profile" title="Link to this definition"></a></dt>
-<dd><p>Return the API-Football profile of the Player object.</p>
+<span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.profile" title="Link to this definition"></a></dt>
+<dd><p>Return the API-Football profile of the Player.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fapi_profile</strong></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the FAPI profile.</p>
+<dd class="field-even"><p>the API-Football profile or <code class="docutils literal notranslate"><span class="pre">None</span></code> in case the response is
+empty.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any</p>
+<dd class="field-odd"><p>dict | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -562,7 +562,7 @@ the current value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.scouting_data">
 <span class="sig-name descname"><span class="pre">scouting_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.scouting_data" title="Link to this definition"></a></dt>
-<dd><p>Get the Player object FBRef scouting profile.</p>
+<dd><p>Get the Player’s FBRef scouting profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>an dictionary of of Statistic objects or <code class="docutils literal notranslate"><span class="pre">0</span></code> in case of an
@@ -577,7 +577,7 @@ error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.shots_over_season">
 <span class="sig-name descname"><span class="pre">shots_over_season</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.shots_over_season" title="Link to this definition"></a></dt>
-<dd><p>Get the raw Player object Understat shooting data over a season.</p>
+<dd><p>Get the raw Player’s Understat shooting data over a season.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a list of data, or an empty list in case of error.</p>
@@ -590,8 +590,8 @@ error.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.statistic">
-<span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.statistic" title="Link to this definition"></a></dt>
-<dd><p>Get the Player object FBRef statistics for a given year and statistic.</p>
+<span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.statistic" title="Link to this definition"></a></dt>
+<dd><p>Get the Player’s FBRef statistics for a given year and statistic.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -601,18 +601,18 @@ method for more information.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>a statistic object or <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+<dd class="field-even"><p>a Statistic object.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str | int</p>
+<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.player.Player.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.statistics" title="Link to this definition"></a></dt>
-<dd><p>Returns the Player object FBRef Statistics for a given year.</p>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.statistics" title="Link to this definition"></a></dt>
+<dd><p>Returns the Player’s FBRef Statistics for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – desired year for the statistics. If not set get the
@@ -623,7 +623,7 @@ the current year otherwise.</p>
 <dd class="field-even"><p>a hash of Statistic objects</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -650,9 +650,8 @@ the current year otherwise.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<em>str</em>) – Team’s Soccer API ID.</p></li>
 <li><p><strong>fbref_id</strong> (<em>str</em>) – Teams’s FBRef ID.</p></li>
-<li><p><strong>fbref_stat_detail_level</strong> (<em>str</em>) – level of Statistic detail FBRef provides for this league.</p></li>
 <li><p><strong>tm_id</strong> (<em>str</em>) – Team’s Transfermarkt ID.</p></li>
-<li><p><strong>fpai_id</strong> (<em>str</em>) – Team’s API-Football ID</p></li>
+<li><p><strong>fapi_id</strong> (<em>str</em>) – Team’s API-Football ID</p></li>
 <li><p><strong>db</strong> (<a class="reference internal" href="#soccerapi.lib.postgres.PostgreSQL" title="soccerapi.lib.postgres.PostgreSQL"><em>PostgreSQL</em></a>) – PostgreSQL database initalization object.</p></li>
 </ul>
 </dd>
@@ -669,7 +668,7 @@ the current year otherwise.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.country">
 <span class="sig-name descname"><span class="pre">country</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.country" title="Link to this definition"></a></dt>
-<dd><p>Get the country the Team object is from.</p>
+<dd><p>Get the country the Team is from.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a country code.</p>
@@ -693,7 +692,7 @@ the current year otherwise.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.fixture">
 <span class="sig-name descname"><span class="pre">fixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.fixture.Fixture" title="soccerapi.obj.fixture.Fixture"><span class="pre">Fixture</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.fixture" title="Link to this definition"></a></dt>
-<dd><p>Get a Team object Fixture for a given date.</p>
+<dd><p>Get a Team’s Fixture for a given date.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>date</strong> (<em>str</em>) – the date to be selected.</p>
@@ -715,11 +714,11 @@ parameter is required here!</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.fixtures">
 <span class="sig-name descname"><span class="pre">fixtures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.fixture.Fixture" title="soccerapi.obj.fixture.Fixture"><span class="pre">Fixture</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.fixtures" title="Link to this definition"></a></dt>
-<dd><p>Get a list of Team objects Fixtures for a given year.</p>
+<dd><p>Get a list of Team’s Fixtures for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get
-the current value.</p>
+the current year.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a list of Fixture, or an empty list in case of error.</p>
@@ -755,7 +754,7 @@ between January and June, or the current year otherwise.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.leagues">
-<span class="sig-name descname"><span class="pre">leagues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.leagues" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">leagues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.league.League" title="soccerapi.obj.league.League"><span class="pre">League</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.leagues" title="Link to this definition"></a></dt>
 <dd><p>Returns the Leagues a team is competing in currently.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -763,7 +762,7 @@ between January and June, or the current year otherwise.</p>
 is empty.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list</p>
+<dd class="field-even"><p>list[‘League’]</p>
 </dd>
 </dl>
 <div class="admonition important">
@@ -775,12 +774,12 @@ between January and June, or the current year otherwise.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.market_value">
-<span class="sig-name descname"><span class="pre">market_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.obj.team.Team.market_value" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">market_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.market_value" title="Link to this definition"></a></dt>
 <dd><p>Get the Teams’s Transfermarkt Market Value for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get
-the current value.</p>
+the current year.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
@@ -805,7 +804,7 @@ the current value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.name">
 <span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.name" title="Link to this definition"></a></dt>
-<dd><p>Get the name of the Team object.</p>
+<dd><p>Get the name of the Team.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the name.</p>
@@ -818,8 +817,8 @@ the current value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.opponent_statistics">
-<span class="sig-name descname"><span class="pre">opponent_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.opponent_statistics" title="Link to this definition"></a></dt>
-<dd><p>Get the Team object Opposition FBRef statistics for a given year.</p>
+<span class="sig-name descname"><span class="pre">opponent_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.opponent_statistics" title="Link to this definition"></a></dt>
+<dd><p>Get the Team’s FBRef opposition statistics for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a Statistic object.</p>
@@ -831,21 +830,21 @@ the current value.</p>
 <dd class="field-odd"><p>a hash of Statistic objects.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.players">
-<span class="sig-name descname"><span class="pre">players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.players" title="Link to this definition"></a></dt>
-<dd><p>Get the current Team object players.</p>
+<span class="sig-name descname"><span class="pre">players</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.players" title="Link to this definition"></a></dt>
+<dd><p>Get the player’s on a Team.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a list of players or an empty list</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list</p>
+<dd class="field-even"><p>list[‘Player’]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -853,13 +852,13 @@ the current value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.profile">
 <span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.profile" title="Link to this definition"></a></dt>
-<dd><p>Return the API-Football profile of the Team object.</p>
+<dd><p>Return the API-Football profile of the Team.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fapi_profile</strong></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the API-Foorball profile or <code class="docutils literal notranslate"><span class="pre">None</span></code> in case the response is
+<dd class="field-even"><p>the API-Football profile or <code class="docutils literal notranslate"><span class="pre">None</span></code> in case the response is
 empty.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -871,7 +870,7 @@ empty.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.statistic">
 <span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistic" title="Link to this definition"></a></dt>
-<dd><p>Get the Team object FBRef statistics for a given year and Statistic.</p>
+<dd><p>Get the Team’s FBRef statistics for a given year and Statistic.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>stat</strong> (<em>str</em>) – internal or display name of a statistic.</p>
@@ -887,14 +886,14 @@ empty.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistics" title="Link to this definition"></a></dt>
-<dd><p>Returns the Team object FBRef Statistics for a given year.</p>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistics" title="Link to this definition"></a></dt>
+<dd><p>Returns the Team’s FBRef Statistics for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a hash of Statistic objects.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -924,7 +923,7 @@ empty.</p>
 <li><p><strong>id</strong> (<em>str</em>) – League’s Soccer API ID.</p></li>
 <li><p><strong>country</strong> (<em>str</em>) – League’s country.</p></li>
 <li><p><strong>tm_id</strong> (<em>str</em>) – Leagues’s Transfermarkt ID.</p></li>
-<li><p><strong>fpai_id</strong> (<em>str</em>) – League’s API-Football ID.</p></li>
+<li><p><strong>fapi_id</strong> (<em>str</em>) – League’s API-Football ID.</p></li>
 <li><p><strong>fbref_stat_detail_level</strong> (<em>str</em>) – level of Statistic detail FBRef provides for
 this League object.</p></li>
 <li><p><strong>understat_id</strong> (<em>str</em>) – Leagues’s Understat ID.</p></li>
@@ -954,7 +953,7 @@ this League object.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.league.League.fixture_list">
 <span class="sig-name descname"><span class="pre">fixture_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.fixture.Fixture" title="soccerapi.obj.fixture.Fixture"><span class="pre">Fixture</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.fixture_list" title="Link to this definition"></a></dt>
-<dd><p>Get a list of League objects Fixtures for a given year.</p>
+<dd><p>Get a list of League’s Fixtures for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get
@@ -972,7 +971,7 @@ the current value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.league.League.fixtures">
 <span class="sig-name descname"><span class="pre">fixtures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.fixture.Fixture" title="soccerapi.obj.fixture.Fixture"><span class="pre">Fixture</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.fixtures" title="Link to this definition"></a></dt>
-<dd><p>Get a list of League objects Fixtures for a given date.</p>
+<dd><p>Get a list of League’s Fixtures for a given date.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>date</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the date to be selected. If this parameter is not set, get
@@ -1049,17 +1048,18 @@ the current value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.league.League.profile">
-<span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.profile" title="Link to this definition"></a></dt>
-<dd><p>Return the API-Football profile of the League object.</p>
+<span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.profile" title="Link to this definition"></a></dt>
+<dd><p>Return the API-Football profile of the League.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fapi_profile</strong></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the FAPI profile, or <code class="docutils literal notranslate"><span class="pre">None</span></code> in case of error.</p>
+<dd class="field-even"><p>the API-Football profile or <code class="docutils literal notranslate"><span class="pre">None</span></code> in case the response is
+empty.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any | None</p>
+<dd class="field-odd"><p>dict | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1067,7 +1067,7 @@ the current value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.league.League.teams">
 <span class="sig-name descname"><span class="pre">teams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.teams" title="Link to this definition"></a></dt>
-<dd><p>Return the League’s object teams for a given year.</p>
+<dd><p>Return the League’s teams for a given year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>teams_cache</strong></p>
@@ -1111,7 +1111,7 @@ between January and June, or the current year otherwise.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>str</em>) – internal name for a Statistic object.</p></li>
 <li><p><strong>value</strong> (<em>float</em>) – numeric value of the Statistic object.</p></li>
-<li><p><strong>percentile</strong> (<em>float</em>) – percentile representation of a Statistics value.</p></li>
+<li><p><strong>percentile</strong> (<em>float</em>) – percentile representation of a Statistic’s value.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – display name for a Statistic object.</p></li>
 </ul>
 </dd>
@@ -1146,7 +1146,7 @@ between January and June, or the current year otherwise.</p>
 <li><p><strong>fixture-details</strong> (<em>dict</em>) – API-Football Fixture description.</p></li>
 <li><p><strong>home_goals</strong> (<em>int</em>) – goals scored by the home team.</p></li>
 <li><p><strong>away_goals</strong> (<em>int</em>) – goals scored by the away team.</p></li>
-<li><p><strong>score_history</strong> (<em>dict</em>) – history of Goals scored in match.</p></li>
+<li><p><strong>score_history</strong> (<em>dict</em>) – history of goals scored in match.</p></li>
 <li><p><strong>league</strong> (<a class="reference internal" href="#soccerapi.obj.league.League" title="soccerapi.obj.league.League"><em>League</em></a>) – League the Fixture is from.</p></li>
 <li><p><strong>home_team</strong> (<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><em>Team</em></a>) – home Team in Fixture.</p></li>
 <li><p><strong>away_team</strong> (<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><em>Team</em></a>) – away Team in Fixture.</p></li>
@@ -1156,28 +1156,28 @@ between January and June, or the current year otherwise.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.fixture.Fixture.away_starting_xi">
-<span class="sig-name descname"><span class="pre">away_starting_xi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.away_starting_xi" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">away_starting_xi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.away_starting_xi" title="Link to this definition"></a></dt>
 <dd><p>Get the away Team’s starting XI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of Team objects, or an empty list in case of errors.</p>
+<dd class="field-odd"><p>a list of the away team’s starting xi players, or an empty list in case of errors.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team">Team</a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player">Player</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.fixture.Fixture.away_team_sheet">
-<span class="sig-name descname"><span class="pre">away_team_sheet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.away_team_sheet" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">away_team_sheet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.away_team_sheet" title="Link to this definition"></a></dt>
 <dd><p>Get the away Team’s entire team sheet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of Team objects, or an empty list in case of errors.</p>
+<dd class="field-odd"><p>a list of the aways team’s players on their team sheet, or an empty list in case of errors.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team">Team</a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player">Player</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1194,35 +1194,35 @@ between January and June, or the current year otherwise.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.fixture.Fixture.home_starting_xi">
-<span class="sig-name descname"><span class="pre">home_starting_xi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.home_starting_xi" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">home_starting_xi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.home_starting_xi" title="Link to this definition"></a></dt>
 <dd><p>Get the home Team’s starting XI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of Team objects, or an empty list in case of errors.</p>
+<dd class="field-odd"><p>a list of home team’s starting xi players, or an empty list in case of errors.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team">Team</a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player">Player</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.fixture.Fixture.home_team_sheet">
-<span class="sig-name descname"><span class="pre">home_team_sheet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.home_team_sheet" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">home_team_sheet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.home_team_sheet" title="Link to this definition"></a></dt>
 <dd><p>Get the home Team’s entire team sheet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of Team objects, or an empty list in case of errors.</p>
+<dd class="field-odd"><p>a list of the home team’s players on their team sheet, or an empty list in case of errors.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team">Team</a>]</p>
+<dd class="field-even"><p>list[<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player">Player</a>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.fixture.Fixture.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.statistics" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.fixture.Fixture.statistics" title="Link to this definition"></a></dt>
 <dd><p>Get the API-Football statistics from a Fixture for both teams or a given player.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1232,7 +1232,7 @@ between January and June, or the current year otherwise.</p>
 <dd class="field-even"><p>a hash of Statistic objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>

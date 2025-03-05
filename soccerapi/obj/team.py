@@ -58,7 +58,7 @@ class Team:
         return f"Team({self.team_name} - {self.country()})"
     
     def name(self) -> str:
-        r"""Get the name of the Team object.
+        r"""Get the name of the Team.
 
         :returns: the name.
         :rtype: str
@@ -128,7 +128,7 @@ class Team:
             self.opps_stats_cache = stats
             
     def profile(self) -> dict | None:
-        r"""Return the API-Football profile of the Team object.
+        r"""Return the API-Football profile of the Team.
 
         :ivar fapi_profile:
         :returns: the API-Football profile or ``None`` in case the response is
@@ -150,7 +150,7 @@ class Team:
         return None
     
     def country(self) -> str:
-        r"""Get the country the Team object is from.
+        r"""Get the country the Team is from.
 
         :returns: a country code.
         :rtype: str
@@ -158,7 +158,7 @@ class Team:
         return self.team_country
     
     def players(self) -> list['Player']:
-        r"""Get the current Team object players.
+        r"""Get the player's on a Team.
 
         :returns: a list of players or an empty list
         :rtype: list['Player']
@@ -178,10 +178,10 @@ class Team:
         return players
     
     def fixtures(self, year: Optional[str] = None) -> list[Fixture] | list:
-        r"""Get a list of Team objects Fixtures for a given year.
+        r"""Get a list of Team's Fixtures for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get
-          the current value.
+          the current year.
         :type year: Optional[str]
         :returns: a list of Fixture, or an empty list in case of error.
         :rtype: list[Fixture] | list
@@ -202,7 +202,7 @@ class Team:
             return []
         
     def fixture(self, date: str = None) -> Fixture | None:
-        r"""Get a Team object Fixture for a given date.
+        r"""Get a Team's Fixture for a given date.
 
         :param date: the date to be selected.
         :type date: str
@@ -267,7 +267,7 @@ class Team:
         r"""Get the Teams's Transfermarkt Market Value for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get
-          the current value.
+          the current year.
         :type year: Optional[str]
         :rtype: int
         """
@@ -296,7 +296,7 @@ class Team:
             return 0
 
     def statistics(self) -> dict[Statistic]:
-        r"""Returns the Team object FBRef Statistics for a given year.
+        r"""Returns the Team's FBRef Statistics for a given year.
 
         :returns: a hash of Statistic objects.
         :rtype: dict[Statistic]
@@ -317,7 +317,7 @@ class Team:
         return self.stats_cache
 
     def statistic(self, stat) -> Statistic:
-        r"""Get the Team object FBRef statistics for a given year and Statistic.
+        r"""Get the Team's FBRef statistics for a given year and Statistic.
 
         :param stat: internal or display name of a statistic.
         :type stat: str
@@ -336,7 +336,7 @@ class Team:
         return Statistic({ "key" : stat_key, "value" : 0 })
 
     def opponent_statistics(self) -> dict[Statistic]:
-        r"""Get the Team object Opposition FBRef statistics for a given year.
+        r"""Get the Team's FBRef opposition statistics for a given year.
 
         :returns: a Statistic object.
         :rtype: Statistic

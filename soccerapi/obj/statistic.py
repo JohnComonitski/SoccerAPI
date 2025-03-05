@@ -8,7 +8,7 @@ class Statistic:
       :vartype key: str
       :ivar value: numeric value of the Statistic object.
       :vartype value: float
-      :ivar percentile: percentile representation of a Statistics value.
+      :ivar percentile: percentile representation of a Statistic's value.
       :vartype percentile: float
       :ivar name: display name for a Statistic object.
       :vartype name: str

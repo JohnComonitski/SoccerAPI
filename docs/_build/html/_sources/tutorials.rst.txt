@@ -9,7 +9,7 @@ Before using the API you need to create a new SoccerAPI object
 .. code-block:: python
 
    import soccerapi.soccerapi
-   config = {"fapi_host" : "v3.football.api-sports.io", "fapi_key" : "API-FOOTBALL API KEY"}
+   config = {"fapi_host" : "API-FOOTBALL HOST", "fapi_key" : "API-FOOTBALL API KEY"}
    api = soccerapi.soccerapi.SoccerAPI(config)
 
 All the following examples will use the ``api`` object just mentioned.

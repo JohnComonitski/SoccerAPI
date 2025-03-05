@@ -14,7 +14,7 @@ class Fixture:
     :vartype home_goals: int
     :ivar away_goals: goals scored by the away team.
     :vartype away_goals: int
-    :ivar score_history: history of Goals scored in match.
+    :ivar score_history: history of goals scored in match.
     :vartype score_history: dict
     :ivar league: League the Fixture is from.
     :vartype league: League
@@ -122,11 +122,11 @@ class Fixture:
                 players.append(player["player"])
         return players
 
-    def home_starting_xi(self) -> list['Team']:
+    def home_starting_xi(self) -> list['Player']:
         r"""Get the home Team's starting XI.
 
-        :returns: a list of Team objects, or an empty list in case of errors.
-        :rtype: list[Team]
+        :returns: a list of home team's starting xi players, or an empty list in case of errors.
+        :rtype: list[Player]
         """
         res = self.fapi.get_line_up(self)
         team_id = self.home_team.fapi_id
@@ -139,11 +139,11 @@ class Fixture:
                 print(res["error_string"]) 
             return []
 
-    def away_starting_xi(self) -> list['Team']:
+    def away_starting_xi(self) -> list['Player']:
         r"""Get the away Team's starting XI.
 
-        :returns: a list of Team objects, or an empty list in case of errors.
-        :rtype: list[Team]
+        :returns: a list of the away team's starting xi players, or an empty list in case of errors.
+        :rtype: list[Player]
         """
         res = self.fapi.get_line_up(self)
         team_id = self.away_team.fapi_id
@@ -156,11 +156,11 @@ class Fixture:
                 print(res["error_string"]) 
             return []
     
-    def home_team_sheet(self) -> list['Team']:
+    def home_team_sheet(self) -> list['Player']:
         r"""Get the home Team's entire team sheet.
 
-        :returns: a list of Team objects, or an empty list in case of errors.
-        :rtype: list[Team]
+        :returns: a list of the home team's players on their team sheet, or an empty list in case of errors.
+        :rtype: list[Player]
         """
         res = self.fapi.get_line_up(self)
         team_id = self.home_team.fapi_id
@@ -175,11 +175,11 @@ class Fixture:
                 print(res["error_string"]) 
             return []
     
-    def away_team_sheet(self) -> list['Team']:
+    def away_team_sheet(self) -> list['Player']:
         r"""Get the away Team's entire team sheet.
 
-        :returns: a list of Team objects, or an empty list in case of errors.
-        :rtype: list[Team]
+        :returns: a list of the aways team's players on their team sheet, or an empty list in case of errors.
+        :rtype: list[Player]
         """
         res = self.fapi.get_line_up(self)
         team_id = self.away_team.fapi_id
@@ -194,13 +194,13 @@ class Fixture:
                 print(res["error_string"]) 
             return []
 
-    def statistics(self, player: Optional['Player'] = None) -> list:
+    def statistics(self, player: Optional['Player'] = None) -> list[Statistic]:
         r"""Get the API-Football statistics from a Fixture for both teams or a given player.
 
         :param player: Player object you want the statistics of.
         :type player: Optional[Player]
         :returns: a hash of Statistic objects.
-        :rtype: dict
+        :rtype: dict[Statistic]
         """
         if(player):
             mapping = {

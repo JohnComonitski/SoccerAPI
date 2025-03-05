@@ -118,7 +118,7 @@ class League:
         return self.league_name
     
     def profile(self) -> dict | None:
-        r"""Return the API-Football profile of the League object.
+        r"""Return the API-Football profile of the League.
 
         :ivar fapi_profile:
         :returns: the API-Football profile or ``None`` in case the response is
@@ -140,7 +140,7 @@ class League:
         return None
 
     def teams(self, year: Optional[str] = None) -> list['Team']:
-        r"""Return the League's object teams for a given year.
+        r"""Return the League's teams for a given year.
 
         :ivar teams_cache:
         :param year: desired year for the information. Defaults to ``None``.
@@ -182,7 +182,7 @@ class League:
         return self.teams_cache[year]
 
     def fixtures(self, date: Optional[str] = None) -> list['Fixture']:
-        r"""Get a list of League objects Fixtures for a given date.
+        r"""Get a list of League's Fixtures for a given date.
 
         :param date: the date to be selected. If this parameter is not set, get
           the current local timezone timestamp. Defaults to ``None``.
@@ -206,7 +206,7 @@ class League:
             return []
 
     def fixture_list(self, year: Optional[str] = None) -> list['Fixture']:
-        r"""Get a list of League objects Fixtures for a given year.
+        r"""Get a list of League's Fixtures for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get
           the current value.

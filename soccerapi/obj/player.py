@@ -151,7 +151,7 @@ class Player:
             self.stats_cache = stats
 
     def profile(self) -> dict | None:
-        r"""Return the API-Football profile of the Player object.
+        r"""Return the API-Football profile of the Player.
 
         :ivar fapi_profile:
         :returns: the API-Football profile or ``None`` in case the response is
@@ -194,7 +194,7 @@ class Player:
             return []
 
     def country(self) -> str:
-        r"""Get the country the Player object is from.
+        r"""Get the country the Player is from.
 
         :ivar player_country: a country code.
         :type player_country: str
@@ -221,7 +221,7 @@ class Player:
         return None
     
     def current_team(self) -> 'Team':
-        r"""Get the current team of the Player object.
+        r"""Get the current team of the Player.
 
         :ivar team: the player's team.
         :returns: the team.
@@ -247,7 +247,7 @@ class Player:
         r"""Get the Player's Transfermarkt Market Value for a given year.
 
         :param year: the year to be selected. If this parameter is not set, get
-          the current value.
+          the current year.
         :type year: Optional[str]
         :rtype: int
         """
@@ -264,7 +264,7 @@ class Player:
             return 0
 
     def statistics(self, year = None) -> dict[Statistic]:
-        r"""Returns the Player object's FBRef Statistics for a given year.
+        r"""Returns the Player's FBRef Statistics for a given year.
 
         :param year: desired year for the statistics. If not set get the
           previous year if the current month is between January and June, or
@@ -302,7 +302,7 @@ class Player:
         return self.stats_cache[year]
 
     def statistic(self, stat, year: Optional[str]  = None) -> Statistic:
-        r"""Get the Player object's FBRef statistics for a given year and statistic.
+        r"""Get the Player's FBRef statistics for a given year and statistic.
 
         :param stat: internal or display name of a statistic.
         :type stat: str
@@ -324,7 +324,7 @@ class Player:
         return 0
 
     def fbref_image(self) -> str:
-        r"""Get a URL of the Player object's FBRef image.
+        r"""Get a URL of the Player's FBRef image.
 
         :returns: a URL
         :rtype: str
@@ -339,7 +339,7 @@ class Player:
             return 0
 
     def image(self) -> str:
-        r"""Get a URL to the Player object's API-Football image.
+        r"""Get a URL to the Player's API-Football image.
 
         :returns: a URL
         :rtype: str
@@ -350,7 +350,7 @@ class Player:
             return self.fapi_profile['photo']
 
     def scouting_data(self) -> dict[Statistic] | int:
-        r"""Get the Player object's FBRef scouting profile.
+        r"""Get the Player's FBRef scouting profile.
 
         :returns: an dictionary of of Statistic objects or ``0`` in case of an
           error.
@@ -374,7 +374,7 @@ class Player:
         return
 
     def shots_over_season(self) -> list:
-        r"""Get the raw Player object's Understat shooting data over a season.
+        r"""Get the raw Player's Understat shooting data over a season.
 
         :returns: a list of data, or an empty list in case of error.
         :rtype: list
@@ -389,7 +389,7 @@ class Player:
             return []
 
     def analyze_shots(self, shots) -> dict[Statistic]:
-        r"""Get the analysis of a Player object's Understat shooting data.
+        r"""Get the analysis of a Player's Understat shooting data.
 
         :returns: a dictionary of Statistic Objects. In case of an error
         :rtype: dict[Statistic]
