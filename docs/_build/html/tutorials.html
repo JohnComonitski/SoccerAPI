@@ -144,27 +144,27 @@ foreign ID. Tables available to search on are players, teams and leagues.</p>
 <span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)]</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1f44ac21&quot;</span><span class="p">})</span>
-<span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Sebastian</span> <span class="n">Lie</span> <span class="n">Haaland</span><span class="p">)]</span>
+<span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)]</span>
 
 <span class="c1"># Search for Man City using API-Football ID, Transfermarkt ID and FBRef ID respectively</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;33&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;fapi_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;33&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;985&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;tm_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;985&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;19538871&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;fbref_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;19538871&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
 <span class="c1"># Search for Premier League using API-Football ID, Transfermarkt ID and FBRef ID respectively</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;fapi_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;GB1&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;tm_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;GB1&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">})</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">postgres</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">282</span><span class="p">,</span> <span class="ow">in</span> <span class="n">search</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;fbref_player_id&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">})</span>
+<span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 </pre></div>
 </div>
 </section>
@@ -202,15 +202,17 @@ to avoid redundant request calls and save time.</p>
 <span class="c1"># Get Haaland&#39;s current club.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">man_city</span> <span class="o">=</span> <span class="n">haaland</span><span class="o">.</span><span class="n">current_team</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">man_city</span><span class="p">)</span>
-<span class="n">line</span> <span class="mi">27</span><span class="p">,</span> <span class="ow">in</span> <span class="n">make_request</span> <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;success&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;res&quot;</span> <span class="p">:</span> <span class="kc">None</span> <span class="p">,</span> <span class="s2">&quot;error_string&quot;</span> <span class="p">:</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">][</span><span class="s2">&quot;requests&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="ne">TypeError</span><span class="p">:</span> <span class="nb">list</span> <span class="n">indices</span> <span class="n">must</span> <span class="n">be</span> <span class="n">integers</span> <span class="ow">or</span> <span class="n">slices</span><span class="p">,</span> <span class="ow">not</span> <span class="nb">str</span>
+<span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">City</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)</span>
 
 <span class="c1"># Get a list of all competition&#39;s City is currently in.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">cities_leagues</span> <span class="o">=</span> <span class="n">man_city</span><span class="o">.</span><span class="n">leagues</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cities_leagues</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">cities_leagues</span><span class="p">)</span>
+<span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Friendlies</span> <span class="n">Clubs</span> <span class="o">-</span> <span class="n">World</span><span class="p">),</span> <span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">),</span> <span class="n">League</span><span class="p">(</span><span class="n">UEFA</span> <span class="n">Champions</span> <span class="n">League</span> <span class="o">-</span> <span class="n">World</span><span class="p">),</span> <span class="n">League</span><span class="p">(</span><span class="n">League</span> <span class="n">Cup</span> <span class="o">-</span> <span class="n">GB</span><span class="p">),</span> <span class="n">League</span><span class="p">(</span><span class="n">Community</span> <span class="n">Shield</span> <span class="o">-</span> <span class="n">GB</span><span class="p">),</span> <span class="n">League</span><span class="p">(</span><span class="n">FA</span> <span class="n">Cup</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
 <span class="c1"># Grab the Premier League from that list.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">premier_league</span> <span class="o">=</span> <span class="n">cities_leagues</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">premier_league</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">premier_league</span><span class="p">)</span>
+<span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -222,124 +224,126 @@ to avoid redundant request calls and save time.</p>
 <span class="go"># Returns statistics organized by team.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">haaland</span><span class="o">.</span><span class="n">statistics</span><span class="p">())</span>
-<span class="go">{&#39;aerials_lost&#39;: 37.0,</span>
-<span class="go"> &#39;aerials_won&#39;: 43.0,</span>
-<span class="go"> &#39;aerials_won_pct&#39;: 53.8,</span>
-<span class="go"> &#39;assisted_shots&#39;: 24.0,</span>
-<span class="go"> &#39;assists&#39;: 3.0,</span>
-<span class="go"> &#39;assists_per90&#39;: 0.12,</span>
-<span class="go"> &#39;average_shot_distance&#39;: 12.0,</span>
-<span class="go"> &#39;ball_recoveries&#39;: 19.0,</span>
-<span class="go"> &#39;blocked_passes&#39;: 8.0,</span>
-<span class="go"> &#39;blocked_shots&#39;: 1.0,</span>
-<span class="go"> &#39;blocks&#39;: 9.0,</span>
-<span class="go"> &#39;cards_yellow&#39;: 2.0,</span>
-<span class="go"> &#39;carries&#39;: 243.0,</span>
-<span class="go"> &#39;carries_distance&#39;: 1207.0,</span>
-<span class="go"> &#39;carries_into_final_third&#39;: 13.0,</span>
-<span class="go"> &#39;carries_into_penalty_area&#39;: 17.0,</span>
-<span class="go"> &#39;carries_progressive_distance&#39;: 444.0,</span>
-<span class="go"> &#39;challenge_tackles&#39;: 1.0,</span>
-<span class="go"> &#39;challenge_tackles_pct&#39;: 20.0,</span>
-<span class="go"> &#39;challenges&#39;: 5.0,</span>
-<span class="go"> &#39;challenges_lost&#39;: 4.0,</span>
-<span class="go"> &#39;clearances&#39;: 21.0,</span>
-<span class="go"> &#39;crosses&#39;: 3.0,</span>
-<span class="go"> &#39;crosses_into_penalty_area&#39;: 1.0,</span>
-<span class="go"> &#39;dispossessed&#39;: 20.0,</span>
-<span class="go"> &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
-<span class="go"> &#39;fouled&#39;: 12.0,</span>
-<span class="go"> &#39;fouls&#39;: 20.0,</span>
-<span class="go"> &#39;games&#39;: 25.0,</span>
-<span class="go"> &#39;games_complete&#39;: 21.0,</span>
-<span class="go"> &#39;games_starts&#39;: 25.0,</span>
-<span class="go"> &#39;goals&#39;: 19.0,</span>
-<span class="go"> &#39;goals_assists&#39;: 22.0,</span>
-<span class="go"> &#39;goals_assists_pens_per90&#39;: 0.86,</span>
-<span class="go"> &#39;goals_assists_per90&#39;: 0.9,</span>
-<span class="go"> &#39;goals_pens&#39;: 18.0,</span>
-<span class="go"> &#39;goals_pens_per90&#39;: 0.73,</span>
-<span class="go"> &#39;goals_per90&#39;: 0.77,</span>
-<span class="go"> &#39;goals_per_shot&#39;: 0.2,</span>
-<span class="go"> &#39;goals_per_shot_on_target&#39;: 0.35,</span>
-<span class="go"> &#39;interceptions&#39;: 4.0,</span>
-<span class="go"> &#39;minutes&#39;: 2210.0,</span>
-<span class="go"> &#39;minutes_90s&#39;: 24.6,</span>
-<span class="go"> &#39;minutes_pct&#39;: 94.4,</span>
-<span class="go"> &#39;minutes_per_game&#39;: 88.0,</span>
-<span class="go"> &#39;minutes_per_start&#39;: 88.0,</span>
-<span class="go"> &#39;miscontrols&#39;: 37.0,</span>
-<span class="go"> &#39;npxg&#39;: 16.8,</span>
-<span class="go"> &#39;npxg_net&#39;: 1.2,</span>
-<span class="go"> &#39;npxg_per90&#39;: 0.68,</span>
-<span class="go"> &#39;npxg_per_shot&#39;: 0.19,</span>
-<span class="go"> &#39;npxg_xg_assist&#39;: 19.5,</span>
-<span class="go"> &#39;npxg_xg_assist_per90&#39;: 0.79,</span>
-<span class="go"> &#39;offsides&#39;: 4.0,</span>
-<span class="go"> &#39;on_goals_against&#39;: 35.0,</span>
-<span class="go"> &#39;on_goals_for&#39;: 51.0,</span>
-<span class="go"> &#39;on_xg_against&#39;: 34.6,</span>
-<span class="go"> &#39;on_xg_for&#39;: 45.3,</span>
-<span class="go"> &#39;pass_xa&#39;: 1.7,</span>
-<span class="go"> &#39;passes&#39;: 298.0,</span>
-<span class="go"> &#39;passes_blocked&#39;: 7.0,</span>
-<span class="go"> &#39;passes_completed&#39;: 193.0,</span>
-<span class="go"> &#39;passes_completed_long&#39;: 4.0,</span>
-<span class="go"> &#39;passes_completed_medium&#39;: 40.0,</span>
-<span class="go"> &#39;passes_completed_short&#39;: 136.0,</span>
-<span class="go"> &#39;passes_dead&#39;: 6.0,</span>
-<span class="go"> &#39;passes_into_final_third&#39;: 8.0,</span>
-<span class="go"> &#39;passes_into_penalty_area&#39;: 5.0,</span>
-<span class="go"> &#39;passes_live&#39;: 291.0,</span>
-<span class="go"> &#39;passes_long&#39;: 6.0,</span>
-<span class="go"> &#39;passes_medium&#39;: 63.0,</span>
-<span class="go"> &#39;passes_offsides&#39;: 1.0,</span>
-<span class="go"> &#39;passes_pct&#39;: 64.8,</span>
-<span class="go"> &#39;passes_pct_long&#39;: 66.7,</span>
-<span class="go"> &#39;passes_pct_medium&#39;: 63.5,</span>
-<span class="go"> &#39;passes_pct_short&#39;: 69.4,</span>
-<span class="go"> &#39;passes_progressive_distance&#39;: 457.0,</span>
-<span class="go"> &#39;passes_received&#39;: 388.0,</span>
-<span class="go"> &#39;passes_short&#39;: 196.0,</span>
-<span class="go"> &#39;passes_total_distance&#39;: 2332.0,</span>
-<span class="go"> &#39;pens_att&#39;: 2.0,</span>
-<span class="go"> &#39;pens_made&#39;: 1.0,</span>
-<span class="go"> &#39;progressive_carries&#39;: 17.0,</span>
-<span class="go"> &#39;progressive_passes&#39;: 16.0,</span>
-<span class="go"> &#39;progressive_passes_received&#39;: 98.0,</span>
-<span class="go"> &#39;shots&#39;: 92.0,</span>
-<span class="go"> &#39;shots_free_kicks&#39;: 1.0,</span>
-<span class="go"> &#39;shots_on_target&#39;: 51.0,</span>
-<span class="go"> &#39;shots_on_target_pct&#39;: 55.4,</span>
-<span class="go"> &#39;shots_on_target_per90&#39;: 2.08,</span>
-<span class="go"> &#39;shots_per90&#39;: 3.75,</span>
-<span class="go"> &#39;tackles&#39;: 7.0,</span>
-<span class="go"> &#39;tackles_att_3rd&#39;: 3.0,</span>
-<span class="go"> &#39;tackles_def_3rd&#39;: 2.0,</span>
-<span class="go"> &#39;tackles_interceptions&#39;: 11.0,</span>
-<span class="go"> &#39;tackles_mid_3rd&#39;: 2.0,</span>
-<span class="go"> &#39;tackles_won&#39;: 4.0,</span>
-<span class="go"> &#39;take_ons&#39;: 27.0,</span>
-<span class="go"> &#39;take_ons_tackled&#39;: 15.0,</span>
-<span class="go"> &#39;take_ons_tackled_pct&#39;: 55.6,</span>
-<span class="go"> &#39;take_ons_won&#39;: 10.0,</span>
-<span class="go"> &#39;take_ons_won_pct&#39;: 37.0,</span>
-<span class="go"> &#39;through_balls&#39;: 1.0,</span>
-<span class="go"> &#39;throw_ins&#39;: 1.0,</span>
-<span class="go"> &#39;touches&#39;: 513.0,</span>
-<span class="go"> &#39;touches_att_3rd&#39;: 317.0,</span>
-<span class="go"> &#39;touches_att_pen_area&#39;: 158.0,</span>
-<span class="go"> &#39;touches_def_3rd&#39;: 34.0,</span>
-<span class="go"> &#39;touches_def_pen_area&#39;: 20.0,</span>
-<span class="go"> &#39;touches_live_ball&#39;: 511.0,</span>
-<span class="go"> &#39;touches_mid_3rd&#39;: 165.0,</span>
-<span class="go"> &#39;xg&#39;: 18.3,</span>
-<span class="go"> &#39;xg_assist&#39;: 2.7,</span>
-<span class="go"> &#39;xg_assist_net&#39;: 0.3,</span>
-<span class="go"> &#39;xg_assist_per90&#39;: 0.11,</span>
-<span class="go"> &#39;xg_net&#39;: 0.7,</span>
-<span class="go"> &#39;xg_per90&#39;: 0.75,</span>
-<span class="go"> &#39;xg_xg_assist_per90&#39;: 0.86}</span>
+<span class="go">{</span>
+<span class="go">   &#39;aerials_lost&#39;: 37.0,</span>
+<span class="go">   &#39;aerials_won&#39;: 43.0,</span>
+<span class="go">   &#39;aerials_won_pct&#39;: 53.8,</span>
+<span class="go">   &#39;assisted_shots&#39;: 24.0,</span>
+<span class="go">   &#39;assists&#39;: 3.0,</span>
+<span class="go">   &#39;assists_per90&#39;: 0.12,</span>
+<span class="go">   &#39;average_shot_distance&#39;: 12.0,</span>
+<span class="go">   &#39;ball_recoveries&#39;: 19.0,</span>
+<span class="go">   &#39;blocked_passes&#39;: 8.0,</span>
+<span class="go">   &#39;blocked_shots&#39;: 1.0,</span>
+<span class="go">   &#39;blocks&#39;: 9.0,</span>
+<span class="go">   &#39;cards_yellow&#39;: 2.0,</span>
+<span class="go">   &#39;carries&#39;: 243.0,</span>
+<span class="go">   &#39;carries_distance&#39;: 1207.0,</span>
+<span class="go">   &#39;carries_into_final_third&#39;: 13.0,</span>
+<span class="go">   &#39;carries_into_penalty_area&#39;: 17.0,</span>
+<span class="go">   &#39;carries_progressive_distance&#39;: 444.0,</span>
+<span class="go">   &#39;challenge_tackles&#39;: 1.0,</span>
+<span class="go">   &#39;challenge_tackles_pct&#39;: 20.0,</span>
+<span class="go">   &#39;challenges&#39;: 5.0,</span>
+<span class="go">   &#39;challenges_lost&#39;: 4.0,</span>
+<span class="go">   &#39;clearances&#39;: 21.0,</span>
+<span class="go">   &#39;crosses&#39;: 3.0,</span>
+<span class="go">   &#39;crosses_into_penalty_area&#39;: 1.0,</span>
+<span class="go">   &#39;dispossessed&#39;: 20.0,</span>
+<span class="go">   &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
+<span class="go">   &#39;fouled&#39;: 12.0,</span>
+<span class="go">   &#39;fouls&#39;: 20.0,</span>
+<span class="go">   &#39;games&#39;: 25.0,</span>
+<span class="go">   &#39;games_complete&#39;: 21.0,</span>
+<span class="go">   &#39;games_starts&#39;: 25.0,</span>
+<span class="go">   &#39;goals&#39;: 19.0,</span>
+<span class="go">   &#39;goals_assists&#39;: 22.0,</span>
+<span class="go">   &#39;goals_assists_pens_per90&#39;: 0.86,</span>
+<span class="go">   &#39;goals_assists_per90&#39;: 0.9,</span>
+<span class="go">   &#39;goals_pens&#39;: 18.0,</span>
+<span class="go">   &#39;goals_pens_per90&#39;: 0.73,</span>
+<span class="go">   &#39;goals_per90&#39;: 0.77,</span>
+<span class="go">   &#39;goals_per_shot&#39;: 0.2,</span>
+<span class="go">   &#39;goals_per_shot_on_target&#39;: 0.35,</span>
+<span class="go">   &#39;interceptions&#39;: 4.0,</span>
+<span class="go">   &#39;minutes&#39;: 2210.0,</span>
+<span class="go">   &#39;minutes_90s&#39;: 24.6,</span>
+<span class="go">   &#39;minutes_pct&#39;: 94.4,</span>
+<span class="go">   &#39;minutes_per_game&#39;: 88.0,</span>
+<span class="go">   &#39;minutes_per_start&#39;: 88.0,</span>
+<span class="go">   &#39;miscontrols&#39;: 37.0,</span>
+<span class="go">   &#39;npxg&#39;: 16.8,</span>
+<span class="go">   &#39;npxg_net&#39;: 1.2,</span>
+<span class="go">   &#39;npxg_per90&#39;: 0.68,</span>
+<span class="go">   &#39;npxg_per_shot&#39;: 0.19,</span>
+<span class="go">   &#39;npxg_xg_assist&#39;: 19.5,</span>
+<span class="go">   &#39;npxg_xg_assist_per90&#39;: 0.79,</span>
+<span class="go">   &#39;offsides&#39;: 4.0,</span>
+<span class="go">   &#39;on_goals_against&#39;: 35.0,</span>
+<span class="go">   &#39;on_goals_for&#39;: 51.0,</span>
+<span class="go">   &#39;on_xg_against&#39;: 34.6,</span>
+<span class="go">   &#39;on_xg_for&#39;: 45.3,</span>
+<span class="go">   &#39;pass_xa&#39;: 1.7,</span>
+<span class="go">   &#39;passes&#39;: 298.0,</span>
+<span class="go">   &#39;passes_blocked&#39;: 7.0,</span>
+<span class="go">   &#39;passes_completed&#39;: 193.0,</span>
+<span class="go">   &#39;passes_completed_long&#39;: 4.0,</span>
+<span class="go">   &#39;passes_completed_medium&#39;: 40.0,</span>
+<span class="go">   &#39;passes_completed_short&#39;: 136.0,</span>
+<span class="go">   &#39;passes_dead&#39;: 6.0,</span>
+<span class="go">   &#39;passes_into_final_third&#39;: 8.0,</span>
+<span class="go">   &#39;passes_into_penalty_area&#39;: 5.0,</span>
+<span class="go">   &#39;passes_live&#39;: 291.0,</span>
+<span class="go">   &#39;passes_long&#39;: 6.0,</span>
+<span class="go">   &#39;passes_medium&#39;: 63.0,</span>
+<span class="go">   &#39;passes_offsides&#39;: 1.0,</span>
+<span class="go">   &#39;passes_pct&#39;: 64.8,</span>
+<span class="go">   &#39;passes_pct_long&#39;: 66.7,</span>
+<span class="go">   &#39;passes_pct_medium&#39;: 63.5,</span>
+<span class="go">   &#39;passes_pct_short&#39;: 69.4,</span>
+<span class="go">   &#39;passes_progressive_distance&#39;: 457.0,</span>
+<span class="go">   &#39;passes_received&#39;: 388.0,</span>
+<span class="go">   &#39;passes_short&#39;: 196.0,</span>
+<span class="go">   &#39;passes_total_distance&#39;: 2332.0,</span>
+<span class="go">   &#39;pens_att&#39;: 2.0,</span>
+<span class="go">   &#39;pens_made&#39;: 1.0,</span>
+<span class="go">   &#39;progressive_carries&#39;: 17.0,</span>
+<span class="go">   &#39;progressive_passes&#39;: 16.0,</span>
+<span class="go">   &#39;progressive_passes_received&#39;: 98.0,</span>
+<span class="go">   &#39;shots&#39;: 92.0,</span>
+<span class="go">   &#39;shots_free_kicks&#39;: 1.0,</span>
+<span class="go">   &#39;shots_on_target&#39;: 51.0,</span>
+<span class="go">   &#39;shots_on_target_pct&#39;: 55.4,</span>
+<span class="go">   &#39;shots_on_target_per90&#39;: 2.08,</span>
+<span class="go">   &#39;shots_per90&#39;: 3.75,</span>
+<span class="go">   &#39;tackles&#39;: 7.0,</span>
+<span class="go">   &#39;tackles_att_3rd&#39;: 3.0,</span>
+<span class="go">   &#39;tackles_def_3rd&#39;: 2.0,</span>
+<span class="go">   &#39;tackles_interceptions&#39;: 11.0,</span>
+<span class="go">   &#39;tackles_mid_3rd&#39;: 2.0,</span>
+<span class="go">   &#39;tackles_won&#39;: 4.0,</span>
+<span class="go">   &#39;take_ons&#39;: 27.0,</span>
+<span class="go">   &#39;take_ons_tackled&#39;: 15.0,</span>
+<span class="go">   &#39;take_ons_tackled_pct&#39;: 55.6,</span>
+<span class="go">   &#39;take_ons_won&#39;: 10.0,</span>
+<span class="go">   &#39;take_ons_won_pct&#39;: 37.0,</span>
+<span class="go">   &#39;through_balls&#39;: 1.0,</span>
+<span class="go">   &#39;throw_ins&#39;: 1.0,</span>
+<span class="go">   &#39;touches&#39;: 513.0,</span>
+<span class="go">   &#39;touches_att_3rd&#39;: 317.0,</span>
+<span class="go">   &#39;touches_att_pen_area&#39;: 158.0,</span>
+<span class="go">   &#39;touches_def_3rd&#39;: 34.0,</span>
+<span class="go">   &#39;touches_def_pen_area&#39;: 20.0,</span>
+<span class="go">   &#39;touches_live_ball&#39;: 511.0,</span>
+<span class="go">   &#39;touches_mid_3rd&#39;: 165.0,</span>
+<span class="go">   &#39;xg&#39;: 18.3,</span>
+<span class="go">   &#39;xg_assist&#39;: 2.7,</span>
+<span class="go">   &#39;xg_assist_net&#39;: 0.3,</span>
+<span class="go">   &#39;xg_assist_per90&#39;: 0.11,</span>
+<span class="go">   &#39;xg_net&#39;: 0.7,</span>
+<span class="go">   &#39;xg_per90&#39;: 0.75,</span>
+<span class="go">   &#39;xg_xg_assist_per90&#39;: 0.86</span>
+<span class="go">}</span>
 </pre></div>
 </div>
 </section>
@@ -351,127 +355,129 @@ to avoid redundant request calls and save time.</p>
 <span class="go"># Returns statistics organized by team</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">haaland</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="s2">&quot;2023&quot;</span><span class="p">))</span>
-<span class="go">{&#39;aerials_lost&#39;: 42.0,</span>
-<span class="go"> &#39;aerials_won&#39;: 39.0,</span>
-<span class="go"> &#39;aerials_won_pct&#39;: 48.1,</span>
-<span class="go"> &#39;assisted_shots&#39;: 29.0,</span>
-<span class="go"> &#39;assists&#39;: 5.0,</span>
-<span class="go"> &#39;assists_per90&#39;: 0.18,</span>
-<span class="go"> &#39;average_shot_distance&#39;: 11.9,</span>
-<span class="go"> &#39;ball_recoveries&#39;: 47.0,</span>
-<span class="go"> &#39;blocked_passes&#39;: 10.0,</span>
-<span class="go"> &#39;blocked_shots&#39;: 1.0,</span>
-<span class="go"> &#39;blocks&#39;: 11.0,</span>
-<span class="go"> &#39;cards_yellow&#39;: 1.0,</span>
-<span class="go"> &#39;carries&#39;: 357.0,</span>
-<span class="go"> &#39;carries_distance&#39;: 1628.0,</span>
-<span class="go"> &#39;carries_into_final_third&#39;: 13.0,</span>
-<span class="go"> &#39;carries_into_penalty_area&#39;: 22.0,</span>
-<span class="go"> &#39;carries_progressive_distance&#39;: 728.0,</span>
-<span class="go"> &#39;challenge_tackles&#39;: 2.0,</span>
-<span class="go"> &#39;challenge_tackles_pct&#39;: 66.7,</span>
-<span class="go"> &#39;challenges&#39;: 3.0,</span>
-<span class="go"> &#39;challenges_lost&#39;: 1.0,</span>
-<span class="go"> &#39;clearances&#39;: 16.0,</span>
-<span class="go"> &#39;crosses&#39;: 5.0,</span>
-<span class="go"> &#39;dispossessed&#39;: 19.0,</span>
-<span class="go"> &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
-<span class="go"> &#39;fouled&#39;: 31.0,</span>
-<span class="go"> &#39;fouls&#39;: 18.0,</span>
-<span class="go"> &#39;games&#39;: 31.0,</span>
-<span class="go"> &#39;games_complete&#39;: 20.0,</span>
-<span class="go"> &#39;games_starts&#39;: 29.0,</span>
-<span class="go"> &#39;games_subs&#39;: 2.0,</span>
-<span class="go"> &#39;goals&#39;: 27.0,</span>
-<span class="go"> &#39;goals_assists&#39;: 32.0,</span>
-<span class="go"> &#39;goals_assists_pens_per90&#39;: 0.88,</span>
-<span class="go"> &#39;goals_assists_per90&#39;: 1.13,</span>
-<span class="go"> &#39;goals_pens&#39;: 20.0,</span>
-<span class="go"> &#39;goals_pens_per90&#39;: 0.71,</span>
-<span class="go"> &#39;goals_per90&#39;: 0.95,</span>
-<span class="go"> &#39;goals_per_shot&#39;: 0.18,</span>
-<span class="go"> &#39;goals_per_shot_on_target&#39;: 0.4,</span>
-<span class="go"> &#39;interceptions&#39;: 2.0,</span>
-<span class="go"> &#39;minutes&#39;: 2552.0,</span>
-<span class="go"> &#39;minutes_90s&#39;: 28.4,</span>
-<span class="go"> &#39;minutes_pct&#39;: 74.6,</span>
-<span class="go"> &#39;minutes_per_game&#39;: 82.0,</span>
-<span class="go"> &#39;minutes_per_start&#39;: 86.0,</span>
-<span class="go"> &#39;minutes_per_sub&#39;: 25.0,</span>
-<span class="go"> &#39;miscontrols&#39;: 41.0,</span>
-<span class="go"> &#39;npxg&#39;: 22.9,</span>
-<span class="go"> &#39;npxg_net&#39;: -2.9,</span>
-<span class="go"> &#39;npxg_per90&#39;: 0.81,</span>
-<span class="go"> &#39;npxg_per_shot&#39;: 0.2,</span>
-<span class="go"> &#39;npxg_xg_assist&#39;: 27.2,</span>
-<span class="go"> &#39;npxg_xg_assist_per90&#39;: 0.96,</span>
-<span class="go"> &#39;offsides&#39;: 6.0,</span>
-<span class="go"> &#39;on_goals_against&#39;: 25.0,</span>
-<span class="go"> &#39;on_goals_for&#39;: 65.0,</span>
-<span class="go"> &#39;on_xg_against&#39;: 26.2,</span>
-<span class="go"> &#39;on_xg_for&#39;: 59.5,</span>
-<span class="go"> &#39;pass_xa&#39;: 2.2,</span>
-<span class="go"> &#39;passes&#39;: 388.0,</span>
-<span class="go"> &#39;passes_blocked&#39;: 17.0,</span>
-<span class="go"> &#39;passes_completed&#39;: 295.0,</span>
-<span class="go"> &#39;passes_completed_long&#39;: 5.0,</span>
-<span class="go"> &#39;passes_completed_medium&#39;: 56.0,</span>
-<span class="go"> &#39;passes_completed_short&#39;: 197.0,</span>
-<span class="go"> &#39;passes_dead&#39;: 12.0,</span>
-<span class="go"> &#39;passes_free_kicks&#39;: 1.0,</span>
-<span class="go"> &#39;passes_into_final_third&#39;: 16.0,</span>
-<span class="go"> &#39;passes_into_penalty_area&#39;: 11.0,</span>
-<span class="go"> &#39;passes_live&#39;: 375.0,</span>
-<span class="go"> &#39;passes_long&#39;: 8.0,</span>
-<span class="go"> &#39;passes_medium&#39;: 70.0,</span>
-<span class="go"> &#39;passes_offsides&#39;: 1.0,</span>
-<span class="go"> &#39;passes_pct&#39;: 76.0,</span>
-<span class="go"> &#39;passes_pct_long&#39;: 62.5,</span>
-<span class="go"> &#39;passes_pct_medium&#39;: 80.0,</span>
-<span class="go"> &#39;passes_pct_short&#39;: 81.4,</span>
-<span class="go"> &#39;passes_progressive_distance&#39;: 567.0,</span>
-<span class="go"> &#39;passes_received&#39;: 489.0,</span>
-<span class="go"> &#39;passes_short&#39;: 242.0,</span>
-<span class="go"> &#39;passes_total_distance&#39;: 3234.0,</span>
-<span class="go"> &#39;pens_att&#39;: 8.0,</span>
-<span class="go"> &#39;pens_made&#39;: 7.0,</span>
-<span class="go"> &#39;pens_won&#39;: 2.0,</span>
-<span class="go"> &#39;progressive_carries&#39;: 35.0,</span>
-<span class="go"> &#39;progressive_passes&#39;: 26.0,</span>
-<span class="go"> &#39;progressive_passes_received&#39;: 126.0,</span>
-<span class="go"> &#39;shots&#39;: 113.0,</span>
-<span class="go"> &#39;shots_free_kicks&#39;: 1.0,</span>
-<span class="go"> &#39;shots_on_target&#39;: 50.0,</span>
-<span class="go"> &#39;shots_on_target_pct&#39;: 44.2,</span>
-<span class="go"> &#39;shots_on_target_per90&#39;: 1.76,</span>
-<span class="go"> &#39;shots_per90&#39;: 3.99,</span>
-<span class="go"> &#39;tackles&#39;: 6.0,</span>
-<span class="go"> &#39;tackles_att_3rd&#39;: 3.0,</span>
-<span class="go"> &#39;tackles_interceptions&#39;: 8.0,</span>
-<span class="go"> &#39;tackles_mid_3rd&#39;: 3.0,</span>
-<span class="go"> &#39;tackles_won&#39;: 3.0,</span>
-<span class="go"> &#39;take_ons&#39;: 30.0,</span>
-<span class="go"> &#39;take_ons_tackled&#39;: 16.0,</span>
-<span class="go"> &#39;take_ons_tackled_pct&#39;: 53.3,</span>
-<span class="go"> &#39;take_ons_won&#39;: 12.0,</span>
-<span class="go"> &#39;take_ons_won_pct&#39;: 40.0,</span>
-<span class="go"> &#39;through_balls&#39;: 2.0,</span>
-<span class="go"> &#39;throw_ins&#39;: 1.0,</span>
-<span class="go"> &#39;touches&#39;: 636.0,</span>
-<span class="go"> &#39;touches_att_3rd&#39;: 398.0,</span>
-<span class="go"> &#39;touches_att_pen_area&#39;: 183.0,</span>
-<span class="go"> &#39;touches_def_3rd&#39;: 36.0,</span>
-<span class="go"> &#39;touches_def_pen_area&#39;: 15.0,</span>
-<span class="go"> &#39;touches_live_ball&#39;: 628.0,</span>
-<span class="go"> &#39;touches_mid_3rd&#39;: 206.0,</span>
-<span class="go"> &#39;unused_subs&#39;: 1.0,</span>
-<span class="go"> &#39;xg&#39;: 29.2,</span>
-<span class="go"> &#39;xg_assist&#39;: 4.3,</span>
-<span class="go"> &#39;xg_assist_net&#39;: 0.7,</span>
-<span class="go"> &#39;xg_assist_per90&#39;: 0.15,</span>
-<span class="go"> &#39;xg_net&#39;: -2.2,</span>
-<span class="go"> &#39;xg_per90&#39;: 1.03,</span>
-<span class="go"> &#39;xg_xg_assist_per90&#39;: 1.18}</span>
+<span class="go">{</span>
+<span class="go">   &#39;aerials_lost&#39;: 42.0,</span>
+<span class="go">   &#39;aerials_won&#39;: 39.0,</span>
+<span class="go">   &#39;aerials_won_pct&#39;: 48.1,</span>
+<span class="go">   &#39;assisted_shots&#39;: 29.0,</span>
+<span class="go">   &#39;assists&#39;: 5.0,</span>
+<span class="go">   &#39;assists_per90&#39;: 0.18,</span>
+<span class="go">   &#39;average_shot_distance&#39;: 11.9,</span>
+<span class="go">   &#39;ball_recoveries&#39;: 47.0,</span>
+<span class="go">   &#39;blocked_passes&#39;: 10.0,</span>
+<span class="go">   &#39;blocked_shots&#39;: 1.0,</span>
+<span class="go">   &#39;blocks&#39;: 11.0,</span>
+<span class="go">   &#39;cards_yellow&#39;: 1.0,</span>
+<span class="go">   &#39;carries&#39;: 357.0,</span>
+<span class="go">   &#39;carries_distance&#39;: 1628.0,</span>
+<span class="go">   &#39;carries_into_final_third&#39;: 13.0,</span>
+<span class="go">   &#39;carries_into_penalty_area&#39;: 22.0,</span>
+<span class="go">   &#39;carries_progressive_distance&#39;: 728.0,</span>
+<span class="go">   &#39;challenge_tackles&#39;: 2.0,</span>
+<span class="go">   &#39;challenge_tackles_pct&#39;: 66.7,</span>
+<span class="go">   &#39;challenges&#39;: 3.0,</span>
+<span class="go">   &#39;challenges_lost&#39;: 1.0,</span>
+<span class="go">   &#39;clearances&#39;: 16.0,</span>
+<span class="go">   &#39;crosses&#39;: 5.0,</span>
+<span class="go">   &#39;dispossessed&#39;: 19.0,</span>
+<span class="go">   &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
+<span class="go">   &#39;fouled&#39;: 31.0,</span>
+<span class="go">   &#39;fouls&#39;: 18.0,</span>
+<span class="go">   &#39;games&#39;: 31.0,</span>
+<span class="go">   &#39;games_complete&#39;: 20.0,</span>
+<span class="go">   &#39;games_starts&#39;: 29.0,</span>
+<span class="go">   &#39;games_subs&#39;: 2.0,</span>
+<span class="go">   &#39;goals&#39;: 27.0,</span>
+<span class="go">   &#39;goals_assists&#39;: 32.0,</span>
+<span class="go">   &#39;goals_assists_pens_per90&#39;: 0.88,</span>
+<span class="go">   &#39;goals_assists_per90&#39;: 1.13,</span>
+<span class="go">   &#39;goals_pens&#39;: 20.0,</span>
+<span class="go">   &#39;goals_pens_per90&#39;: 0.71,</span>
+<span class="go">   &#39;goals_per90&#39;: 0.95,</span>
+<span class="go">   &#39;goals_per_shot&#39;: 0.18,</span>
+<span class="go">   &#39;goals_per_shot_on_target&#39;: 0.4,</span>
+<span class="go">   &#39;interceptions&#39;: 2.0,</span>
+<span class="go">   &#39;minutes&#39;: 2552.0,</span>
+<span class="go">   &#39;minutes_90s&#39;: 28.4,</span>
+<span class="go">   &#39;minutes_pct&#39;: 74.6,</span>
+<span class="go">   &#39;minutes_per_game&#39;: 82.0,</span>
+<span class="go">   &#39;minutes_per_start&#39;: 86.0,</span>
+<span class="go">   &#39;minutes_per_sub&#39;: 25.0,</span>
+<span class="go">   &#39;miscontrols&#39;: 41.0,</span>
+<span class="go">   &#39;npxg&#39;: 22.9,</span>
+<span class="go">   &#39;npxg_net&#39;: -2.9,</span>
+<span class="go">   &#39;npxg_per90&#39;: 0.81,</span>
+<span class="go">   &#39;npxg_per_shot&#39;: 0.2,</span>
+<span class="go">   &#39;npxg_xg_assist&#39;: 27.2,</span>
+<span class="go">   &#39;npxg_xg_assist_per90&#39;: 0.96,</span>
+<span class="go">   &#39;offsides&#39;: 6.0,</span>
+<span class="go">   &#39;on_goals_against&#39;: 25.0,</span>
+<span class="go">   &#39;on_goals_for&#39;: 65.0,</span>
+<span class="go">   &#39;on_xg_against&#39;: 26.2,</span>
+<span class="go">   &#39;on_xg_for&#39;: 59.5,</span>
+<span class="go">   &#39;pass_xa&#39;: 2.2,</span>
+<span class="go">   &#39;passes&#39;: 388.0,</span>
+<span class="go">   &#39;passes_blocked&#39;: 17.0,</span>
+<span class="go">   &#39;passes_completed&#39;: 295.0,</span>
+<span class="go">   &#39;passes_completed_long&#39;: 5.0,</span>
+<span class="go">   &#39;passes_completed_medium&#39;: 56.0,</span>
+<span class="go">   &#39;passes_completed_short&#39;: 197.0,</span>
+<span class="go">   &#39;passes_dead&#39;: 12.0,</span>
+<span class="go">   &#39;passes_free_kicks&#39;: 1.0,</span>
+<span class="go">   &#39;passes_into_final_third&#39;: 16.0,</span>
+<span class="go">   &#39;passes_into_penalty_area&#39;: 11.0,</span>
+<span class="go">   &#39;passes_live&#39;: 375.0,</span>
+<span class="go">   &#39;passes_long&#39;: 8.0,</span>
+<span class="go">   &#39;passes_medium&#39;: 70.0,</span>
+<span class="go">   &#39;passes_offsides&#39;: 1.0,</span>
+<span class="go">   &#39;passes_pct&#39;: 76.0,</span>
+<span class="go">   &#39;passes_pct_long&#39;: 62.5,</span>
+<span class="go">   &#39;passes_pct_medium&#39;: 80.0,</span>
+<span class="go">   &#39;passes_pct_short&#39;: 81.4,</span>
+<span class="go">   &#39;passes_progressive_distance&#39;: 567.0,</span>
+<span class="go">   &#39;passes_received&#39;: 489.0,</span>
+<span class="go">   &#39;passes_short&#39;: 242.0,</span>
+<span class="go">   &#39;passes_total_distance&#39;: 3234.0,</span>
+<span class="go">   &#39;pens_att&#39;: 8.0,</span>
+<span class="go">   &#39;pens_made&#39;: 7.0,</span>
+<span class="go">   &#39;pens_won&#39;: 2.0,</span>
+<span class="go">   &#39;progressive_carries&#39;: 35.0,</span>
+<span class="go">   &#39;progressive_passes&#39;: 26.0,</span>
+<span class="go">   &#39;progressive_passes_received&#39;: 126.0,</span>
+<span class="go">   &#39;shots&#39;: 113.0,</span>
+<span class="go">   &#39;shots_free_kicks&#39;: 1.0,</span>
+<span class="go">   &#39;shots_on_target&#39;: 50.0,</span>
+<span class="go">   &#39;shots_on_target_pct&#39;: 44.2,</span>
+<span class="go">   &#39;shots_on_target_per90&#39;: 1.76,</span>
+<span class="go">   &#39;shots_per90&#39;: 3.99,</span>
+<span class="go">   &#39;tackles&#39;: 6.0,</span>
+<span class="go">   &#39;tackles_att_3rd&#39;: 3.0,</span>
+<span class="go">   &#39;tackles_interceptions&#39;: 8.0,</span>
+<span class="go">   &#39;tackles_mid_3rd&#39;: 3.0,</span>
+<span class="go">   &#39;tackles_won&#39;: 3.0,</span>
+<span class="go">   &#39;take_ons&#39;: 30.0,</span>
+<span class="go">   &#39;take_ons_tackled&#39;: 16.0,</span>
+<span class="go">   &#39;take_ons_tackled_pct&#39;: 53.3,</span>
+<span class="go">   &#39;take_ons_won&#39;: 12.0,</span>
+<span class="go">   &#39;take_ons_won_pct&#39;: 40.0,</span>
+<span class="go">   &#39;through_balls&#39;: 2.0,</span>
+<span class="go">   &#39;throw_ins&#39;: 1.0,</span>
+<span class="go">   &#39;touches&#39;: 636.0,</span>
+<span class="go">   &#39;touches_att_3rd&#39;: 398.0,</span>
+<span class="go">   &#39;touches_att_pen_area&#39;: 183.0,</span>
+<span class="go">   &#39;touches_def_3rd&#39;: 36.0,</span>
+<span class="go">   &#39;touches_def_pen_area&#39;: 15.0,</span>
+<span class="go">   &#39;touches_live_ball&#39;: 628.0,</span>
+<span class="go">   &#39;touches_mid_3rd&#39;: 206.0,</span>
+<span class="go">   &#39;unused_subs&#39;: 1.0,</span>
+<span class="go">   &#39;xg&#39;: 29.2,</span>
+<span class="go">   &#39;xg_assist&#39;: 4.3,</span>
+<span class="go">   &#39;xg_assist_net&#39;: 0.7,</span>
+<span class="go">   &#39;xg_assist_per90&#39;: 0.15,</span>
+<span class="go">   &#39;xg_net&#39;: -2.2,</span>
+<span class="go">   &#39;xg_per90&#39;: 1.03,</span>
+<span class="go">   &#39;xg_xg_assist_per90&#39;: 1.18</span>
+<span class="go">}</span>
 </pre></div>
 </div>
 </section>
@@ -533,8 +539,7 @@ to avoid redundant request calls and save time.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">man_city</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="s2">&quot;5874&quot;</span><span class="p">)</span>
 
 <span class="go"># Iterate over each player in the squad and return their market value in a list of integers</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">player</span><span class="o">.</span><span class="n">market_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">man_city</span><span class="o">.</span><span class="n">players</span><span class="p">()]</span>
-<span class="go">soccerapi/lib/fapi.py, line 27, in make_request return { &quot;success&quot; : 0, &quot;res&quot; : None , &quot;error_string&quot; : &quot;Error: &quot; + res[&quot;errors&quot;][&quot;requests&quot;] } TypeError: list indices must be integers or slices, not str</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">team_market_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">player</span><span class="o">.</span><span class="n">market_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">man_city</span><span class="o">.</span><span class="n">players</span><span class="p">()]</span>
 </pre></div>
 </div>
 </section>
@@ -559,7 +564,6 @@ value.</p>
 <span class="go"># Iterate over each player in the league and return their market value in</span>
 <span class="go"># a dictionary.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">market_values</span> <span class="o">=</span> <span class="p">{</span> <span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">market_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">team</span> <span class="ow">in</span> <span class="n">premier_league</span><span class="o">.</span><span class="n">teams</span><span class="p">()</span> <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">team</span><span class="o">.</span><span class="n">players</span><span class="p">()</span> <span class="p">}</span>
-<span class="go">soccerapi/lib/fapi.py, line 27, in make_request return { &quot;success&quot; : 0, &quot;res&quot; : None , &quot;error_string&quot; : &quot;Error: &quot; + res[&quot;errors&quot;][&quot;requests&quot;] } KeyError: &#39;requests&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -570,7 +574,8 @@ starting XI of that team.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">fapi</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">27</span><span class="p">,</span> <span class="ow">in</span> <span class="n">make_request</span> <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;success&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;res&quot;</span> <span class="p">:</span> <span class="kc">None</span> <span class="p">,</span> <span class="s2">&quot;error_string&quot;</span> <span class="p">:</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">][</span><span class="s2">&quot;requests&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;requests&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">fixture</span><span class="p">)</span>
+<span class="n">Fixture</span><span class="p">(</span><span class="n">Wolves</span> <span class="n">vs</span> <span class="n">Bournemouth</span><span class="p">)</span>
 
 <span class="c1"># Iterate over each player in the starting XI and store their market value</span>
 <span class="c1"># to a dictionary.</span>
@@ -584,9 +589,50 @@ starting XI of that team.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">fapi</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">27</span><span class="p">,</span> <span class="ow">in</span> <span class="n">make_request</span> <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;success&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;res&quot;</span> <span class="p">:</span> <span class="kc">None</span> <span class="p">,</span> <span class="s2">&quot;error_string&quot;</span> <span class="p">:</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">][</span><span class="s2">&quot;requests&quot;</span><span class="p">]</span> <span class="p">}</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span><span class="o">.</span><span class="n">statistics</span><span class="p">()</span>
+<span class="p">[</span>
+   <span class="p">{</span>
+      <span class="s1">&#39;team&#39;</span><span class="p">:</span> <span class="n">Team</span><span class="p">(</span><span class="n">Wolves</span> <span class="o">-</span> <span class="n">GB</span><span class="p">),</span>
+      <span class="s1">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s1">&#39;shots_on_target&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+         <span class="s1">&#39;shots&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+         <span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+         <span class="s1">&#39;fouls&#39;</span><span class="p">:</span> <span class="mf">13.0</span><span class="p">,</span>
+         <span class="s1">&#39;corner_kicks&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>
+         <span class="s1">&#39;offsides&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+         <span class="s1">&#39;possession&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="s1">&#39;cards_yellow&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+         <span class="s1">&#39;cards_red&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s1">&#39;gk_saves&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes&#39;</span><span class="p">:</span> <span class="mf">520.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes_completed&#39;</span><span class="p">:</span> <span class="mf">440.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes_pct&#39;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span>
+         <span class="s1">&#39;xg&#39;</span><span class="p">:</span> <span class="mf">0.46</span><span class="p">,</span>
+         <span class="s1">&#39;gk_psxg_net&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="p">{</span>
+      <span class="s1">&#39;team&#39;</span><span class="p">:</span> <span class="n">Team</span><span class="p">(</span><span class="n">Bournemouth</span> <span class="o">-</span> <span class="n">GB</span><span class="p">),</span>
+      <span class="s1">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s1">&#39;shots_on_target&#39;</span><span class="p">:</span> <span class="mf">8.0</span><span class="p">,</span>
+         <span class="s1">&#39;shots&#39;</span><span class="p">:</span> <span class="mf">12.0</span><span class="p">,</span>
+         <span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+         <span class="s1">&#39;fouls&#39;</span><span class="p">:</span> <span class="mf">11.0</span><span class="p">,</span>
+         <span class="s1">&#39;corner_kicks&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+         <span class="s1">&#39;offsides&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">&#39;possession&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="s1">&#39;cards_yellow&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">&#39;cards_red&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s1">&#39;gk_saves&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes&#39;</span><span class="p">:</span> <span class="mf">344.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes_completed&#39;</span><span class="p">:</span> <span class="mf">265.0</span><span class="p">,</span>
+         <span class="s1">&#39;passes_pct&#39;</span><span class="p">:</span> <span class="mf">0.77</span><span class="p">,</span>
+         <span class="s1">&#39;xg&#39;</span><span class="p">:</span> <span class="mf">3.29</span><span class="p">,</span>
+         <span class="s1">&#39;gk_psxg_net&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 </section>
@@ -597,14 +643,37 @@ from that match.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
-<span class="n">soccerapi</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">fapi</span><span class="o">.</span><span class="n">py</span><span class="p">,</span> <span class="n">line</span> <span class="mi">27</span><span class="p">,</span> <span class="ow">in</span> <span class="n">make_request</span> <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;success&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;res&quot;</span> <span class="p">:</span> <span class="kc">None</span> <span class="p">,</span> <span class="s2">&quot;error_string&quot;</span> <span class="p">:</span> <span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">][</span><span class="s2">&quot;requests&quot;</span><span class="p">]</span> <span class="p">}</span> <span class="ne">KeyError</span><span class="p">:</span> <span class="s1">&#39;requests&#39;</span>
 
 <span class="c1"># Get the starting XI.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">xi</span> <span class="o">=</span> <span class="n">fixture</span><span class="o">.</span><span class="n">home_starting_xi</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+<span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Kepa</span> <span class="n">Arrizabalaga</span> <span class="n">Revuelta</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Adam</span> <span class="n">James</span> <span class="n">Smith</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Illia</span> <span class="n">Borysovych</span> <span class="n">Zabarnyi</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Marcos</span> <span class="n">Nicolás</span> <span class="n">Senesi</span> <span class="n">Barón</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Miloš</span> <span class="n">Kerkez</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Tyler</span> <span class="n">Shaan</span> <span class="n">Adams</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Ryan</span> <span class="n">Christie</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">David</span> <span class="n">Robert</span> <span class="n">Brooks</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Justin</span> <span class="n">Dean</span> <span class="n">Kluivert</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Marcus</span> <span class="n">Joseph</span> <span class="n">Tavernier</span><span class="p">),</span> <span class="n">Player</span><span class="p">(</span><span class="n">Francisco</span> <span class="n">Evanilson</span> <span class="n">de</span> <span class="n">Lima</span> <span class="n">Barbosa</span><span class="p">)]</span>
 
 <span class="c1"># Grab a player and get their statistics</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">kepa</span> <span class="o">=</span> <span class="n">xi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="n">kepa</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="s1">&#39;minutes&#39;</span><span class="p">:</span> <span class="mf">90.0</span><span class="p">,</span>
+   <span class="s1">&#39;shots&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;shots_on_goal&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="s1">&#39;gk_goals_against&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+   <span class="s1">&#39;assists&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;gk_saves&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+   <span class="s1">&#39;passes&#39;</span><span class="p">:</span> <span class="mf">32.0</span><span class="p">,</span>
+   <span class="s1">&#39;assisted_shots&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;passes_pct&#39;</span><span class="p">:</span> <span class="mf">23.0</span><span class="p">,</span>
+   <span class="s1">&#39;tackles&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;interceptions&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;take_ons&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;take_ons_won_pct&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;take_ons_won&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;fouled&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;fouls&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;cards_yellow&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;cards_red&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+   <span class="s1">&#39;gk_pens_saved&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
