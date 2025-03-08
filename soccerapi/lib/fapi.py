@@ -34,11 +34,11 @@ class FAPI:
     def make_request(self, end_point, query):
         end_point = self.url + end_point
         response = requests.get(end_point, headers=self.fapi_headers, params=query)
-
         res = response.json()
-        if("message" in res and "You are not subscribed" in res["message"]):
-            return { "success" : 0, "res" : None , "error_string" : "Error: " + res["message"] }
-            
+        if("message" in res):
+            if(len(list(res.keys())) == 1):
+                return { "success" : 0, "res" : None , "error_string" : "Error: " + res["message"] }
+
         if("errors" in res):
             error = self.parse_error(res["errors"])
         
