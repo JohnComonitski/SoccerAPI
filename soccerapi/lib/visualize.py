@@ -6,11 +6,17 @@ from mplsoccer import VerticalPitch, PyPizza, FontManager, add_image
 
 class Visualize:
     def __init__(self):
-        self.background_color = "#0C0C0E"
+        self.primary_color = "#3D405B"
+        self.secondary_color = "#F87060"
+        self.tertiary_color = "#F4F1DE"
+
+        self.font = 'Trebuchet MS'
+
+        self.primary_color = "#0C0C0E"
         self.pitch = VerticalPitch(
             pitch_type='opta', 
             half=True, 
-            pitch_color=self.background_color, 
+            pitch_color=self.primary_color, 
             pad_bottom=.5, 
             line_color='white',
             linewidth=.75,
@@ -154,12 +160,12 @@ class Visualize:
 
         # create a subplot with 2 rows and 1 column
         fig = plt.figure(figsize=(8, 12))
-        fig.patch.set_facecolor(self.background_color)
+        fig.patch.set_facecolor(self.primary_color)
 
         # Top row for the team names and score
         # [left, bottom, width, height]
         ax1 = fig.add_axes([0, 0.7, 1, .2])
-        ax1.set_facecolor(self.background_color)
+        ax1.set_facecolor(self.primary_color)
         ax1.set_xlim(0, 1)
         ax1.set_ylim(0, 1)
 
@@ -195,7 +201,7 @@ class Visualize:
             x=0.37, 
             y=0.53, 
             s=100, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -203,7 +209,7 @@ class Visualize:
             x=0.42, 
             y=0.53, 
             s=200, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -211,7 +217,7 @@ class Visualize:
             x=0.48, 
             y=0.53, 
             s=300, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -219,7 +225,7 @@ class Visualize:
             x=0.54, 
             y=0.53, 
             s=400, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -227,7 +233,7 @@ class Visualize:
             x=0.6, 
             y=0.53, 
             s=500, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -263,7 +269,7 @@ class Visualize:
             x=0.53, 
             y=0.3, 
             s=100, 
-            color=self.background_color, 
+            color=self.primary_color, 
             edgecolor='white', 
             linewidth=.8
         )
@@ -280,7 +286,7 @@ class Visualize:
         ax1.set_axis_off()
 
         ax2 = fig.add_axes([.05, 0.25, .9, .5])
-        ax2.set_facecolor(self.background_color)
+        ax2.set_facecolor(self.primary_color)
 
         self.pitch.draw(ax=ax2)
 
@@ -317,7 +323,7 @@ class Visualize:
                 float(x['X']) * 100, 
                 float(x['Y']) * 100, 
                 s=300 * float(x['xG']), 
-                color='red' if x['result'] == 'Goal' else self.background_color, 
+                color='red' if x['result'] == 'Goal' else self.primary_color, 
                 ax=ax2,
                 alpha=.7,
                 linewidth=.8,
@@ -328,7 +334,7 @@ class Visualize:
 
         # add another axis for the stats
         ax3 = fig.add_axes([0, .2, 1, .05])
-        ax3.set_facecolor(self.background_color)
+        ax3.set_facecolor(self.primary_color)
         ax3.set_xlim(0, 1)
         ax3.set_ylim(0, 1)
 
@@ -415,12 +421,12 @@ class Visualize:
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
     def plot_statistics(self, objs, stats_names, params = None):
-        color = '#0e13ad'
+        color = self.secondary_color
         if( params and "color" in params):
             color = params["color"]
             
         has_obj_highlights = 0
-        highlight_color = '#ff0044'
+        highlight_color = self.tertiary_color
         obj_highlight = []
         if(params and "highlight" in params):
             if( "objects" in params["highlight"] and len(params["highlight"]["objects"]) > 0):
@@ -540,10 +546,21 @@ class Visualize:
                         to_highlight.append(idx)
                 
         plt.clf()
-        plt.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
+        fig, ax = plt.subplots()
+        fig.patch.set_facecolor(self.primary_color)
+        ax.patch.set_facecolor(self.primary_color)
+        
+        ax.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
         plt.grid(True, alpha=0.2)
         plt.gca().spines['top'].set_visible(False)
         plt.gca().spines['right'].set_visible(False)
+
+        ax.spines['top'].set_color(self.tertiary_color)
+        ax.spines['right'].set_color(self.tertiary_color)
+        ax.spines['left'].set_color(self.tertiary_color)
+        ax.spines['bottom'].set_color(self.tertiary_color)
+        ax.set_xlabel('X Axis', color=self.tertiary_color)
+        ax.set_ylabel('Y Axis', color=self.tertiary_color)
 
         if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
@@ -553,21 +570,21 @@ class Visualize:
 
         #X Label
         if( params and "x_label" in params):
-            plt.xlabel(params["x_label"])
+            plt.xlabel(params["x_label"], fontname='Trebuchet MS', fontsize=12, fontweight='bold')
         else:
-            plt.xlabel(x_stat)
+            plt.xlabel(x_stat, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
 
         #Y Label
         if( params and "y_label" in params):
-            plt.ylabel(params["y_label"])
+            plt.ylabel(params["y_label"], c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
         else:
-            plt.ylabel(y_stat)
+            plt.ylabel(y_stat, c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
 
         #Title
         if( params and "title" in params):
-            plt.title(params["title"], fontweight='bold')
+            plt.title(params["title"], c=self.tertiary_color, fontname='Trebuchet MS', fontsize=14, fontweight='bold')
         else:
-            plt.title(x_stat + " vs " + y_stat, fontweight='bold')
+            plt.title(x_stat + " vs " + y_stat, c=self.tertiary_color, fontname='Trebuchet MS', fontsize=14, fontweight='bold')
 
         #filename
         file_name = x_stat + "_vs_" + y_stat + ".png"

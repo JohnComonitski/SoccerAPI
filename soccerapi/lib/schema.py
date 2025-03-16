@@ -73,6 +73,11 @@ class Schema:
                     "type" : "text"
                 },
                 {
+                    "sql" : "understat_league_id",
+                    "label" : "Understat League ID",
+                    "type" : "text"
+                },
+                {
                     "sql" : "fbref_stat_detail_level",
                     "label" : "FBRef Stat Detail Level",
                     "type" : "text",
@@ -163,7 +168,12 @@ class Schema:
                     "sql" : "fbref_team_id",
                     "label" : "FBRef Team ID",
                     "type" : "text"
-                }
+                },
+                {
+                    "sql" : "understat_team_id",
+                    "label" : "Understat Team ID",
+                    "type" : "text"
+                },
             ]
         }
         self.player_stats = {
