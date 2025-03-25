@@ -406,7 +406,7 @@ class Player:
                 "goals" : Statistic({ "key" : "goals", "value": 0}),
                 "xg" : Statistic({ "key" : "goals", "value": 0}),
                 "xg_per_shot" : Statistic({ "key" : "xg", "value": 0}),
-                "average_shot_distance" : Statistic( { "key" : "average_shot_distance", "value" : 0 }),
+                "avg_shot_distance" : Statistic( { "key" : "avg_shot_distance", "value" : 0 }),
                 "avg_actual_shot_distance" : Statistic({ "key" : "avg_actual_shot_distance", "value" : 0 })
             }    
 

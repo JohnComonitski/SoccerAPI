@@ -54,9 +54,9 @@ class PostgreSQL:
     def build_cache(self):
         data = self.get_cache_data()
         cache = {
-            "players" : { "fbref_player_id" : {}, "tm_player_id" : {}, "fapi_player_id" : {}, "player_id" : {} },
-            "teams" : { "fbref_team_id" : {}, "tm_team_id" : {}, "fapi_team_id" : {}, "team_id" : {} },
-            "leagues" : { "fbref_league_id" : {}, "tm_league_id" : {}, "fapi_league_id" : {}, "league_id" : {} }
+            "players" : { "understat_player_id" : {}, "fbref_player_id" : {}, "tm_player_id" : {}, "fapi_player_id" : {}, "player_id" : {} },
+            "teams" : { "understat_team_id" : {}, "fbref_team_id" : {}, "tm_team_id" : {}, "fapi_team_id" : {}, "team_id" : {} },
+            "leagues" : { "understat_league_id" : {}, "fbref_league_id" : {}, "tm_league_id" : {}, "fapi_league_id" : {}, "league_id" : {} }
         }
         for table in data:
             singular = table[0:-1]
@@ -75,6 +75,8 @@ class PostgreSQL:
                         cache[table]["fapi_" + singular + "_id"][str(row[key])] = row
                     elif key == singular + "_id":
                         cache[table][singular + "_id"][str(row[key])] = row
+                    if key == "understat_" + singular + "_id":
+                        cache[table]["understat_" + singular + "_id"][str(row[key])] = row
         return cache
         
     def get_cache_data(self):

@@ -9,10 +9,11 @@ class Visualize:
         self.primary_color = "#3D405B"
         self.secondary_color = "#F87060"
         self.tertiary_color = "#F4F1DE"
+        self.highlight_color = "#81B29A"
 
         self.font = 'Trebuchet MS'
 
-        self.primary_color = "#0C0C0E"
+        #self.primary_color = "#0C0C0E"
         self.pitch = VerticalPitch(
             pitch_type='opta', 
             half=True, 
@@ -23,31 +24,138 @@ class Visualize:
             axis=True, label=True
         )
 
-    def player_pizza_plot(self, player, columns):
-        if not columns:
+        self.ax1 = None
+        self.ax2 = None
+        self.ax3 = None
+        self.fig = None
+
+    def __set_up_vis(self, params):
+        plt.clf()
+        width = 8
+        height = 9
+
+        #Title
+        if( params and "title" in params):
+            title = params["title"]
+
+        #Description
+        a3_height = .015
+        desc = ""
+        if( params and "description" in params):
+            a3_height = .035
+            desc = params["description"]
+
+        #Signature
+        signature = ""
+        a1_height = 0
+        if( params and "signature" in params):
+            a1_height = .01
+            signature = params["signature"]
+
+        fig = plt.figure(figsize=(width, height))
+        fig.patch.set_facecolor(self.primary_color)
+
+        ax1 = fig.add_axes([0, 0, 1, a1_height]) #.09 inches tall
+        ax1.set_facecolor(self.primary_color)
+
+        ax1.text(
+            x=0, 
+            y=0, 
+            s=signature, 
+            fontname='Trebuchet MS',
+            fontsize=10,
+            fontweight='bold',
+            color=self.tertiary_color, 
+            ha='left'
+        )
+        ax1.set_axis_off()
+
+        ax2 = fig.add_axes([0, 0.05, 1, .8])
+        ax2.set_facecolor(self.primary_color)
+
+        plt.grid(True, alpha=0.2, color=self.tertiary_color)
+        plt.gca().spines['top'].set_visible(False)
+        plt.gca().spines['right'].set_visible(False)
+
+        ax2.spines['top'].set_color(self.tertiary_color)
+        ax2.spines['right'].set_color(self.tertiary_color)
+        ax2.spines['left'].set_color(self.tertiary_color)
+        ax2.spines['bottom'].set_color(self.tertiary_color)
+        
+        ax3 = fig.add_axes([0, .86, 1, a3_height])
+        ax3.set_facecolor(self.primary_color)
+
+        ax3.text(
+            x=0, 
+            y=.85, 
+            s=title, 
+            fontname='Trebuchet MS',
+            fontsize=20, 
+            fontweight='bold', 
+            color=self.tertiary_color, 
+            ha='left'
+        )
+        
+        if(desc != ""):
+            ax3.text(
+                x=0, 
+                y=.05, 
+                s=desc, 
+                fontname='Trebuchet MS',
+                fontsize=14,
+                color=self.tertiary_color, 
+                ha='left'
+            )
+        ax3.set_axis_off()
+
+        #X Axis
+        ax2.tick_params(axis='x', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
+        ax2.set_xlabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
+
+        #Y Axis
+        ax2.tick_params(axis='y', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
+        ax2.set_ylabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
+
+        self.ax1 = ax1
+        self.ax2 = ax2
+        self.ax3 = ax3
+        self.fig = fig
+
+    def __output_vis(self, params):
+        plt.savefig(params["filename"], format="png", bbox_inches="tight")
+
+    def pizza_plot(self, object, params):
+        object_type = str(type(object))
+        if( "Team" not in object_type and "Player" not in object_type ):
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Team objects can be used to generate pizza plots" }
+
+        columns = []
+        if "columns" not in params:
             columns = ['Non-Penalty Goals', 'Assists', 'Goals Plus Assists', 'Yellow Cards', 'Red Cards', 'Passes',
                 'Passes Completed', 'Progressive Passes', 'Through Balls', 'Key Passes', 'Touches','Take Ons', 'Take Ons Won', 'Miscontrols',
                 'Dispossessed', 'Tackles', 'Tackles Won', 'Blocked Shots', 'Interceptions', 'Clearances']
-        
-        player_data = player.scouting_data()
-        if( not player_data ):
+        else:
+            columns = params["columns"]
+
+        object_data = object.scouting_data()
+        if( not object_data ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: No Player Scouting data was found." }
         
-        player_img = player.image()
-        if( not player_img ):
-            player_img = ""
+        object_img = object.image()
+        if( not object_img ):
+            object_img = ""
 
         stat_keys = []
         stat_values = []
         values = []
-        for key in player_data:
-            stat = player_data[key]
+        for key in object_data:
+            stat = object_data[key]
             name = stat.name
             if name in columns:
                 stat_keys.append(name)
                 values.append(stat.value)
                 stat_values.append([stat.value, stat.percentile])
-        image = Image.open(urlopen(player_img))
+        image = Image.open(urlopen(object_img))
 
         # Create a circular mask for the image
         mask = Image.new('L', image.size, 0)
@@ -100,7 +208,7 @@ class Visualize:
 
         # add title
         fig.text(
-            0.515, 0.945, player.last_name, size=27,
+            0.515, 0.945, object.name(), size=27,
             ha="center", color="#ffffff"
         )
 
@@ -151,10 +259,15 @@ class Visualize:
             masked_img, fig, left=0.472, bottom=0.457, width=0.086, height=0.08, zorder= -1
         )
 
-        plt.savefig(player.last_name + '@my_plot.png', format='png')
+        plt.savefig(object.name() + '@my_plot.png', format='png')
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def player_shot_map(self, player):
+    def shot_map(self, object, params):
+        object_type = str(type(object))
+        if( "Player" not in object_type ):
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player objects can be used to generate shot maps" }
+
+        player = object
         shots = player.shots_over_season()
         shot_data = player.analyze_shots(shots)
 
@@ -290,11 +403,10 @@ class Visualize:
 
         self.pitch.draw(ax=ax2)
 
-
         # create a scatter plot at y 100 - average_distance
         ax2.scatter(
             x=90, 
-            y=shot_data["average_shot_distance"].value, 
+            y=shot_data["avg_shot_distance"].value, 
             s=100, 
             color='white',  
             linewidth=.8
@@ -302,7 +414,7 @@ class Visualize:
         # create a line from the bottom of the pitch to the scatter point
         ax2.plot(
             [90, 90], 
-            [100, shot_data["average_shot_distance"].value], 
+            [100, shot_data["avg_shot_distance"].value], 
             color='white', 
             linewidth=2
         )
@@ -310,7 +422,7 @@ class Visualize:
         # Add a text label for the average distance
         ax2.text(
             x=90, 
-            y=shot_data["average_shot_distance"].value - 4, 
+            y=shot_data["avg_shot_distance"].value - 4, 
             s=f'Average Distance\n{shot_data["avg_actual_shot_distance"].value:.1f} yards', 
             fontsize=10, 
             color='white', 
@@ -434,6 +546,8 @@ class Visualize:
                 has_obj_highlights = 1
             if("color" in params["highlight"]):
                 highlight_color = params["highlight"]["color"]
+            else:
+                highlight_color = self.highlight_color
 
         x_stat = stats_names[0]
         y_stat = stats_names[1]
@@ -443,37 +557,38 @@ class Visualize:
             
         stats = []
         for obj in objs:
-            stat = { "object" : obj }
+            if("Player" in str(type(obj)) or "Team" in str(type(obj))):
+                stat = { "object" : obj }
 
-            if(x_stat == "Market Value"):
-                stat[x_stat] = obj.market_value()
-            else:
-                val = obj.statistic(x_stat)
-                if(str(type(val)) == "<class 'int'>"):
-                    stat[x_stat] = 0
+                if(x_stat == "Market Value"):
+                    stat[x_stat] = obj.market_value()
                 else:
-                    stat[x_stat] = val.value
-
-            if(y_stat == "Market Value"):
-                stat[y_stat] = obj.market_value()
-            else:
-                val = obj.statistic(y_stat)
-                if(str(type(val)) == "<class 'int'>"):
-                    stat[y_stat] = 0
-                else:
-                    stat[y_stat] = val.value
-
-            if(z_stat):
-                if(z_stat == "Market Value"):
-                    stat[z_stat] = obj.market_value()
-                else:
-                    val = obj.statistic(z_stat)
+                    val = obj.statistic(x_stat)
                     if(str(type(val)) == "<class 'int'>"):
-                        stat[z_stat] = 0
+                        stat[x_stat] = 0
                     else:
-                        stat[z_stat] = val.value
+                        stat[x_stat] = val.value
 
-            stats.append(stat)
+                if(y_stat == "Market Value"):
+                    stat[y_stat] = obj.market_value()
+                else:
+                    val = obj.statistic(y_stat)
+                    if(str(type(val)) == "<class 'int'>"):
+                        stat[y_stat] = 0
+                    else:
+                        stat[y_stat] = val.value
+
+                if(z_stat):
+                    if(z_stat == "Market Value"):
+                        stat[z_stat] = obj.market_value()
+                    else:
+                        val = obj.statistic(z_stat)
+                        if(str(type(val)) == "<class 'int'>"):
+                            stat[z_stat] = 0
+                        else:
+                            stat[z_stat] = val.value
+
+                stats.append(stat)
             
         x = []
         y = []
@@ -545,52 +660,34 @@ class Visualize:
                         c[idx] = highlight_color
                         to_highlight.append(idx)
                 
-        plt.clf()
-        fig, ax = plt.subplots()
-        fig.patch.set_facecolor(self.primary_color)
-        ax.patch.set_facecolor(self.primary_color)
-        
-        ax.scatter(x, y, c=c, marker='o', facecolors='none', s=z)
-        plt.grid(True, alpha=0.2)
-        plt.gca().spines['top'].set_visible(False)
-        plt.gca().spines['right'].set_visible(False)
+        if(params and "title" not in params):
+            params["title"] = x_stat + " vs " + y_stat
 
-        ax.spines['top'].set_color(self.tertiary_color)
-        ax.spines['right'].set_color(self.tertiary_color)
-        ax.spines['left'].set_color(self.tertiary_color)
-        ax.spines['bottom'].set_color(self.tertiary_color)
-        ax.set_xlabel('X Axis', color=self.tertiary_color)
-        ax.set_ylabel('Y Axis', color=self.tertiary_color)
+        self.__set_up_vis(params)
+
+        self.ax2.scatter(x, y, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
 
         if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
                 if i in to_highlight:
-                    #plt.annotate(text, (x[i], y[i]))
-                    plt.annotate(text, (x[i], y[i]), xytext=(5, 5), textcoords='offset points')
+                    self.ax2.annotate(text, (x[i], y[i]), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
 
-        #X Label
+        #X Axis
+        x_label = x_stat
         if( params and "x_label" in params):
-            plt.xlabel(params["x_label"], fontname='Trebuchet MS', fontsize=12, fontweight='bold')
-        else:
-            plt.xlabel(x_stat, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
+            x_label = params["x_label"]
+        self.ax2.set_xlabel(x_label)
 
-        #Y Label
+        #Y Axis
+        y_label = y_stat
         if( params and "y_label" in params):
-            plt.ylabel(params["y_label"], c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
-        else:
-            plt.ylabel(y_stat, c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
+            y_label = params["y_label"]
+        self.ax2.set_ylabel(y_label)
 
-        #Title
-        if( params and "title" in params):
-            plt.title(params["title"], c=self.tertiary_color, fontname='Trebuchet MS', fontsize=14, fontweight='bold')
-        else:
-            plt.title(x_stat + " vs " + y_stat, c=self.tertiary_color, fontname='Trebuchet MS', fontsize=14, fontweight='bold')
+        #Filename
+        if( params and "filename" not in params):
+            params["filename"] = x_stat + "_vs_" + y_stat + ".png"
 
-        #filename
-        file_name = x_stat + "_vs_" + y_stat + ".png"
-        if( params and "filename" in params):
-            file_name = params["filename"]
-
-        plt.savefig(file_name, format="png", bbox_inches="tight")
+        self.__output_vis(params)
 
         return { "success" : 1, "res" : {}, "error_string" : "" }
