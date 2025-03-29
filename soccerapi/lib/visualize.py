@@ -1,8 +1,14 @@
-from .utils import normalize, get_max_idx, get_min_idx, get_median_idx, get_top_quartile_idx, kmeans, get_top_n_idx, get_stat_top_n_idx
-import matplotlib.pyplot as plt
+from .utils import *
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
 from mplsoccer import VerticalPitch, PyPizza, FontManager, add_image
+import matplotlib.pyplot as plt
+from matplotlib.patches import Circle, RegularPolygon
+from matplotlib.projections.polar import PolarAxes
+from matplotlib.projections import register_projection
+from matplotlib.spines import Spine
+from matplotlib.transforms import Affine2D
+from matplotlib.path import Path
 
 class Visualize:
     def __init__(self):
@@ -29,12 +35,112 @@ class Visualize:
         self.ax3 = None
         self.fig = None
 
+    def __radar_factory(self, num_vars, frame='circle'):
+        """
+        Create a radar chart with `num_vars` Axes.
+
+        This function creates a RadarAxes projection and registers it.
+
+        Parameters
+        ----------
+        num_vars : int
+            Number of variables for radar chart.
+        frame : {'circle', 'polygon'}
+            Shape of frame surrounding Axes.
+
+        """
+        # calculate evenly-spaced axis angles
+        theta = np.linspace(0, 2*np.pi, num_vars, endpoint=False)
+        tertiary_color = self.tertiary_color
+
+        class RadarTransform(PolarAxes.PolarTransform):
+
+            def transform_path_non_affine(self, path):
+                # Paths with non-unit interpolation steps correspond to gridlines,
+                # in which case we force interpolation (to defeat PolarTransform's
+                # autoconversion to circular arcs).
+                if path._interpolation_steps > 1:
+                    path = path.interpolated(num_vars)
+                return Path(self.transform(path.vertices), path.codes)
+
+        class RadarAxes(PolarAxes):
+
+            name = 'radar'
+            PolarTransform = RadarTransform
+
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                # rotate plot such that the first axis is at the top
+                self.set_theta_zero_location('N')
+
+            def fill(self, *args, closed=True, **kwargs):
+                """Override fill so that line is closed by default"""
+                return super().fill(closed=closed, *args, **kwargs)
+
+            def plot(self, *args, **kwargs):
+                """Override plot so that line is closed by default"""
+                lines = super().plot(*args, **kwargs)
+                for line in lines:
+                    self._close_line(line)
+
+            def _close_line(self, line):
+                x, y = line.get_data()
+                # FIXME: markers at x[0], y[0] get doubled-up
+                if x[0] != x[-1]:
+                    x = np.append(x, x[0])
+                    y = np.append(y, y[0])
+                    line.set_data(x, y)
+
+            def set_varlabels(self, labels):
+                self.set_thetagrids(np.degrees(theta), labels, color=tertiary_color, fontfamily='Trebuchet MS')
+                for tick in self.xaxis.get_ticklabels():
+                    tick.set_color(tertiary_color)
+                    tick.set_fontfamily('Trebuchet MS')
+                for tick in self.yaxis.get_ticklabels():
+                    tick.set_color(tertiary_color)
+                    tick.set_fontfamily('Trebuchet MS')
+
+            def _gen_axes_patch(self):
+                # The Axes patch must be centered at (0.5, 0.5) and of radius 0.5
+                # in axes coordinates.
+                if frame == 'circle':
+                    return Circle((0.5, 0.5), 0.5)
+                elif frame == 'polygon':
+                    return RegularPolygon((0.5, 0.5), num_vars,
+                                        radius=.5, edgecolor=tertiary_color)
+                else:
+                    raise ValueError("Unknown value for 'frame': %s" % frame)
+
+            def _gen_axes_spines(self):
+                if frame == 'circle':
+                    return super()._gen_axes_spines()
+                elif frame == 'polygon':
+                    # spine_type must be 'left'/'right'/'top'/'bottom'/'circle'.
+                    spine = Spine(axes=self,
+                                spine_type='circle',
+                                path=Path.unit_regular_polygon(num_vars))
+                    spine.set_color(tertiary_color)
+                    # unit_regular_polygon gives a polygon of radius 1 centered at
+                    # (0, 0) but we want a polygon of radius 0.5 centered at (0.5,
+                    # 0.5) in axes coordinates.
+                    spine.set_transform(Affine2D().scale(.5).translate(.5, .5)
+                                        + self.transAxes)
+                    return {'polar': spine}
+                else:
+                    raise ValueError("Unknown value for 'frame': %s" % frame)
+
+        register_projection(RadarAxes)
+        return theta
+
     def __set_up_vis(self, params):
         plt.clf()
         width = 8
         height = 9
+        if "height" in params:
+            height = params["height"]
 
         #Title
+        title = ''
         if( params and "title" in params):
             title = params["title"]
 
@@ -70,17 +176,30 @@ class Visualize:
         )
         ax1.set_axis_off()
 
-        ax2 = fig.add_axes([0, 0.05, 1, .8])
+        ax2 = None
+        if( "type" in params and params["type"] == "radar" ):
+            ax2 = fig.add_axes([0, 0.05, 1, .8], projection='radar')
+        else:
+            ax2 = fig.add_axes([0, 0.05, 1, .8])
+            
+
+            plt.grid(True, alpha=0.2, color=self.tertiary_color)
+            plt.gca().spines['top'].set_visible(False)
+            plt.gca().spines['right'].set_visible(False)
+
+            ax2.spines['top'].set_color(self.tertiary_color)
+            ax2.spines['right'].set_color(self.tertiary_color)
+            ax2.spines['left'].set_color(self.tertiary_color)
+            ax2.spines['bottom'].set_color(self.tertiary_color)
+
+            #X Axis
+            ax2.tick_params(axis='x', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
+            ax2.set_xlabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
+
+            #Y Axis
+            ax2.tick_params(axis='y', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
+            ax2.set_ylabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
         ax2.set_facecolor(self.primary_color)
-
-        plt.grid(True, alpha=0.2, color=self.tertiary_color)
-        plt.gca().spines['top'].set_visible(False)
-        plt.gca().spines['right'].set_visible(False)
-
-        ax2.spines['top'].set_color(self.tertiary_color)
-        ax2.spines['right'].set_color(self.tertiary_color)
-        ax2.spines['left'].set_color(self.tertiary_color)
-        ax2.spines['bottom'].set_color(self.tertiary_color)
         
         ax3 = fig.add_axes([0, .86, 1, a3_height])
         ax3.set_facecolor(self.primary_color)
@@ -108,14 +227,6 @@ class Visualize:
             )
         ax3.set_axis_off()
 
-        #X Axis
-        ax2.tick_params(axis='x', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
-        ax2.set_xlabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
-
-        #Y Axis
-        ax2.tick_params(axis='y', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
-        ax2.set_ylabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
-
         self.ax1 = ax1
         self.ax2 = ax2
         self.ax3 = ax3
@@ -124,40 +235,46 @@ class Visualize:
     def __output_vis(self, params):
         plt.savefig(params["filename"], format="png", bbox_inches="tight")
 
-    def pizza_plot(self, object, params):
+    def radar(self, object, params):
         object_type = str(type(object))
-        if( "Team" not in object_type and "Player" not in object_type ):
+        if( "Player" not in object_type ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Team objects can be used to generate pizza plots" }
 
         columns = []
         if "columns" not in params:
-            columns = ['Non-Penalty Goals', 'Assists', 'Goals Plus Assists', 'Yellow Cards', 'Red Cards', 'Passes',
-                'Passes Completed', 'Progressive Passes', 'Through Balls', 'Key Passes', 'Touches','Take Ons', 'Take Ons Won', 'Miscontrols',
-                'Dispossessed', 'Tackles', 'Tackles Won', 'Blocked Shots', 'Interceptions', 'Clearances']
+            columns = [ 'Non-Penalty Goals', 'Assists', 'Passes', 'Key Passes', 'Touches', 'Take Ons' ]
         else:
             columns = params["columns"]
 
         object_data = object.scouting_data()
         if( not object_data ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: No Player Scouting data was found." }
-        
-        object_img = object.image()
-        if( not object_img ):
-            object_img = ""
 
+        # Data Prep
         stat_keys = []
-        stat_values = []
         values = []
         for key in object_data:
             stat = object_data[key]
             name = stat.name
             if name in columns:
                 stat_keys.append(name)
-                values.append(stat.value)
-                stat_values.append([stat.value, stat.percentile])
-        image = Image.open(urlopen(object_img))
+                values.append(stat.percentile)
+
+        # Build Radar
+        N = len(stat_keys)
+        theta = self.__radar_factory(N, frame='polygon')
+        self.__set_up_vis({"type" : "radar"})
+
+        self.ax2.set_varlabels(stat_keys)
+        self.ax2.plot(theta, values, c=self.secondary_color, marker='o', label='_nolegend_')
+        self.ax2.fill(theta, values, c=self.secondary_color, alpha=0.25)
 
         # Create a circular mask for the image
+        object_img = object.image()
+        if( not object_img ):
+            object_img = ""
+
+        image = Image.open(urlopen(object_img))
         mask = Image.new('L', image.size, 0)
         draw = ImageDraw.Draw(mask)
         draw.ellipse((0, 0) + image.size, fill=255)
@@ -166,370 +283,235 @@ class Visualize:
         masked_img = ImageOps.fit(image, mask.size, centering=(0.5, 0.5))
         masked_img.putalpha(mask)
 
-        # color for the slices and text
-        slice_colors = ["#bbEE90"] * 5 + ["#FF93ff"] * 5 + ["#FFCCCB"] * 5 + ["#87CEEB"] * 5
-        text_colors = ["#000000"] * len(stat_keys)
-
-        # instantiate PyPizza class
-        baker = PyPizza(
-            params=stat_keys,               # list of parameters
-            background_color="#132257",     # background color
-            straight_line_color="#000000",  # color for straight lines
-            straight_line_lw=1,             # linewidth for straight lines
-            last_circle_color="#000000",    # color for last line
-            last_circle_lw=1,               # linewidth of last circle
-            other_circle_lw=0,              # linewidth for other circles
-            inner_circle_size=11            # size of inner circle
+        # Add image
+        add_image(
+            masked_img, self.fig, left=0.455, bottom=0.415, width=0.086, height=0.08, zorder= -1
         )
 
-        # plot pizza
-        fig, ax = baker.make_pizza(
-            values,                          # list of values
-            figsize=(10, 12),                # adjust the figsize according to your need
-            color_blank_space="same",        # use the same color to fill blank space
-            slice_colors=slice_colors,       # color for individual slices
-            value_colors=text_colors,        # color for the value-text
-            value_bck_colors=slice_colors,   # color for the blank spaces
-            blank_alpha=0.4,                 # alpha for blank-space colors
-            kwargs_slices=dict(
-                edgecolor="#000000", zorder=2, linewidth=1
-            ),                               # values to be used when plotting slices
-            kwargs_params=dict(
-                color="#ffffff", fontsize=13, va="center"
-            ),                               # values to be used when adding parameter labels
-            kwargs_values=dict(
-                color="#ffffff", fontsize=11, zorder=3,
-                bbox=dict(
-                    edgecolor="#000000", facecolor="cornflowerblue",
-                    boxstyle="round,pad=0.2", lw=1
-                )
-            )                                # values to be used when adding parameter-values labels
-        )
+        #Filename
+        if( params and "filename" not in params):
+            params["filename"] = object.name().replace(" ", "_") + "_radar" + ".png"
 
-        # add title
-        fig.text(
-            0.515, 0.945, object.name(), size=27,
-            ha="center", color="#ffffff"
-        )
-
-        # add subtitle
-        fig.text(
-            0.515, 0.925,
-            "Percentile Rank vs Top-Five League Players in their Position for LAST 365 DAYS",
-            size=13,
-            ha="center", color="#ffffff"
-        )
-
-        # add credits
-        CREDIT_2 = "inspired by: @Worville, @FootballSlices, @somazerofc & @Soumyaj15209314"
-        CREDIT_3 = "Automated By @Regmi38"
-
-        fig.text(
-            0.99, 0.08, f"\n{CREDIT_2}\n{CREDIT_3}", size=15, color="#ffffff",
-            ha="right"
-        )
-
-        # add text
-        fig.text(
-            0.23, 0.9," Standard        Passing        Possession         Defense", size=18, color="#ffffff"
-        )
-
-        # add rectangles
-        fig.patches.extend([
-            plt.Rectangle(
-                (0.205, 0.9), 0.025, 0.0196, fill=True, color="#bbEE90",
-                transform=fig.transFigure, figure=fig
-            ),
-            plt.Rectangle(
-                (0.365, 0.9), 0.025, 0.0196, fill=True, color="#FF93ff",
-                transform=fig.transFigure, figure=fig
-            ),
-            plt.Rectangle(
-                (0.505, 0.9), 0.025, 0.0196, fill=True, color="#FFCCCB",
-                transform=fig.transFigure, figure=fig
-            ),
-            plt.Rectangle(
-                (0.695, 0.9), 0.025, 0.0196, fill=True, color="#87CEEB",
-                transform=fig.transFigure, figure=fig
-            ),
-        ])
-
-        # add image
-        ax_image = add_image(
-            masked_img, fig, left=0.472, bottom=0.457, width=0.086, height=0.08, zorder= -1
-        )
-
-        plt.savefig(object.name() + '@my_plot.png', format='png')
+        self.__output_vis(params)
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def shot_map(self, object, params):
-        object_type = str(type(object))
+    def shot_map(self, player, params):
+        object_type = str(type(player))
         if( "Player" not in object_type ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player objects can be used to generate shot maps" }
 
-        player = object
         shots = player.shots_over_season()
         shot_data = player.analyze_shots(shots)
 
-        # create a subplot with 2 rows and 1 column
-        fig = plt.figure(figsize=(8, 12))
-        fig.patch.set_facecolor(self.primary_color)
+        params["height"] = 8
+        self.__set_up_vis(params)
 
-        # Top row for the team names and score
-        # [left, bottom, width, height]
-        ax1 = fig.add_axes([0, 0.7, 1, .2])
-        ax1.set_facecolor(self.primary_color)
-        ax1.set_xlim(0, 1)
-        ax1.set_ylim(0, 1)
-
-        ax1.text(
-            x=0.5, 
-            y=.85, 
-            s=player.first_name + " " + player.last_name, 
-            fontsize=20, 
-            fontweight='bold', 
-            color='white', 
-            ha='center'
-        )
-        ax1.text(
-            x=0.5, 
-            y=.7, 
-            s=f'All shots in the Premier League 2022-23', 
-            fontsize=14,
-            fontweight='bold',
-            color='white', 
-            ha='center'
-        )
-        ax1.text(
-            x=0.25, 
-            y=0.5, 
+        self.ax2.text(
+            x=90.0, 
+            y=101, 
             s=f'Low Quality Chance', 
             fontsize=12, 
-            color='white', 
-            ha='center'
+            color=self.tertiary_color, 
+            ha='center',
+            fontfamily='Trebuchet MS'
         )
 
-        # add a scatter point between the two texts
-        ax1.scatter(
-            x=0.37, 
-            y=0.53, 
+        self.ax2.scatter(
+            x=78.5, 
+            y=101.5, 
             s=100, 
             color=self.primary_color, 
-            edgecolor='white', 
+            edgecolor=self.tertiary_color, 
             linewidth=.8
         )
-        ax1.scatter(
-            x=0.42, 
-            y=0.53, 
+
+        self.ax2.scatter(
+            x=75, 
+            y=101.5, 
+            s=150, 
+            color=self.primary_color, 
+            edgecolor=self.tertiary_color, 
+            linewidth=.8
+        )
+        self.ax2.scatter(
+            x=71, 
+            y=101.5, 
             s=200, 
             color=self.primary_color, 
-            edgecolor='white', 
+            edgecolor=self.tertiary_color, 
             linewidth=.8
         )
-        ax1.scatter(
-            x=0.48, 
-            y=0.53, 
+        self.ax2.scatter(
+            x=66.5, 
+            y=101.5, 
+            s=250, 
+            color=self.primary_color, 
+            edgecolor=self.tertiary_color, 
+            linewidth=.8
+        )
+        self.ax2.scatter(
+            x=62, 
+            y=101.5, 
             s=300, 
             color=self.primary_color, 
-            edgecolor='white', 
-            linewidth=.8
-        )
-        ax1.scatter(
-            x=0.54, 
-            y=0.53, 
-            s=400, 
-            color=self.primary_color, 
-            edgecolor='white', 
-            linewidth=.8
-        )
-        ax1.scatter(
-            x=0.6, 
-            y=0.53, 
-            s=500, 
-            color=self.primary_color, 
-            edgecolor='white', 
+            edgecolor=self.tertiary_color, 
             linewidth=.8
         )
 
-        ax1.text(
-            x=0.75, 
-            y=0.5, 
+        self.ax2.text(
+            x=49, 
+            y=101, 
             s=f'High Quality Chance', 
             fontsize=12, 
-            color='white', 
+            color=self.tertiary_color,  
+            fontfamily='Trebuchet MS',
             ha='center'
         )
 
-        ax1.text(
-            x=0.45, 
-            y=0.27, 
+        self.ax2.text(
+            x=13.5, 
+            y=101, 
             s=f'Goal', 
             fontsize=10, 
-            color='white', 
+            color=self.tertiary_color, 
+            fontfamily='Trebuchet MS',
             ha='right'
         )
-        ax1.scatter(
-            x=0.47, 
-            y=0.3, 
+
+        self.ax2.scatter(
+            x=11.5,
+            y=101.5, 
             s=100, 
-            color='red', 
-            edgecolor='white', 
+            color=self.secondary_color,
+            edgecolor=self.tertiary_color, 
             linewidth=.8,
             alpha=.7
         )
 
-        ax1.scatter(
-            x=0.53, 
-            y=0.3, 
-            s=100, 
-            color=self.primary_color, 
-            edgecolor='white', 
-            linewidth=.8
-        )
-
-        ax1.text(
-            x=0.55, 
-            y=0.27, 
+        self.ax2.text(
+            x=9.5,
+            y=101, 
             s=f'No Goal', 
             fontsize=10, 
-            color='white', 
-            ha='left'
+            color=self.tertiary_color, 
+            ha='left',
+            fontfamily='Trebuchet MS'
         )
 
-        ax1.set_axis_off()
-
-        ax2 = fig.add_axes([.05, 0.25, .9, .5])
-        ax2.set_facecolor(self.primary_color)
-
-        self.pitch.draw(ax=ax2)
-
-        # create a scatter plot at y 100 - average_distance
-        ax2.scatter(
-            x=90, 
-            y=shot_data["avg_shot_distance"].value, 
+        self.ax2.scatter(
+            x=1, 
+            y=101.5, 
             s=100, 
-            color='white',  
+            color=self.primary_color, 
+            edgecolor=self.tertiary_color, 
             linewidth=.8
         )
-        # create a line from the bottom of the pitch to the scatter point
-        ax2.plot(
-            [90, 90], 
-            [100, shot_data["avg_shot_distance"].value], 
-            color='white', 
-            linewidth=2
-        )
 
-        # Add a text label for the average distance
-        ax2.text(
-            x=90, 
-            y=shot_data["avg_shot_distance"].value - 4, 
-            s=f'Average Distance\n{shot_data["avg_actual_shot_distance"].value:.1f} yards', 
-            fontsize=10, 
-            color='white', 
-            ha='center'
-        )
-
+        self.pitch.draw(ax=self.ax2)
 
         for x in shots:
             self.pitch.scatter(
                 float(x['X']) * 100, 
                 float(x['Y']) * 100, 
                 s=300 * float(x['xG']), 
-                color='red' if x['result'] == 'Goal' else self.primary_color, 
-                ax=ax2,
+                color=self.secondary_color if x['result'] == 'Goal' else self.primary_color, 
+                ax=self.ax2,
                 alpha=.7,
                 linewidth=.8,
-                edgecolor='white'
+                edgecolor=self.tertiary_color
             )
             
-        ax2.set_axis_off()
+        self.ax2.set_axis_off()
 
-        # add another axis for the stats
-        ax3 = fig.add_axes([0, .2, 1, .05])
-        ax3.set_facecolor(self.primary_color)
-        ax3.set_xlim(0, 1)
-        ax3.set_ylim(0, 1)
-
-        ax3.text(
-            x=0.25, 
-            y=.5, 
+        self.ax2.text(
+            x=95, 
+            y=64, 
             s='Shots', 
-            fontsize=20, 
-            fontweight='bold', 
-            color='white', 
+            fontsize=28, 
+            fontweight='bold',
+            fontfamily='Trebuchet MS',
+            color=self.tertiary_color, 
             ha='left'
         )
 
-        ax3.text(
-            x=0.25, 
-            y=0, 
+        self.ax2.text(
+            x=95, 
+            y=61,
             s=f'{shot_data["shots"].value}', 
-            fontsize=16, 
-            color='red', 
+            fontsize=20, 
+            fontfamily='Trebuchet MS',
+            color=self.secondary_color, 
             ha='left'
         )
 
-        ax3.text(
-            x=0.38, 
-            y=.5, 
+        self.ax2.text(
+            x=70,
+            y=64, 
             s='Goals', 
-            fontsize=20, 
+            fontsize=28, 
             fontweight='bold', 
-            color='white', 
+            fontfamily='Trebuchet MS',
+            color=self.tertiary_color, 
             ha='left'
         )
 
-        ax3.text(
-            x=0.38, 
-            y=0, 
+        self.ax2.text(
+            x=70, 
+            y=61,
             s=f'{shot_data["goals"].value}', 
-            fontsize=16, 
-            color='red', 
+            fontsize=20, 
+            color=self.secondary_color, 
+            fontfamily='Trebuchet MS',
             ha='left'
         )
 
-        ax3.text(
-            x=0.53, 
-            y=.5, 
+        self.ax2.text(
+            x=45,
+            y=64,
             s='xG', 
-            fontsize=20, 
+            fontsize=28, 
             fontweight='bold', 
-            color='white', 
+            color=self.tertiary_color, 
+            fontfamily='Trebuchet MS',
             ha='left'
         )
 
-        ax3.text(
-            x=0.53, 
-            y=0, 
+        self.ax2.text(
+            x=45, 
+            y=61,
             s=f'{shot_data["xg"].value:.2f}', 
-            fontsize=16, 
-            color='red', 
-            ha='left'
-        )
-
-        ax3.text(
-            x=0.63, 
-            y=.5, 
-            s='xG/Shot', 
             fontsize=20, 
+            color=self.secondary_color, 
+            fontfamily='Trebuchet MS',
+            ha='left'
+        )
+
+        self.ax2.text(
+            x=25,
+            y=64,
+            s='xG/Shot', 
+            fontsize=28, 
             fontweight='bold', 
-            color='white', 
+            color=self.tertiary_color, 
+            fontfamily='Trebuchet MS',
             ha='left'
         )
 
-        ax3.text(
-            x=0.63, 
-            y=0, 
+        self.ax2.text(
+            x=25, 
+            y=61,
             s=f'{shot_data["xg_per_shot"].value:.2f}', 
-            fontsize=16, 
-            color='red', 
+            fontsize=20, 
+            color=self.secondary_color, 
+            fontfamily='Trebuchet MS',
             ha='left'
         )
 
-        ax3.set_axis_off()
+        #Filename
+        if( params and "filename" not in params):
+            params["filename"] = player.first_name + "_" + player.last_name + "_shots.png"
 
-        file_name = player.first_name + "_" + player.last_name + "_shots.png"
-        plt.savefig(file_name, format="png", bbox_inches="tight")
+        self.__output_vis(params)
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
     def plot_statistics(self, objs, stats_names, params = None):
@@ -663,6 +645,7 @@ class Visualize:
         if(params and "title" not in params):
             params["title"] = x_stat + " vs " + y_stat
 
+        params["height"] = 9
         self.__set_up_vis(params)
 
         self.ax2.scatter(x, y, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)

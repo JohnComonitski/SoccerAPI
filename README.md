@@ -32,9 +32,10 @@ object classes API.
 - ⚽ Access to near real-time fixture results and statistics
 - 📅 Access to thousands of club's fixture lists and results & statistics from previous fixtures
 - 🔎 Programmatically combine data from multiple sources to perform data driven scouting ([Example](https://medium.com/@johncomonitski/data-driven-scouting-with-python-and-soccer-api-88570c59f592))
- 
-Features Coming Soon:
-- 📈 Generate data visualizations using player, club and league statistics
+- 🖼️ Generate data visualizations using player, club and league statistics
+  - 📡 Profile player by creating radar charts from their statistics
+  - 📈 Generate statistic scatter plots for teams and players
+  - 🔫 Plot players shooting over a season
 
 ## Data Sources
 
