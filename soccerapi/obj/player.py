@@ -301,7 +301,7 @@ class Player:
 
         return self.stats_cache[year]
 
-    def statistic(self, stat, year: Optional[str]  = None) -> Statistic:
+    def statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Player's FBRef statistics for a given year and statistic.
 
         :param stat: internal or display name of a statistic.

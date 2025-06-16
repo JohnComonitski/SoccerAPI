@@ -1,3 +1,4 @@
+from datetime import datetime
 from .utils import *
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
@@ -9,6 +10,10 @@ from matplotlib.projections import register_projection
 from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
 from matplotlib.path import Path
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from matplotlib.patches import Polygon
+import requests
+from io import BytesIO
 
 class Visualize:
     def __init__(self):
@@ -234,6 +239,81 @@ class Visualize:
 
     def __output_vis(self, params):
         plt.savefig(params["filename"], format="png", bbox_inches="tight")
+
+    def __get_stat(self, stat, obj, year=None):
+        if(stat == "Market Value"):
+            return obj.market_value()
+        else:
+            val = obj.statistic(stat, year)
+            
+            if(str(type(val)) == "<class 'int'>"):
+                return 0
+            else:
+                return val.value
+
+    def __get_img(self, obj):
+        profile = obj.profile()
+        url = ""
+        round_edges = 0
+        if "logo" in profile:
+            url = profile["logo"]
+        elif "photo" in profile:
+            round_edges = 1
+            url = profile["photo"]
+        if(url):
+            response = requests.get(url)
+            img = Image.open(BytesIO(response.content)).convert("RGBA")
+            if round_edges:
+                stroke_width = 5
+                stroke_color = self.secondary_color
+                size = min(img.size)
+                img = ImageOps.fit(img, (size, size), centering=(0.5, 0.5))
+
+                # Create mask for the circle
+                mask = Image.new("L", (size, size), 0)
+                draw = ImageDraw.Draw(mask)
+                draw.ellipse((0, 0, size, size), fill=255)
+
+                # Create background with stroke
+                stroke_size = size + 2 * stroke_width
+                background = Image.new("RGBA", (stroke_size, stroke_size), (0, 0, 0, 0))
+                
+                stroke_mask = Image.new("L", (stroke_size, stroke_size), 0)
+                stroke_draw = ImageDraw.Draw(stroke_mask)
+                stroke_draw.ellipse((0, 0, stroke_size, stroke_size), fill=255)
+
+                # Draw stroke circle
+                stroke_circle = Image.new("RGBA", (stroke_size, stroke_size), stroke_color)
+                background.paste(stroke_circle, (0, 0), stroke_mask)
+
+                # Paste the image in the center with its alpha mask
+                background.paste(img, (stroke_width, stroke_width), mask)
+                return background
+            return img
+        return None
+
+    def __add_fan(self, x0, y0, x1, y1, width=0.75, color=None):
+        if not color:
+            color = self.secondary_color
+        
+        dx, dy = x1 - x0, y1 - y0
+        length = np.hypot(dx, dy)
+        if length == 0:
+            return  
+
+        dx /= length
+        dy /= length
+
+        perp_dx = -dy
+        perp_dy = dx
+
+        points = np.array([
+            [x0, y0],  # tip
+            [x1 + width * perp_dx, y1 + width * perp_dy],
+            [x1 - width * perp_dx, y1 - width * perp_dy]
+        ])
+        poly = Polygon(points, closed=True, color=color, alpha=0.6, linewidth=0)
+        self.ax2.add_patch(poly)
 
     def radar(self, object, params):
         object_type = str(type(object))
@@ -515,10 +595,35 @@ class Visualize:
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
     def plot_statistics(self, objs, stats_names, params = None):
+        for obj in objs:
+            if("Player" not in str(type(obj)) and "Team" not in str(type(obj))):
+                return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Teams objects can be used to generate scatter plots" }
+
         color = self.secondary_color
         if( params and "color" in params):
             color = params["color"]
-            
+
+        if(params and "title" not in params):
+            params["title"] = x_stat + " vs " + y_stat
+
+        params["height"] = 9
+        self.__set_up_vis(params)
+
+        use_images = 0
+        if(params and "use_images" in params):
+            use_images = 1
+
+        years = []
+        if(params and "years" in params):
+            year_end = max(params["years"])
+            years.append(year_end)
+            year_start = min(params["years"])
+            if year_start not in years:
+                years.append(year_start)
+        else:
+            current_date = datetime.now()
+            years.append(str([current_date.year]))
+
         has_obj_highlights = 0
         highlight_color = self.tertiary_color
         obj_highlight = []
@@ -537,67 +642,67 @@ class Visualize:
         if(len(stats_names) > 2):
             z_stat = stats_names[2]
             
+        # Prepping Data
         stats = []
         for obj in objs:
-            if("Player" in str(type(obj)) or "Team" in str(type(obj))):
-                stat = { "object" : obj }
+            image = None
+            if use_images:
+                image = self.__get_img(obj) 
+            stat = { "object" : obj, "image" : image }
 
-                if(x_stat == "Market Value"):
-                    stat[x_stat] = obj.market_value()
-                else:
-                    val = obj.statistic(x_stat)
-                    if(str(type(val)) == "<class 'int'>"):
-                        stat[x_stat] = 0
-                    else:
-                        stat[x_stat] = val.value
+            if(z_stat):
+                stat[z_stat] = self.__get_stat(z_stat, obj, year)
 
-                if(y_stat == "Market Value"):
-                    stat[y_stat] = obj.market_value()
-                else:
-                    val = obj.statistic(y_stat)
-                    if(str(type(val)) == "<class 'int'>"):
-                        stat[y_stat] = 0
-                    else:
-                        stat[y_stat] = val.value
+            stat["stats"] = {}
+            for year in years:
+                    stat["stats"][year] = {}
+                    stat["stats"][year][x_stat] = self.__get_stat(x_stat, obj, year)
+                    stat["stats"][year][y_stat] = self.__get_stat(y_stat, obj, year)
+            stats.append(stat)
 
-                if(z_stat):
-                    if(z_stat == "Market Value"):
-                        stat[z_stat] = obj.market_value()
-                    else:
-                        val = obj.statistic(z_stat)
-                        if(str(type(val)) == "<class 'int'>"):
-                            stat[z_stat] = 0
-                        else:
-                            stat[z_stat] = val.value
-
-                stats.append(stat)
-            
-        x = []
-        y = []
+        # Consolidate Data into Arrays
+        x_start = []
+        y_start = []
+        has_evolution = 0
+        if(len(years) > 1):
+            print("has evolution")
+            has_evolution = 1
+        x_end = []
+        y_end = []
         z = []
         c = []
         labels = []
         to_highlight = []
+        images = []
         idx = 0
-        for stat in stats:
-            if( stat[x_stat] and stat[y_stat] ):
-                if has_obj_highlights:
-                    if(str(stat["object"].id) in obj_highlight):
-                        c.append(highlight_color)
-                        to_highlight.append(idx)
-                    else:
-                        c.append(color)
+        for obj in stats:
+            idx += 1
+            labels.append(obj["object"].name())
+            images.append(obj["image"])
+            if has_obj_highlights:
+                if(str(stat["object"].id) in obj_highlight):
+                    c.append(highlight_color)
+                    to_highlight.append(idx)
                 else:
                     c.append(color)
+            else:
+                c.append(color)
 
-                x.append(stat[x_stat])
-                y.append(stat[y_stat])
-                idx += 1
-                labels.append(stat["object"].name())
-                if z_stat:
-                    z.append(stat[z_stat])
+            if z_stat:
+                z.append(obj[z_stat])
 
-        
+            end_year = max(years)
+            stat = obj["stats"][end_year]
+
+            x_end.append(stat[x_stat])
+            y_end.append(stat[y_stat])
+            
+            if has_evolution:
+                start_year = min(years)
+                stat = obj["stats"][start_year]
+                x_start.append(stat[x_stat])
+                y_start.append(stat[y_stat])
+
         if(len(z) == 0):
             z = None
         else:
@@ -605,22 +710,22 @@ class Visualize:
 
         if(params and "highlight" in params):
             if("kmeans" in params["highlight"]):
-                c = kmeans(x, y, params["highlight"]["kmeans"])
+                c = kmeans(x_end, y_end, params["highlight"]["kmeans"])
             else:
                 if("max" in params["highlight"]):
-                    idx = get_max_idx(x, y)
+                    idx = get_max_idx(x_end, y_end)
                     c[idx] = highlight_color
                     to_highlight.append(idx)
                 if("min" in params["highlight"]):
-                    idx = get_min_idx(x, y)
+                    idx = get_min_idx(x_end, y_end)
                     c[idx] = highlight_color
                     to_highlight.append(idx)
                 if("median" in params["highlight"]):
-                    idx = get_median_idx(x, y)
+                    idx = get_median_idx(x_end, y_end)
                     c[idx] = highlight_color
                     to_highlight.append(idx)
                 if("top_n" in params["highlight"]):
-                    idxs = get_top_n_idx(x, y, params["highlight"]["top_n"])
+                    idxs = get_top_n_idx(x_end, y_end, params["highlight"]["top_n"])
                     for idx in idxs:
                         c[idx] = highlight_color
                         to_highlight.append(idx)
@@ -629,31 +734,37 @@ class Visualize:
                     stat = params["highlight"]["stat_top_n"]["stat"]
                     stats = []
                     if(stat == x_stat):
-                        stats = x
+                        stats = x_end
                     elif( stat == y_stat):
-                        stats = y
+                        stats = y_end
                     idxs = get_stat_top_n_idx(stats, n)
                     for idx in idxs:
                         c[idx] = highlight_color
                         to_highlight.append(idx)
                 if("top_quartile" in params["highlight"]):
-                    idxs = get_top_quartile_idx(x, y)
+                    idxs = get_top_quartile_idx(x_end, y_end)
                     for idx in idxs:
                         c[idx] = highlight_color
                         to_highlight.append(idx)
-                
-        if(params and "title" not in params):
-            params["title"] = x_stat + " vs " + y_stat
 
-        params["height"] = 9
-        self.__set_up_vis(params)
+        # Plotting Data
+        self.ax2.scatter(x_end, y_end, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
+        if has_evolution:
+            self.ax2.scatter(x_start, y_start, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
+            for (x0, y0, x1, y1) in zip(x_start, y_start, x_end, y_end):
+                self.__add_fan(x0, y0, x1, y1)
 
-        self.ax2.scatter(x, y, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
+        if(use_images):
+            for (x0, y0, img) in zip(x_end, y_end, images):
+                if img:
+                    im = OffsetImage(img, zoom=.3)
+                    ab = AnnotationBbox(im, (x0, y0), frameon=False)
+                    self.ax2.add_artist(ab)
 
         if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
                 if i in to_highlight:
-                    self.ax2.annotate(text, (x[i], y[i]), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
+                    self.ax2.annotate(text, (x_end[i], y_end[i]), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
 
         #X Axis
         x_label = x_stat

@@ -35,7 +35,7 @@ object classes API.
 - 🖼️ Generate data visualizations using player, club and league statistics
   - 📡 Profile player by creating radar charts from their statistics
   - 📈 Generate statistic scatter plots for teams and players
-  - 🔫 Plot players shooting over a season
+  - 🔫 Plot players shoots and goals over a season
 
 ## Data Sources
 

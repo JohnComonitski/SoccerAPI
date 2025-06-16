@@ -42,8 +42,8 @@ class Team:
         self.fapi_id = team_data["fapi_team_id"]
         #Cached Data
         self.fapi_profile = None
-        self.stats_cache = None
-        self.opps_stats_cache = None
+        self.stats_cache = {}
+        self.opps_stats_cache = {}
         #Packages
         self.db = db 
         app = db.app
@@ -298,49 +298,69 @@ class Team:
                 print(res["error_string"]) 
             return 0
 
-    def statistics(self) -> dict[Statistic]:
+    def statistics(self, year = None) -> dict[Statistic]:
         r"""Returns the Team's FBRef Statistics for a given year.
-
+        :param year: the year to be selected. If this parameter is not set, get
+          the current year.
+        :type year: Optional[str]
         :returns: a hash of Statistic objects.
         :rtype: dict[Statistic]
         """
         stats = self.stats_cache
 
-        if stats:
-            return stats
-        res = self.fbref.get_team_stats(self)
+        if not year:
+            current_date = datetime.now()
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
+
+        if year in stats:
+            return stats[year]
+        
+        res = self.fbref.get_team_stats(self, year)
+
         if(res["success"]):
-            stats = res["res"]["stats"]
+            stats[year] = res["res"]["stats"]
         else:
             if(self.debug):
                 print(res["error_string"])
-            stats = {}
+            stats[year] = {}
         self.stats_cache = stats
 
-        return self.stats_cache
+        return self.stats_cache[year]
 
-    def statistic(self, stat) -> Statistic:
+    def statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Team's FBRef statistics for a given year and Statistic.
-
+        :param year: the year to be selected. If this parameter is not set, get
+          the current year.
+        :type year: Optional[str]
         :param stat: internal or display name of a statistic.
         :type stat: str
         :returns: a Statistic object.
         :rtype: Statistic
         """
+        if not year:
+            current_date = datetime.now()
+            year = str(current_date.year)
+
         stat_key = None
         if(key_to_name(stat)):
             stat_key = stat
         elif(name_to_key(stat)):
             stat_key = name_to_key(stat)
 
-        stats = self.statistics()
+        stats = self.statistics(year)
         if stat_key and stat_key in stats:
             return stats[stat_key]
         return Statistic({ "key" : stat_key, "value" : 0 })
 
-    def opponent_statistics(self) -> dict[Statistic]:
+    def opponent_statistics(self, year: Optional[str] = None) -> dict[Statistic]:
         r"""Get the Team's FBRef opposition statistics for a given year.
-
+        :param year: the year to be selected. If this parameter is not set, get
+          the current year.
+        :type year: Optional[str]
         :returns: a Statistic object.
         :rtype: Statistic
         :returns: a hash of Statistic objects.
@@ -348,16 +368,49 @@ class Team:
         """
         stats = self.opps_stats_cache
 
-        if stats:
-            return stats
+        if not year:
+            current_date = datetime.now()
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
 
-        res = self.fbref.get_team_opposition_stats(self)
+        if year in stats:
+            return stats[year]
+
+        res = self.fbref.get_team_opposition_stats(self, year)
         if(res["success"]):
-            stats = res["res"]["stats"]
+            stats[year] = res["res"]["stats"]
         else:
             if(self.debug):
                 print(res["error_string"])
-            stats = {}
+            stats[year] = {}
         self.opps_stats_cache = stats
 
-        return self.opps_stats_cache
+        return self.opps_stats_cache[year]
+    
+    def opponent_statistic(self, stat, year: Optional[str] = None) -> Statistic:
+        r"""Get the Team's FBRef opposition statistics for a given year and Statistic.
+        :param year: the year to be selected. If this parameter is not set, get
+          the current year.
+        :type year: Optional[str]
+        :param stat: internal or display name of a statistic.
+        :type stat: str
+        :returns: a Statistic object.
+        :rtype: Statistic
+        """
+        if not year:
+            current_date = datetime.now()
+            year = str(current_date.year)
+
+        stat_key = None
+        if(key_to_name(stat)):
+            stat_key = stat
+        elif(name_to_key(stat)):
+            stat_key = name_to_key(stat)
+
+        stats = self.opponent_statistics(year)
+        if stat_key and stat_key in stats:
+            return stats[stat_key]
+        return Statistic({ "key" : stat_key, "value" : 0 })

@@ -1,5 +1,6 @@
 from ..lib.ratelimiter import RateLimiter
 from ..obj.statistic import Statistic
+from datetime import datetime
 from bs4 import BeautifulSoup
 import unicodedata
 import requests
@@ -254,13 +255,21 @@ class FBRef:
             return  { "success" : 0, "res" : "", "error_string" : "Error: Failed to find player position" }
         return  { "success" : 0, "res" : "", "error_string" : "Error: Player could not be found" }
     
-    def get_team_stats(self, team):
+    def get_team_stats(self, team, year):
         if(not team.fbref_id ):
             return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
         
         fbref_team_id = team.fbref_id
+
+        year_string = ""
+        last_year = None
+        if not year:
+            current_date = datetime.now()
+            year = str(current_date.year)
+        last_year = int(year) - 1
+        year_string = str(last_year) + "-" + str(year)
         
-        endpoint = "https://fbref.com/en/squads/" + fbref_team_id + "/team-name"
+        endpoint = "https://fbref.com/en/squads/"  + fbref_team_id + "/" +  year_string + "/team-name"
         doc = self.limiter.call(self.make_request, endpoint)
         stats = {}
 
@@ -277,13 +286,21 @@ class FBRef:
 
         return  { "success" : 0, "res" : {}, "error_string" : "Error: Team page not found" }
     
-    def get_team_opposition_stats(self, team):
+    def get_team_opposition_stats(self, team, year):
         if(not team.fbref_id ):
             return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
         
         fbref_team_id = team.fbref_id
         
-        endpoint = "https://fbref.com/en/squads/" + fbref_team_id + "/team-name"
+        year_string = ""
+        last_year = None
+        if not year:
+            current_date = datetime.now()
+            year = str(current_date.year)
+        last_year = int(year) - 1
+        year_string = str(last_year) + "-" + str(year)
+        
+        endpoint = "https://fbref.com/en/squads/"  + fbref_team_id + "/" +  year_string + "/team-name"
         doc = self.limiter.call(self.make_request, endpoint)
         stats = {}
 
