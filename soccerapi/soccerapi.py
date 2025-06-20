@@ -4,6 +4,7 @@ from .lib.fapi import FAPI
 from .lib.fbref import FBRef
 from .lib.understat import Understat
 from .lib.visualize import Visualize
+from .lib.scouting import Scouting
 from .obj.fixture import Fixture
 import json
 import csv
@@ -15,6 +16,10 @@ class SoccerAPI():
 
        :ivar db: PostgreSQL database initalization.
        :vartype: PostgreSQL
+       :ivar visualize: Visualize object initalization.
+       :vartype: Visualize
+       :ivar db: Scouting object initalization.
+       :vartype: Scouting
        :ivar app: app data configuration.
 
        Example:
@@ -88,10 +93,12 @@ class SoccerAPI():
             "tm" : TM(),
             "understat" : Understat(),
             "visualize" : Visualize(),
+            "scout" : Scouting(),
             "fapi" : FAPI(config=config),
         }
         self.db = PostgreSQL(app) 
         self.visualize = Visualize()
+        self.scout = Scouting()
         self.app = app
 
     def import_object(self, path: str) -> Any:

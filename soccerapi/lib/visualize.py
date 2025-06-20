@@ -1,5 +1,7 @@
 from datetime import datetime
 from .utils import *
+from ..obj.player import Player
+from ..obj.team import Team
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
 from mplsoccer import VerticalPitch, PyPizza, FontManager, add_image
@@ -16,6 +18,9 @@ import requests
 from io import BytesIO
 
 class Visualize:
+    r"""The Visualize object. This class is designed to take in Soccer API 
+    objects and a series of parameters and generate visualizations.   
+    """
     def __init__(self):
         self.primary_color = "#3D405B"
         self.secondary_color = "#F87060"
@@ -315,7 +320,14 @@ class Visualize:
         poly = Polygon(points, closed=True, color=color, alpha=0.6, linewidth=0)
         self.ax2.add_patch(poly)
 
-    def radar(self, object, params):
+    def radar(self, object: ( Player | Team ), params: dict):
+        r"""Generate and export a radar chart for a player or team detailing a series of their statistics.
+
+        :param object: the Player or Team to build a radar chart around.
+        :type object: ( Player | Team )
+        :param params: params dictionary to define the radar chart customization.
+        :type params: dict
+        """
         object_type = str(type(object))
         if( "Player" not in object_type ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Team objects can be used to generate pizza plots" }
@@ -375,7 +387,14 @@ class Visualize:
         self.__output_vis(params)
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def shot_map(self, player, params):
+    def shot_map(self, player: Player, params: dict):
+        r"""Generate and export a shot map for a player over a season.
+
+        :param object: the Player or Team to build a shot map of.
+        :type object: Player
+        :param params: params dictionary to define the shot map customization.
+        :type params: dict
+        """
         object_type = str(type(player))
         if( "Player" not in object_type ):
             return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player objects can be used to generate shot maps" }
@@ -594,7 +613,16 @@ class Visualize:
         self.__output_vis(params)
         return { "success" : 1, "res" : {}, "error_string" : "" }
 
-    def plot_statistics(self, objs, stats_names, params = None):
+    def plot_statistics(self, objs: list[(Player | Team )], stats_names: list[str], params: ( dict | None ) = None):
+        r"""Generate and export a scatter plot for a series of Players or Teams over a given season and set of statistics.
+
+        :param object: the Players or Teams to plot on the scatter plot.
+        :type object: list[(Player | Team )]
+        :param object: statistics to define the X, Y and (optional) Z axis of the scatter plot.
+        :type object: list[str]
+        :param params: params dictionary to define the shot map customization.
+        :type params: dict
+        """
         for obj in objs:
             if("Player" not in str(type(obj)) and "Team" not in str(type(obj))):
                 return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Teams objects can be used to generate scatter plots" }

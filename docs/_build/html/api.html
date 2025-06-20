@@ -63,6 +63,17 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.postgres.PostgreSQL.search"><code class="docutils literal notranslate"><span class="pre">PostgreSQL.search()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize"><code class="docutils literal notranslate"><span class="pre">Visualize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.plot_statistics"><code class="docutils literal notranslate"><span class="pre">Visualize.plot_statistics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.radar"><code class="docutils literal notranslate"><span class="pre">Visualize.radar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.shot_map"><code class="docutils literal notranslate"><span class="pre">Visualize.shot_map()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting"><code class="docutils literal notranslate"><span class="pre">Scouting</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.cheaper_younger_better"><code class="docutils literal notranslate"><span class="pre">Scouting.cheaper_younger_better()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.same_position"><code class="docutils literal notranslate"><span class="pre">Scouting.same_position()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-soccerapi.obj.player">Obj</a><ul>
@@ -95,6 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.market_value"><code class="docutils literal notranslate"><span class="pre">Team.market_value()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.market_value_over_time"><code class="docutils literal notranslate"><span class="pre">Team.market_value_over_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.name"><code class="docutils literal notranslate"><span class="pre">Team.name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.opponent_statistic"><code class="docutils literal notranslate"><span class="pre">Team.opponent_statistic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.opponent_statistics"><code class="docutils literal notranslate"><span class="pre">Team.opponent_statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.players"><code class="docutils literal notranslate"><span class="pre">Team.players()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.profile"><code class="docutils literal notranslate"><span class="pre">Team.profile()</span></code></a></li>
@@ -190,11 +202,19 @@ classes in the <strong>Obj</strong> dir are used to scrape &amp; collected indiv
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>db</strong> – PostgreSQL database initalization.</p></li>
+<li><p><strong>visualize</strong> – Visualize object initalization.</p></li>
+<li><p><strong>db</strong> – Scouting object initalization.</p></li>
 <li><p><strong>app</strong> – app data configuration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#soccerapi.lib.postgres.PostgreSQL" title="soccerapi.lib.postgres.PostgreSQL">PostgreSQL</a></p>
+</dd>
+<dt class="field-odd">Vartype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.lib.visualize.Visualize" title="soccerapi.lib.visualize.Visualize">Visualize</a></p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#soccerapi.lib.scouting.Scouting" title="soccerapi.lib.scouting.Scouting">Scouting</a></p>
 </dd>
 </dl>
 <dl>
@@ -356,6 +376,104 @@ or more of the connection parameters are missing this value is set to
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-soccerapi.lib.visualize">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">soccerapi.lib.visualize.</span></span><span class="sig-name descname"><span class="pre">Visualize</span></span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize" title="Link to this definition"></a></dt>
+<dd><p>The Visualize object. This class is designed to take in Soccer API 
+objects and a series of parameters and generate visualizations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.plot_statistics">
+<span class="sig-name descname"><span class="pre">plot_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.plot_statistics" title="Link to this definition"></a></dt>
+<dd><p>Generate and export a scatter plot for a series of Players or Teams over a given season and set of statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the Players or Teams to plot on the scatter plot.</p></li>
+<li><p><strong>object</strong> – statistics to define the X, Y and (optional) Z axis of the scatter plot.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the shot map customization.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.radar">
+<span class="sig-name descname"><span class="pre">radar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.radar" title="Link to this definition"></a></dt>
+<dd><p>Generate and export a radar chart for a player or team detailing a series of their statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>( </em><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a><em> | </em><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><em>Team</em></a><em> )</em>) – the Player or Team to build a radar chart around.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the radar chart customization.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.shot_map">
+<span class="sig-name descname"><span class="pre">shot_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.shot_map" title="Link to this definition"></a></dt>
+<dd><p>Generate and export a shot map for a player over a season.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the Player or Team to build a shot map of.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the shot map customization.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-soccerapi.lib.scouting">
+<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">soccerapi.lib.scouting.</span></span><span class="sig-name descname"><span class="pre">Scouting</span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting" title="Link to this definition"></a></dt>
+<dd><p>The Scouting object. This class is provides a series of methods which
+can be used as tools for scouting players.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting.cheaper_younger_better">
+<span class="sig-name descname"><span class="pre">cheaper_younger_better</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">players_to_scout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting.cheaper_younger_better" title="Link to this definition"></a></dt>
+<dd><p>Using a Player object, a list of Players to scout and a statistic this method performs a ‘Cheaper, Younger, Better’ styled scouting analysis across that list of Players to scout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>player</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the player you are comparing against.</p></li>
+<li><p><strong>players_to_scout</strong> (<em>list</em><em>[</em><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a><em>]</em>) – the players you are scouting.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – the statistic name you are using to compare these players.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a dictionary containing the results from the cheaper, younger, better analysis.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting.same_position">
+<span class="sig-name descname"><span class="pre">same_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">players_to_scount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting.same_position" title="Link to this definition"></a></dt>
+<dd><p>Compares two Player objects and returns true if they play the same position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>player</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the player you are comparing against.</p></li>
+<li><p><strong>players_to_scount</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the player you are scouting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns True if the Players play the same position, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -652,6 +770,7 @@ the current year otherwise.</p>
 <li><p><strong>fbref_id</strong> (<em>str</em>) – Teams’s FBRef ID.</p></li>
 <li><p><strong>tm_id</strong> (<em>str</em>) – Team’s Transfermarkt ID.</p></li>
 <li><p><strong>fapi_id</strong> (<em>str</em>) – Team’s API-Football ID</p></li>
+<li><p><strong>understat_id</strong> (<em>str</em>) – teams’s Understat ID.</p></li>
 <li><p><strong>db</strong> (<a class="reference internal" href="#soccerapi.lib.postgres.PostgreSQL" title="soccerapi.lib.postgres.PostgreSQL"><em>PostgreSQL</em></a>) – PostgreSQL database initalization object.</p></li>
 </ul>
 </dd>
@@ -816,21 +935,44 @@ the current year.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.obj.team.Team.opponent_statistic">
+<span class="sig-name descname"><span class="pre">opponent_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.opponent_statistic" title="Link to this definition"></a></dt>
+<dd><p>Get the Team’s FBRef opposition statistics for a given year and Statistic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – internal or display name of a statistic.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a Statistic object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.opponent_statistics">
-<span class="sig-name descname"><span class="pre">opponent_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.opponent_statistics" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">opponent_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.opponent_statistics" title="Link to this definition"></a></dt>
 <dd><p>Get the Team’s FBRef opposition statistics for a given year.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a Statistic object.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a Statistic object.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a hash of Statistic objects.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a hash of Statistic objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -869,11 +1011,14 @@ empty.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.statistic">
-<span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistic" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistic" title="Link to this definition"></a></dt>
 <dd><p>Get the Team’s FBRef statistics for a given year and Statistic.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stat</strong> (<em>str</em>) – internal or display name of a statistic.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – internal or display name of a statistic.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a Statistic object.</p>
@@ -886,14 +1031,17 @@ empty.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.team.Team.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistics" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.statistics" title="Link to this definition"></a></dt>
 <dd><p>Returns the Team’s FBRef Statistics for a given year.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a hash of Statistic objects.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a hash of Statistic objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -924,9 +1072,10 @@ empty.</p>
 <li><p><strong>country</strong> (<em>str</em>) – League’s country.</p></li>
 <li><p><strong>tm_id</strong> (<em>str</em>) – Leagues’s Transfermarkt ID.</p></li>
 <li><p><strong>fapi_id</strong> (<em>str</em>) – League’s API-Football ID.</p></li>
+<li><p><strong>understat_id</strong> (<em>str</em>) – league’s Understat ID.</p></li>
 <li><p><strong>fbref_stat_detail_level</strong> (<em>str</em>) – level of Statistic detail FBRef provides for
 this League object.</p></li>
-<li><p><strong>understat_id</strong> (<em>str</em>) – Leagues’s Understat ID.</p></li>
+<li><p><strong>understat_id</strong> – Leagues’s Understat ID.</p></li>
 <li><p><strong>db</strong> (<a class="reference internal" href="#soccerapi.lib.postgres.PostgreSQL" title="soccerapi.lib.postgres.PostgreSQL"><em>PostgreSQL</em></a>) – a database instance.</p></li>
 </ul>
 </dd>

@@ -300,8 +300,8 @@ class Team:
 
     def statistics(self, year = None) -> dict[Statistic]:
         r"""Returns the Team's FBRef Statistics for a given year.
-        :param year: the year to be selected. If this parameter is not set, get
-          the current year.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
         :type year: Optional[str]
         :returns: a hash of Statistic objects.
         :rtype: dict[Statistic]
@@ -333,8 +333,8 @@ class Team:
 
     def statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Team's FBRef statistics for a given year and Statistic.
-        :param year: the year to be selected. If this parameter is not set, get
-          the current year.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
         :type year: Optional[str]
         :param stat: internal or display name of a statistic.
         :type stat: str
@@ -358,8 +358,8 @@ class Team:
 
     def opponent_statistics(self, year: Optional[str] = None) -> dict[Statistic]:
         r"""Get the Team's FBRef opposition statistics for a given year.
-        :param year: the year to be selected. If this parameter is not set, get
-          the current year.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
         :type year: Optional[str]
         :returns: a Statistic object.
         :rtype: Statistic
@@ -392,8 +392,8 @@ class Team:
     
     def opponent_statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Team's FBRef opposition statistics for a given year and Statistic.
-        :param year: the year to be selected. If this parameter is not set, get
-          the current year.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
         :type year: Optional[str]
         :param stat: internal or display name of a statistic.
         :type stat: str

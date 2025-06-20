@@ -26,6 +26,12 @@ Lib
 .. automodule:: soccerapi.lib.postgres
    :members:
 
+.. automodule:: soccerapi.lib.visualize
+   :members:
+
+.. automodule:: soccerapi.lib.scouting
+   :members:
+
 Obj
 ---
 
