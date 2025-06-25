@@ -26,7 +26,7 @@ class Statistic:
             self.name = name
         else:
             self.name = stat_data["key"]
-            self.value = None
+            self.value = 0
             return
         
         val = ""

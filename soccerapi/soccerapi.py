@@ -93,12 +93,12 @@ class SoccerAPI():
             "tm" : TM(),
             "understat" : Understat(),
             "visualize" : Visualize(),
-            "scout" : Scouting(),
+            "scouting" : Scouting(),
             "fapi" : FAPI(config=config),
         }
         self.db = PostgreSQL(app) 
         self.visualize = Visualize()
-        self.scout = Scouting()
+        self.scouting = Scouting()
         self.app = app
 
     def import_object(self, path: str) -> Any:

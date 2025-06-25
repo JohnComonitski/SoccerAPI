@@ -68,6 +68,14 @@ class Team:
         """
         return self.team_name
     
+    def short_name(self) -> str:
+        r"""Get the short name of the Team.
+
+        :returns: the team name.
+        :rtype: str
+        """
+        return self.team_name
+    
     def export(self):
         r"""Export the Team object as a JSON file.
 

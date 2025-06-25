@@ -72,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting"><code class="docutils literal notranslate"><span class="pre">Scouting</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.cheaper_younger_better"><code class="docutils literal notranslate"><span class="pre">Scouting.cheaper_younger_better()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.same_position"><code class="docutils literal notranslate"><span class="pre">Scouting.same_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.top_10_by_stat"><code class="docutils literal notranslate"><span class="pre">Scouting.top_10_by_stat()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -396,7 +397,43 @@ objects and a series of parameters and generate visualizations.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the Players or Teams to plot on the scatter plot.</p></li>
 <li><p><strong>object</strong> – statistics to define the X, Y and (optional) Z axis of the scatter plot.</p></li>
-<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the shot map customization.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the scatter plot customization.</p>
+<ul>
+<li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
+<li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
+<li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
+<li><p><strong>stats</strong> (<em>list[str]</em>): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.</p></li>
+<li><p><strong>years</strong> (<em>list[str]</em>): which year to plot the statistics of. Use 1 year to plot statistics from a single season. Use 2 years to plot the evolution of a statistic. If not included, the most recent season will be used as default.</p></li>
+<li><p><strong>color</strong> (<em>str</em>): color of the points on the scatter plot.</p></li>
+<li><p><strong>use_images</strong> (<em>bool</em>): use object logos of images instead of points on the scatter plot.</p></li>
+<li><p><strong>highlight</strong> (<em>dict</em>): dictionary describing which points should be highlighted.</p>
+<blockquote>
+<div><ul>
+<li><p><strong>objects</strong> (<em>list[Player|Team]</em>): highlight a list of given objects.</p></li>
+<li><p><strong>color</strong> (str*): color of the highlights points.</p></li>
+<li><p><strong>min</strong> (<em>bool</em>): highlight the minimum point.</p></li>
+<li><p><strong>max</strong> (<em>bool</em>): highlight the maximum point.</p></li>
+<li><p><strong>median</strong> (<em>bool</em>): highlight the median point.</p></li>
+<li><p><strong>kmeans</strong> (<em>int</em>): Perform kmeans clustering over the scatter plot using a given (k) number of groups.</p></li>
+<li><p><strong>top_n</strong> (<em>int</em>): highlight the top n points.</p></li>
+<li><p><strong>top_n_stat</strong> (<em>dict</em>): dictionary describing how to highlight the top n of a given statistic.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>): the top n to highlight.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>): statistic used to calculate the top n.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>top_quartile</strong> (<em>bool</em>): highlight all points in the top quartile.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>label_highlights</strong> (<em>bool</em>): include a label (object name) of the objects highlighted.</p></li>
+<li><p><strong>x_label</strong> (<em>str</em>): label used along the x axis. If not set, a default will be generated.</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>): label used along the y axis. If not set, a default will be generated.</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -410,7 +447,15 @@ objects and a series of parameters and generate visualizations.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>( </em><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a><em> | </em><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><em>Team</em></a><em> )</em>) – the Player or Team to build a radar chart around.</p></li>
-<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the radar chart customization.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the radar chart customization.</p>
+<ul>
+<li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
+<li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
+<li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
+<li><p><strong>columns</strong> (<em>list[str]</em>): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -424,7 +469,14 @@ objects and a series of parameters and generate visualizations.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the Player or Team to build a shot map of.</p></li>
-<li><p><strong>params</strong> (<em>dict</em>) – params dictionary to define the shot map customization.</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the shot map customization.</p>
+<ul>
+<li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
+<li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
+<li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -474,6 +526,28 @@ can be used as tools for scouting players.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting.top_10_by_stat">
+<span class="sig-name descname"><span class="pre">top_10_by_stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">players</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting.top_10_by_stat" title="Link to this definition"></a></dt>
+<dd><p>Scout a list of players and return (in order) the top 10 players for a given stat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>player</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the players you are scouting.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – the statistic name you are using to compare these players.</p></li>
+<li><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year the statistic is from. If this parameter is not set, get
+the current year.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns a list of the top 10 players by a given stat</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player">Player</a>]</p>
 </dd>
 </dl>
 </dd></dl>

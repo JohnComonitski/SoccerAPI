@@ -71,6 +71,14 @@ class Player:
         """
         return self.first_name + " " + self.last_name
     
+    def short_name(self) -> str:
+        r"""Get the short name of the Player.
+
+        :returns: the first initial and last names.
+        :rtype: str
+        """
+        return self.first_name[0] + ". " + self.last_name
+    
     def export(self):
         r"""Export the Player object as a JSON file.
 
@@ -321,7 +329,7 @@ class Player:
         stats = self.statistics(year)
         if stat_key and stat_key in stats:
             return stats[stat_key]
-        return 0
+        return Statistic({ "key" : stat, "value" : 0, "percentile" : 0})
 
     def fbref_image(self) -> str:
         r"""Get a URL of the Player's FBRef image.

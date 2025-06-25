@@ -14,7 +14,12 @@ from matplotlib.transforms import Affine2D
 from matplotlib.path import Path
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from matplotlib.patches import Polygon
+import matplotlib.gridspec as gridspec
+from matplotlib_venn import venn2, venn3
+from itertools import chain, combinations
+import textwrap
 import requests
+list
 from io import BytesIO
 
 class Visualize:
@@ -34,10 +39,11 @@ class Visualize:
             pitch_type='opta', 
             half=True, 
             pitch_color=self.primary_color, 
-            pad_bottom=.5, 
             line_color='white',
             linewidth=.75,
-            axis=True, label=True
+            axis=True, 
+            label=True,
+            pad_top=5.5
         )
 
         self.ax1 = None
@@ -144,63 +150,108 @@ class Visualize:
 
     def __set_up_vis(self, params):
         plt.clf()
-        width = 8
-        height = 9
-        if "height" in params:
-            height = params["height"]
+        body_height = 5
 
         #Title
+        header_height = 0
         title = ''
         if( params and "title" in params):
+            header_height += .3
             title = params["title"]
 
         #Description
-        a3_height = .015
         desc = ""
+        desc_buffer = 0
         if( params and "description" in params):
-            a3_height = .035
             desc = params["description"]
+            wrapped_description = "\n".join(textwrap.wrap(desc, width=110))
+            desc_lines = wrapped_description.count("\n") + 1
+            if(desc_lines == 1):
+                desc_buffer = .1
+            header_height += ( desc_lines * .25 )
 
         #Signature
         signature = ""
-        a1_height = 0
+        footer_height = 0
         if( params and "signature" in params):
-            a1_height = .01
+            footer_height = 0.5
             signature = params["signature"]
 
-        fig = plt.figure(figsize=(width, height))
+        height = header_height + body_height + footer_height
+        width = 8
+
+        # Find where each section starts
+        top_y = (body_height + footer_height) / height
+        middle_y = footer_height / height
+        bottom_y = 0
+
+        top_h_norm = header_height / height
+        middle_h_norm = body_height / height
+        bottom_h_norm = footer_height / height
+
+        # Set Up Figure
+        fig = plt.figure(figsize=(width, height), dpi=900)
         fig.patch.set_facecolor(self.primary_color)
 
-        ax1 = fig.add_axes([0, 0, 1, a1_height]) #.09 inches tall
-        ax1.set_facecolor(self.primary_color)
+        # Set Up Header Axis
+        ax3 = fig.add_axes([0, top_y, 1, top_h_norm])
+        ax3.set_facecolor("#ffcccc")  # Debug color (light red)
 
-        ax1.text(
-            x=0, 
-            y=0, 
-            s=signature, 
+        ax3.text(
+            x=0.01, 
+            y=.75, 
+            s=title, 
             fontname='Trebuchet MS',
-            fontsize=10,
-            fontweight='bold',
+            fontsize=16,
+            va='center',
+            fontweight='bold', 
             color=self.tertiary_color, 
             ha='left'
         )
-        ax1.set_axis_off()
+        
+        if(desc != ""):
+            ax3.text(
+                x=0.01, 
+                y=( 0.55 - desc_buffer ), 
+                s=wrapped_description, 
+                fontname='Trebuchet MS',
+                fontsize=10,
+                color=self.tertiary_color, 
+                ha='left',
+                va='top'
+            )
+        ax3.set_axis_off()
 
+        # Set Up Footer Axis
+        ax1 = fig.add_axes([0, bottom_y, 1, bottom_h_norm])
+        ax1.set_facecolor("#ccccff")  # Debug color (light blue)
+        ax1.set_axis_off()
+        if(footer_height > 0):
+            ax1.text(
+                x=0.01, 
+                y=0.1, 
+                s=signature, 
+                fontname='Trebuchet MS',
+                fontsize=8,
+                fontweight='bold',
+                color=self.tertiary_color, 
+                ha='left',
+                va='center',
+            )
+
+        # Set Up Plot Axis
         ax2 = None
         if( "type" in params and params["type"] == "radar" ):
-            ax2 = fig.add_axes([0, 0.05, 1, .8], projection='radar')
+            ax2 = fig.add_axes([0, middle_y, 1, middle_h_norm], projection='radar')
         else:
-            ax2 = fig.add_axes([0, 0.05, 1, .8])
-            
+            ax2 = fig.add_axes([0, middle_y, 1, middle_h_norm])
 
             plt.grid(True, alpha=0.2, color=self.tertiary_color)
             plt.gca().spines['top'].set_visible(False)
             plt.gca().spines['right'].set_visible(False)
 
-            ax2.spines['top'].set_color(self.tertiary_color)
-            ax2.spines['right'].set_color(self.tertiary_color)
-            ax2.spines['left'].set_color(self.tertiary_color)
-            ax2.spines['bottom'].set_color(self.tertiary_color)
+            for spine in ax2.spines.values():
+                spine.set_color(self.tertiary_color)
 
             #X Axis
             ax2.tick_params(axis='x', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
@@ -209,34 +260,15 @@ class Visualize:
             #Y Axis
             ax2.tick_params(axis='y', colors=self.tertiary_color, labelfontfamily='Trebuchet MS')
             ax2.set_ylabel("", c=self.tertiary_color, fontname='Trebuchet MS', fontsize=12, fontweight='bold')
-        ax2.set_facecolor(self.primary_color)
-        
-        ax3 = fig.add_axes([0, .86, 1, a3_height])
-        ax3.set_facecolor(self.primary_color)
+        ax2.set_facecolor("#ccffcc")  # Debug color (light green)
 
-        ax3.text(
-            x=0, 
-            y=.85, 
-            s=title, 
-            fontname='Trebuchet MS',
-            fontsize=20, 
-            fontweight='bold', 
-            color=self.tertiary_color, 
-            ha='left'
-        )
-        
-        if(desc != ""):
-            ax3.text(
-                x=0, 
-                y=.05, 
-                s=desc, 
-                fontname='Trebuchet MS',
-                fontsize=14,
-                color=self.tertiary_color, 
-                ha='left'
-            )
-        ax3.set_axis_off()
+        # Clean up Axes
+        for ax in [ax1, ax2, ax3]:
+            if ax:
+                # Comment out to see each individual axes
+                ax.set_facecolor(self.primary_color)
 
+        # Saves Axes
         self.ax1 = ax1
         self.ax2 = ax2
         self.ax3 = ax3
@@ -320,12 +352,18 @@ class Visualize:
         poly = Polygon(points, closed=True, color=color, alpha=0.6, linewidth=0)
         self.ax2.add_patch(poly)
 
-    def radar(self, object: ( Player | Team ), params: dict):
+    def radar(self, object: Player | Team, params: dict):
         r"""Generate and export a radar chart for a player or team detailing a series of their statistics.
 
         :param object: the Player or Team to build a radar chart around.
         :type object: ( Player | Team )
         :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **columns** (*list[str]*): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.
         :type params: dict
         """
         object_type = str(type(object))
@@ -393,6 +431,11 @@ class Visualize:
         :param object: the Player or Team to build a shot map of.
         :type object: Player
         :param params: params dictionary to define the shot map customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): file name. If not set, a default will be generated.
         :type params: dict
         """
         object_type = str(type(player))
@@ -404,10 +447,13 @@ class Visualize:
 
         params["height"] = 8
         self.__set_up_vis(params)
-
+        
+        self.pitch.draw(ax=self.ax2)
+        
+        # Legend Left
         self.ax2.text(
-            x=90.0, 
-            y=101, 
+            x=87.5, 
+            y=101.2, 
             s=f'Low Quality Chance', 
             fontsize=12, 
             color=self.tertiary_color, 
@@ -416,8 +462,8 @@ class Visualize:
         )
 
         self.ax2.scatter(
-            x=78.5, 
-            y=101.5, 
+            x=73, 
+            y=101.8, 
             s=100, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
@@ -425,32 +471,32 @@ class Visualize:
         )
 
         self.ax2.scatter(
-            x=75, 
-            y=101.5, 
+            x=69.5, 
+            y=101.8, 
             s=150, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
             linewidth=.8
         )
         self.ax2.scatter(
-            x=71, 
-            y=101.5, 
+            x=65.5, 
+            y=101.8, 
             s=200, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
             linewidth=.8
         )
         self.ax2.scatter(
-            x=66.5, 
-            y=101.5, 
+            x=61, 
+            y=101.8, 
             s=250, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
             linewidth=.8
         )
         self.ax2.scatter(
-            x=62, 
-            y=101.5, 
+            x=56, 
+            y=101.8, 
             s=300, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
@@ -458,8 +504,8 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=49, 
-            y=101, 
+            x=40, 
+            y=101.2, 
             s=f'High Quality Chance', 
             fontsize=12, 
             color=self.tertiary_color,  
@@ -467,11 +513,12 @@ class Visualize:
             ha='center'
         )
 
+        # Legend Right 
         self.ax2.text(
             x=13.5, 
-            y=101, 
+            y=101.4, 
             s=f'Goal', 
-            fontsize=10, 
+            fontsize=8, 
             color=self.tertiary_color, 
             fontfamily='Trebuchet MS',
             ha='right'
@@ -479,7 +526,7 @@ class Visualize:
 
         self.ax2.scatter(
             x=11.5,
-            y=101.5, 
+            y=101.9, 
             s=100, 
             color=self.secondary_color,
             edgecolor=self.tertiary_color, 
@@ -489,9 +536,9 @@ class Visualize:
 
         self.ax2.text(
             x=9.5,
-            y=101, 
+            y=101.4, 
             s=f'No Goal', 
-            fontsize=10, 
+            fontsize=8, 
             color=self.tertiary_color, 
             ha='left',
             fontfamily='Trebuchet MS'
@@ -499,15 +546,19 @@ class Visualize:
 
         self.ax2.scatter(
             x=1, 
-            y=101.5, 
+            y=101.9, 
             s=100, 
             color=self.primary_color, 
             edgecolor=self.tertiary_color, 
             linewidth=.8
         )
 
-        self.pitch.draw(ax=self.ax2)
+        # Line For Measuring
+        #x = [0, 101.8]
+        #y = [102, 101.8]
+        #self.ax2.plot(x, y, color='white', linewidth=.25) 
 
+        # Plot Shots
         for x in shots:
             self.pitch.scatter(
                 float(x['X']) * 100, 
@@ -519,11 +570,12 @@ class Visualize:
                 linewidth=.8,
                 edgecolor=self.tertiary_color
             )
-            
+
         self.ax2.set_axis_off()
 
+        # Player Stats
         self.ax2.text(
-            x=95, 
+            x=97, 
             y=64, 
             s='Shots', 
             fontsize=28, 
@@ -534,7 +586,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=95, 
+            x=97, 
             y=61,
             s=f'{shot_data["shots"].value}', 
             fontsize=20, 
@@ -544,7 +596,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=70,
+            x=71.5,
             y=64, 
             s='Goals', 
             fontsize=28, 
@@ -555,7 +607,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=70, 
+            x=71.5, 
             y=61,
             s=f'{shot_data["goals"].value}', 
             fontsize=20, 
@@ -565,7 +617,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=45,
+            x=44.7,
             y=64,
             s='xG', 
             fontsize=28, 
@@ -576,7 +628,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=45, 
+            x=44.7, 
             y=61,
             s=f'{shot_data["xg"].value:.2f}', 
             fontsize=20, 
@@ -586,7 +638,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=25,
+            x=27,
             y=64,
             s='xG/Shot', 
             fontsize=28, 
@@ -597,7 +649,7 @@ class Visualize:
         )
 
         self.ax2.text(
-            x=25, 
+            x=27, 
             y=61,
             s=f'{shot_data["xg_per_shot"].value:.2f}', 
             fontsize=20, 
@@ -620,12 +672,45 @@ class Visualize:
         :type object: list[(Player | Team )]
         :param object: statistics to define the X, Y and (optional) Z axis of the scatter plot.
         :type object: list[str]
-        :param params: params dictionary to define the shot map customization.
+        :param params: params dictionary to define the scatter plot customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **stats** (*list[str]*): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.
+            - **years** (*list[str]*): which year to plot the statistics of. Use 1 year to plot statistics from a single season. Use 2 years to plot the evolution of a statistic. If not included, the most recent season will be used as default.
+            - **color** (*str*): color of the points on the scatter plot.
+            - **use_images** (*bool*): use object logos of images instead of points on the scatter plot.
+            - **highlight** (*dict*): dictionary describing which points should be highlighted.
+
+                - **objects** (*list[Player|Team]*): highlight a list of given objects.
+                - **color** (str*): color of the highlights points.
+                - **min** (*bool*): highlight the minimum point.
+                - **max** (*bool*): highlight the maximum point.
+                - **median** (*bool*): highlight the median point.
+                - **kmeans** (*int*): Perform kmeans clustering over the scatter plot using a given (k) number of groups.
+                - **top_n** (*int*): highlight the top n points.
+                - **top_n_stat** (*dict*): dictionary describing how to highlight the top n of a given statistic.
+                
+                    - **n** (*int*): the top n to highlight.
+                    - **stat** (*str*): statistic used to calculate the top n.
+                - **top_quartile** (*bool*): highlight all points in the top quartile.
+            - **label_highlights** (*bool*): include a label (object name) of the objects highlighted.
+            - **x_label** (*str*): label used along the x axis. If not set, a default will be generated.
+            - **y_label** (*str*): label used along the y axis. If not set, a default will be generated.
         :type params: dict
         """
+
         for obj in objs:
             if("Player" not in str(type(obj)) and "Team" not in str(type(obj))):
                 return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Teams objects can be used to generate scatter plots" }
+
+        x_stat = stats_names[0]
+        y_stat = stats_names[1]
+        z_stat = None
+        if(len(stats_names) > 2):
+            z_stat = stats_names[2]
 
         color = self.secondary_color
         if( params and "color" in params):
@@ -663,12 +748,6 @@ class Visualize:
                 highlight_color = params["highlight"]["color"]
             else:
                 highlight_color = self.highlight_color
-
-        x_stat = stats_names[0]
-        y_stat = stats_names[1]
-        z_stat = None
-        if(len(stats_names) > 2):
-            z_stat = stats_names[2]
             
         # Prepping Data
         stats = []
@@ -693,7 +772,6 @@ class Visualize:
         y_start = []
         has_evolution = 0
         if(len(years) > 1):
-            print("has evolution")
             has_evolution = 1
         x_end = []
         y_end = []
@@ -708,7 +786,7 @@ class Visualize:
             labels.append(obj["object"].name())
             images.append(obj["image"])
             if has_obj_highlights:
-                if(str(stat["object"].id) in obj_highlight):
+                if(str(obj["object"].id) in obj_highlight):
                     c.append(highlight_color)
                     to_highlight.append(idx)
                 else:
@@ -813,3 +891,78 @@ class Visualize:
         self.__output_vis(params)
 
         return { "success" : 1, "res" : {}, "error_string" : "" }
+
+    def venn_diagram(self, sets: dict, params: dict):
+        r"""Generate and export a venn diagram chart given two or three sets.
+
+        :param sets: dictionary holding sets to be diagrammed, where the key is the label and the value is the set (list[str]).
+        :type sets: dict
+        :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): file name. If not set, a default will be generated.
+        :type params: dict
+        """
+        self.__set_up_vis(params)
+
+        sets_list = []
+        labels = []
+        for key in sets.keys():
+            labels.append(key)
+            sets_list.append(sets[key])
+
+        if(len(labels) > 3 or len(labels) == 1):
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Can only generate vendiagrams for 2 or 3 sets" }
+ 
+        venn = None
+        region_map = {}
+
+        if(len(labels) == 2):
+            venn = venn2(sets_list, set_labels=(labels), ax=self.ax2)
+            region_map = {
+                '100': (0,),     # A only
+                '010': (1,),     # B only
+                '110': (0, 1)   # A ∩ B
+            }
+        else:
+            venn = venn3(sets_list, set_labels=(labels), ax=self.ax2)
+            region_map = {
+                '100': (0,),     # A only
+                '010': (1,),     # B only
+                '001': (2,),     # C only
+                '110': (0, 1),   # A ∩ B
+                '101': (0, 2),   # A ∩ C
+                '011': (1, 2),   # B ∩ C
+                '111': (0, 1, 2) # A ∩ B ∩ C
+            }
+
+        for patch in venn.patches:
+            if patch:
+                patch.set_edgecolor(self.tertiary_color)
+                patch.set_linewidth(1) 
+
+        for text in venn.set_labels:
+            if text:
+                text.set_color(self.tertiary_color)
+
+        for text in venn.subset_labels:
+            if text:
+                text.set_color(self.tertiary_color)
+
+        def get_label_for_region(indices):
+            included = set.intersection(*(sets_list[i] for i in indices))
+            excluded = set.union(*[sets_list[i] for i in range(len(labels)) if i not in indices], set())
+            return included - excluded
+
+        for code, indices in region_map.items():
+            label = venn.get_label_by_id(code)
+            if label:
+                items = get_label_for_region(indices)
+                label.set_text("\n".join(items))
+
+        if( "filename" not in params):
+            params["filename"] = "_".join(labels) + "_venndiagram.png"
+
+        self.__output_vis(params)
