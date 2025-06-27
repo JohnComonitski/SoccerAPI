@@ -758,7 +758,7 @@ class Visualize:
             stat = { "object" : obj, "image" : image }
 
             if(z_stat):
-                stat[z_stat] = self.__get_stat(z_stat, obj, year)
+                stat[z_stat] = self.__get_stat(z_stat, obj, max(years))
 
             stat["stats"] = {}
             for year in years:
@@ -782,7 +782,6 @@ class Visualize:
         images = []
         idx = 0
         for obj in stats:
-            idx += 1
             labels.append(obj["object"].name())
             images.append(obj["image"])
             if has_obj_highlights:
@@ -808,6 +807,7 @@ class Visualize:
                 stat = obj["stats"][start_year]
                 x_start.append(stat[x_stat])
                 y_start.append(stat[y_stat])
+            idx += 1
 
         if(len(z) == 0):
             z = None
@@ -854,23 +854,31 @@ class Visualize:
                         to_highlight.append(idx)
 
         # Plotting Data
-        self.ax2.scatter(x_end, y_end, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
         if has_evolution:
+            for (x0, y0, x1, y1, color) in zip(x_start, y_start, x_end, y_end, c):
+                self.__add_fan(x0, y0, x1, y1, color=color)
             self.ax2.scatter(x_start, y_start, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
-            for (x0, y0, x1, y1) in zip(x_start, y_start, x_end, y_end):
-                self.__add_fan(x0, y0, x1, y1)
+
+        self.ax2.scatter(x_end, y_end, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
 
         if(use_images):
-            for (x0, y0, img) in zip(x_end, y_end, images):
+            z_sizes = [ .2 for i in range(len(x_end)) ]
+            if use_images and z:
+                z_sizes = normalize(z, min_new=.1, max_new=.3)
+
+            for (x0, y0, img, z_size) in zip(x_end, y_end, images, z_sizes):
                 if img:
-                    im = OffsetImage(img, zoom=.3)
+                    im = OffsetImage(img, zoom=z_size)
                     ab = AnnotationBbox(im, (x0, y0), frameon=False)
                     self.ax2.add_artist(ab)
 
         if( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
                 if i in to_highlight:
-                    self.ax2.annotate(text, (x_end[i], y_end[i]), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
+                    offset = 0
+                    if use_images:
+                        offset = 1
+                    self.ax2.annotate(text, (x_end[i] + offset, y_end[i] + offset), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
 
         #X Axis
         x_label = x_stat

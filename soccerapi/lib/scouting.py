@@ -93,8 +93,6 @@ class Scouting:
         """
 
         stats_list = [ { stat: player.statistic(stat, year), "player" : player } for player in players ]
-        for stats in stats_list:
-            print(type(stats[stat]))
         stats_list.sort(key=lambda x: x[stat].value)
         stats_list.reverse()
 
