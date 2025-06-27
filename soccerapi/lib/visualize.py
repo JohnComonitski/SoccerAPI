@@ -288,7 +288,9 @@ class Visualize:
             else:
                 return val.value
 
-    def __get_img(self, obj):
+    def __get_img(self, obj, c = None):
+        if c is None:
+            c = self.secondary_color
         profile = obj.profile()
         url = ""
         round_edges = 0
@@ -302,7 +304,6 @@ class Visualize:
             img = Image.open(BytesIO(response.content)).convert("RGBA")
             if round_edges:
                 stroke_width = 5
-                stroke_color = self.secondary_color
                 size = min(img.size)
                 img = ImageOps.fit(img, (size, size), centering=(0.5, 0.5))
 
@@ -320,7 +321,7 @@ class Visualize:
                 stroke_draw.ellipse((0, 0, stroke_size, stroke_size), fill=255)
 
                 # Draw stroke circle
-                stroke_circle = Image.new("RGBA", (stroke_size, stroke_size), stroke_color)
+                stroke_circle = Image.new("RGBA", (stroke_size, stroke_size), c)
                 background.paste(stroke_circle, (0, 0), stroke_mask)
 
                 # Paste the image in the center with its alpha mask
@@ -351,6 +352,33 @@ class Visualize:
         ])
         poly = Polygon(points, closed=True, color=color, alpha=0.6, linewidth=0)
         self.ax2.add_patch(poly)
+
+    def set_styling(self, params: dict):
+        r"""Change the color scheme and font defaults for your visualizations.
+
+        :param params: dictionary describing the color scheme and font.
+
+            - **primary_color** (*str*): hex code for the primary color (background color).
+            - **secondary_color** (*str*):  hex code for the secondary color (lines and plot color).
+            - **tertiary_color** (*str*):  hex code for the tertiary color (text color).
+            - **highlight_color** (*str*):  hex code for the highlight color (highlights).
+            - **font** (*str*): font family for text.
+        :type params: dict
+        """
+        if "primary_color" in params:
+            self.primary_color = params["primary_color"]
+
+        if "secondary_color" in params:
+            self.secondary_color = params["secondary_color"]
+
+        if "tertiary_color" in params:
+            self.tertiary_color = params["tertiary_color"]
+
+        if "highlight_color" in params:
+            self.highlight_color = params["highlight_color"]
+
+        if "font" in params:
+            self.font = params["font"]
 
     def radar(self, object: Player | Team, params: dict):
         r"""Generate and export a radar chart for a player or team detailing a series of their statistics.
@@ -697,6 +725,7 @@ class Visualize:
                     - **stat** (*str*): statistic used to calculate the top n.
                 - **top_quartile** (*bool*): highlight all points in the top quartile.
             - **label_highlights** (*bool*): include a label (object name) of the objects highlighted.
+            - **label_all** (*bool*): label (object name) of for all objects.
             - **x_label** (*str*): label used along the x axis. If not set, a default will be generated.
             - **y_label** (*str*): label used along the y axis. If not set, a default will be generated.
         :type params: dict
@@ -871,8 +900,14 @@ class Visualize:
                     im = OffsetImage(img, zoom=z_size)
                     ab = AnnotationBbox(im, (x0, y0), frameon=False)
                     self.ax2.add_artist(ab)
-
-        if( params and "label_highlights" in params and "kmeans" not in params):
+        
+        if( params and "label_all" in params):
+            for (x, y, text) in zip(x_end, y_end, labels):
+                offset = 0
+                if use_images:
+                    offset = 1
+                self.ax2.annotate(text, (x + offset, y + offset), c=self.tertiary_color, xytext=(5, 5), textcoords='offset points')
+        elif( params and "label_highlights" in params and "kmeans" not in params):
             for i, text in enumerate(labels):
                 if i in to_highlight:
                     offset = 0

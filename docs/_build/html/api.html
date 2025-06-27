@@ -66,11 +66,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize"><code class="docutils literal notranslate"><span class="pre">Visualize</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.plot_statistics"><code class="docutils literal notranslate"><span class="pre">Visualize.plot_statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.radar"><code class="docutils literal notranslate"><span class="pre">Visualize.radar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.set_styling"><code class="docutils literal notranslate"><span class="pre">Visualize.set_styling()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.shot_map"><code class="docutils literal notranslate"><span class="pre">Visualize.shot_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.venn_diagram"><code class="docutils literal notranslate"><span class="pre">Visualize.venn_diagram()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting"><code class="docutils literal notranslate"><span class="pre">Scouting</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.cheaper_younger_better"><code class="docutils literal notranslate"><span class="pre">Scouting.cheaper_younger_better()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.cheaper_better_younger"><code class="docutils literal notranslate"><span class="pre">Scouting.cheaper_better_younger()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.same_position"><code class="docutils literal notranslate"><span class="pre">Scouting.same_position()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.scouting.Scouting.top_10_by_stat"><code class="docutils literal notranslate"><span class="pre">Scouting.top_10_by_stat()</span></code></a></li>
 </ul>
@@ -91,6 +93,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.positions"><code class="docutils literal notranslate"><span class="pre">Player.positions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.profile"><code class="docutils literal notranslate"><span class="pre">Player.profile()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.scouting_data"><code class="docutils literal notranslate"><span class="pre">Player.scouting_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.short_name"><code class="docutils literal notranslate"><span class="pre">Player.short_name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.shots_over_season"><code class="docutils literal notranslate"><span class="pre">Player.shots_over_season()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.statistic"><code class="docutils literal notranslate"><span class="pre">Player.statistic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.player.Player.statistics"><code class="docutils literal notranslate"><span class="pre">Player.statistics()</span></code></a></li>
@@ -111,6 +114,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.opponent_statistics"><code class="docutils literal notranslate"><span class="pre">Team.opponent_statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.players"><code class="docutils literal notranslate"><span class="pre">Team.players()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.profile"><code class="docutils literal notranslate"><span class="pre">Team.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.short_name"><code class="docutils literal notranslate"><span class="pre">Team.short_name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.statistic"><code class="docutils literal notranslate"><span class="pre">Team.statistic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.statistics"><code class="docutils literal notranslate"><span class="pre">Team.statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.team.Team.to_json"><code class="docutils literal notranslate"><span class="pre">Team.to_json()</span></code></a></li>
@@ -430,6 +434,7 @@ objects and a series of parameters and generate visualizations.</p>
 </div></blockquote>
 </li>
 <li><p><strong>label_highlights</strong> (<em>bool</em>): include a label (object name) of the objects highlighted.</p></li>
+<li><p><strong>label_all</strong> (<em>bool</em>): label (object name) of for all objects.</p></li>
 <li><p><strong>x_label</strong> (<em>str</em>): label used along the x axis. If not set, a default will be generated.</p></li>
 <li><p><strong>y_label</strong> (<em>str</em>): label used along the y axis. If not set, a default will be generated.</p></li>
 </ul>
@@ -462,6 +467,25 @@ objects and a series of parameters and generate visualizations.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.set_styling">
+<span class="sig-name descname"><span class="pre">set_styling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.set_styling" title="Link to this definition"></a></dt>
+<dd><p>Change the color scheme and font defaults for your visualizations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>dict</em>) – <p>dictionary describing the color scheme and font.</p>
+<ul class="simple">
+<li><p><strong>primary_color</strong> (<em>str</em>): hex code for the primary color (background color).</p></li>
+<li><p><strong>secondary_color</strong> (<em>str</em>):  hex code for the secondary color (lines and plot color).</p></li>
+<li><p><strong>tertiary_color</strong> (<em>str</em>):  hex code for the tertiary color (text color).</p></li>
+<li><p><strong>highlight_color</strong> (<em>str</em>):  hex code for the highlight color (highlights).</p></li>
+<li><p><strong>font</strong> (<em>str</em>): font family for text.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.shot_map">
 <span class="sig-name descname"><span class="pre">shot_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.shot_map" title="Link to this definition"></a></dt>
 <dd><p>Generate and export a shot map for a player over a season.</p>
@@ -482,6 +506,27 @@ objects and a series of parameters and generate visualizations.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.venn_diagram">
+<span class="sig-name descname"><span class="pre">venn_diagram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.venn_diagram" title="Link to this definition"></a></dt>
+<dd><p>Generate and export a venn diagram chart given two or three sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sets</strong> (<em>dict</em>) – dictionary holding sets to be diagrammed, where the key is the label and the value is the set (list[str]).</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the radar chart customization.</p>
+<ul>
+<li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
+<li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
+<li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class" id="module-soccerapi.lib.scouting">
@@ -490,8 +535,8 @@ objects and a series of parameters and generate visualizations.</p>
 <dd><p>The Scouting object. This class is provides a series of methods which
 can be used as tools for scouting players.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting.cheaper_younger_better">
-<span class="sig-name descname"><span class="pre">cheaper_younger_better</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">players_to_scout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting.cheaper_younger_better" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="soccerapi.lib.scouting.Scouting.cheaper_better_younger">
+<span class="sig-name descname"><span class="pre">cheaper_better_younger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">players_to_scout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><span class="pre">Player</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#soccerapi.lib.scouting.Scouting.cheaper_better_younger" title="Link to this definition"></a></dt>
 <dd><p>Using a Player object, a list of Players to scout and a statistic this method performs a ‘Cheaper, Younger, Better’ styled scouting analysis across that list of Players to scout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -762,6 +807,20 @@ error.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>] | int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.obj.player.Player.short_name">
+<span class="sig-name descname"><span class="pre">short_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.player.Player.short_name" title="Link to this definition"></a></dt>
+<dd><p>Get the short name of the Player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the first initial and last names.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1079,6 +1138,20 @@ empty.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.obj.team.Team.short_name">
+<span class="sig-name descname"><span class="pre">short_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#soccerapi.obj.team.Team.short_name" title="Link to this definition"></a></dt>
+<dd><p>Get the short name of the Team.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the team name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
