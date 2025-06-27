@@ -170,6 +170,7 @@ class SoccerAPI():
             reader = reader[1:]
 
             for row in reader:
+                print(row)
                 id = row[0]
                 table = row[2]
                 if(table in [ "teams", "leagues", "players" ]):

@@ -151,6 +151,8 @@ class Visualize:
     def __set_up_vis(self, params):
         plt.clf()
         body_height = 5
+        if( params and "body_height" in params):
+            body_height = params["body_height"]
 
         #Title
         header_height = 0
@@ -306,25 +308,32 @@ class Visualize:
                 stroke_width = 5
                 size = min(img.size)
                 img = ImageOps.fit(img, (size, size), centering=(0.5, 0.5))
+                img = img.convert("RGBA")
 
-                # Create mask for the circle
-                mask = Image.new("L", (size, size), 0)
-                draw = ImageDraw.Draw(mask)
-                draw.ellipse((0, 0, size, size), fill=255)
+                # Draw anti-aliased circular mask at higher resolution
+                scale = 4
+                large_size = size * scale
+                mask_large = Image.new("L", (large_size, large_size), 0)
+                draw = ImageDraw.Draw(mask_large)
+                draw.ellipse((0, 0, large_size, large_size), fill=255)
+                mask = mask_large.resize((size, size), Image.LANCZOS)
 
-                # Create background with stroke
+                # Prepare stroke circle
                 stroke_size = size + 2 * stroke_width
-                background = Image.new("RGBA", (stroke_size, stroke_size), (0, 0, 0, 0))
-                
-                stroke_mask = Image.new("L", (stroke_size, stroke_size), 0)
-                stroke_draw = ImageDraw.Draw(stroke_mask)
-                stroke_draw.ellipse((0, 0, stroke_size, stroke_size), fill=255)
+                stroke_large_size = stroke_size * scale
+                stroke_mask_large = Image.new("L", (stroke_large_size, stroke_large_size), 0)
+                stroke_draw = ImageDraw.Draw(stroke_mask_large)
+                stroke_draw.ellipse(
+                    (0, 0, stroke_large_size, stroke_large_size), fill=255
+                )
+                stroke_mask = stroke_mask_large.resize((stroke_size, stroke_size), Image.LANCZOS)
 
-                # Draw stroke circle
+                # Create background and draw the stroke circle
+                background = Image.new("RGBA", (stroke_size, stroke_size), (0, 0, 0, 0))
                 stroke_circle = Image.new("RGBA", (stroke_size, stroke_size), c)
                 background.paste(stroke_circle, (0, 0), stroke_mask)
 
-                # Paste the image in the center with its alpha mask
+                # Paste image in center using circular alpha mask
                 background.paste(img, (stroke_width, stroke_width), mask)
                 return background
             return img
@@ -1007,5 +1016,92 @@ class Visualize:
 
         if( "filename" not in params):
             params["filename"] = "_".join(labels) + "_venndiagram.png"
+
+        self.__output_vis(params)
+
+    def top_10_list(self, top_10: list[dict], params: dict):
+        r"""Generate and export a top 10 list of Players and Teams for a given stat
+
+        :param 10: list of dictionaries objects detailing the top 10 list (generated buy .scounting.top_10_list).
+        :type sets: list[dict]
+        :param params: params dictionary to define the top 10 list customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): file name. If not set, a default will be generated.
+        :type params: dict
+        """
+        params["body_height"] = 4
+        self.__set_up_vis(params)
+
+        #Get Stat Name
+        stat_name = ""
+        for key in top_10[0]:
+            if key != "player" and key != "team":
+                stat_name = key
+
+        # TODO: Build Viz Here
+        self.ax2.set_axis_off()
+
+        from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker
+        i = 1
+        offset = .105
+        for player in top_10:
+            name = player["player"].short_name()
+            player_name = f"{i}. {name}"
+            data = player[stat_name]
+            
+            team = player["player"].current_team()
+            team_img = None
+            if(team):
+                team_img = self.__get_img(team)
+                im = OffsetImage(team_img, zoom=.15)
+                ab = AnnotationBbox(im, (0.07, .971  - ( (i-1) * offset)), frameon=False)
+                self.ax2.add_artist(ab)
+
+            name_text = TextArea(player_name, textprops=dict(fontsize=16, color=self.tertiary_color, fontfamily='Trebuchet MS', ha='left'))
+            highlight_color = self.secondary_color
+            if i == 1:
+                highlight_color = self.highlight_color
+                
+                team_img = self.__get_img(player["player"], highlight_color)
+                im = OffsetImage(team_img, zoom=1.3)
+                ab = AnnotationBbox(im, (0.75, .5  - ( (i-1) * offset)), frameon=False)
+                self.ax2.add_artist(ab)
+
+            stat_test = TextArea(f'  {data} {stat_name}', textprops=dict(fontsize=18, color=highlight_color, fontfamily='Trebuchet MS', ha='left'))
+
+            hbox = HPacker(children=[name_text, stat_test], align="left", pad=0, sep=0)
+            ab = AnnotationBbox(hbox, (0.1, (.97 - ( (i-1) * offset))), xycoords='data', frameon=False, box_alignment=(0, 0.5))
+            self.ax2.add_artist(ab)
+
+            '''
+            self.ax2.text(
+                x=0.1, 
+                y=.95 - ( (i-1) * offset),
+                s=player_name, 
+                fontsize=18, 
+                color=self.tertiary_color, 
+                fontfamily='Trebuchet MS',
+                ha='left'
+            )
+
+        
+            self.ax2.text(
+                x=0.1 + (len(player_name) * .015), 
+                y=.95 - ( (i-1) * offset),
+                s=f'{data} {stat_name}', 
+                fontsize=18, 
+                color=self.secondary_color, 
+                fontfamily='Trebuchet MS',
+                ha='left'
+            )
+            '''
+
+            i +=1
+
+        if( "filename" not in params):
+            params["filename"] =  f"{stat_name}_top10.png"
 
         self.__output_vis(params)
