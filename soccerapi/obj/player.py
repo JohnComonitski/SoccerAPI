@@ -47,6 +47,7 @@ class Player:
         self.player_country = None
         self.team = None
         self.stats_cache = {}
+        self.mv_cache = {}
         #Packages
         self.db = db 
         app = db.app
@@ -188,6 +189,9 @@ class Player:
         """
         position_list = ["FB", "CB", "AM", "MF", "FW", "DM", "WM", "GK", "CM", "DF" ]
         
+        if self.fbref_id is None:
+            return []
+        
         res = self.fbref.player_positions(self)
         if(res["success"]):
             positions = []
@@ -259,17 +263,34 @@ class Player:
         :type year: Optional[str]
         :rtype: int
         """
-        if(year):
+        mv_cache = self.mv_cache
+
+        current_date = datetime.now()
+        if not year:    
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
+
+        if year in mv_cache:
+            return mv_cache[year]
+
+        res = {}
+        if(year != str(current_date.year)):
             res = self.tm.get_player_value_by_year(self, year)
         else:
             res = self.tm.get_player_value(self)
 
-        if(res["success"]):
-            return res["res"]["market_value"]
+        if(res["success"]):        
+            mv_cache[year] = res["res"]["market_value"]
         else:
             if( self.debug ):
                 print(res["error_string"])
-            return 0
+            mv_cache[year] = 0
+    
+        self.mv_cache = mv_cache
+        return self.mv_cache[year]
 
     def statistics(self, year = None) -> dict[Statistic]:
         r"""Returns the Player's FBRef Statistics for a given year.

@@ -44,6 +44,7 @@ class Team:
         self.fapi_profile = None
         self.stats_cache = {}
         self.opps_stats_cache = {}
+        self.mv_cache = {}
         #Packages
         self.db = db 
         app = db.app
@@ -282,14 +283,26 @@ class Team:
         :type year: Optional[str]
         :rtype: int
         """
+        mv_cache = self.mv_cache
+
+        current_date = datetime.now()
+        if not year:    
+            year = str(current_date.year)
+
+        if year in mv_cache:
+            return mv_cache[year]
+
         res = self.tm.get_team_value(self, year)
 
-        if(res["success"]):
-            return res["res"]["market_value"]
+        if(res["success"]):        
+            mv_cache[year] = res["res"]["market_value"]
         else:
-            if(1 or self.debug ):
-                print(res["error_string"]) 
-            return 0
+            if( self.debug ):
+                print(res["error_string"])
+            mv_cache[year] = 0
+    
+        self.mv_cache = mv_cache
+        return self.mv_cache[year]
         
     def market_value_over_time(self) -> dict[int] | int:
         r"""Get the Teams's Transfermarkt Market Value over time.

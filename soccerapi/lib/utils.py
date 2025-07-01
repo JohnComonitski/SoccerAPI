@@ -12,15 +12,15 @@ def traverse_dict(d, parent_key=""):
         elif isinstance(value, dict):
             # Recursively process nested dictionary
             new_dict[key] = traverse_dict(value, full_key)
-        elif( str(type(value)) == "<class 'SoccerAPI.obj.statistic.Statistic'>" ):
+        elif( str(type(value)) == "<class 'SoccerAPI.soccerapi.obj.statistic.Statistic'>" ):
             new_dict[key] = value.to_json()
-        elif( str(type(value)) == "<class 'SoccerAPI.obj.player.Player'>" ):
+        elif( str(type(value)) == "<class 'SoccerAPI.soccerapi.obj.player.Player'>" ):
             new_dict[key] = value.to_json()
-        elif( str(type(value)) == "<class 'SoccerAPI.obj.team.Team'>" ):
+        elif( str(type(value)) == "<class 'SoccerAPI.soccerapi.obj.team.Team'>" ):
             new_dict[key] = value.to_json()
-        elif( str(type(value)) == "<class 'SoccerAPI.obj.league.League'>" ):
+        elif( str(type(value)) == "<class 'SoccerAPI.soccerapi.obj.league.League'>" ):
             new_dict[key] = value.to_json()
-        elif( str(type(value)) == "<class 'SoccerAPI.obj.fixture.Fixture'>" ):
+        elif( str(type(value)) == "<class 'SoccerAPI.soccerapi.obj.fixture.Fixture'>" ):
             new_dict[key] = value.to_json()
         else:
             # Directly copy other values

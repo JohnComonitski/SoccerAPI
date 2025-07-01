@@ -68,6 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.radar"><code class="docutils literal notranslate"><span class="pre">Visualize.radar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.set_styling"><code class="docutils literal notranslate"><span class="pre">Visualize.set_styling()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.shot_map"><code class="docutils literal notranslate"><span class="pre">Visualize.shot_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.top_10_list"><code class="docutils literal notranslate"><span class="pre">Visualize.top_10_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.lib.visualize.Visualize.venn_diagram"><code class="docutils literal notranslate"><span class="pre">Visualize.venn_diagram()</span></code></a></li>
 </ul>
 </li>
@@ -494,6 +495,27 @@ objects and a series of parameters and generate visualizations.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a>) – the Player or Team to build a shot map of.</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the shot map customization.</p>
+<ul>
+<li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
+<li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
+<li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.lib.visualize.Visualize.top_10_list">
+<span class="sig-name descname"><span class="pre">top_10_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_10</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#soccerapi.lib.visualize.Visualize.top_10_list" title="Link to this definition"></a></dt>
+<dd><p>Generate and export a top 10 list of Players and Teams for a given stat</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>10</strong> – list of dictionaries objects detailing the top 10 list (generated buy .scounting.top_10_list).</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the top 10 list customization.</p>
 <ul>
 <li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
 <li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>

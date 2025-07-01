@@ -24,20 +24,20 @@ class Scouting:
                 return True
         return False
 
-    def cheaper_better_younger(self, player: Player, players_to_scout: list[Player], stat: str) -> dict:
+    def cheaper_better_younger(self, player: Player, players_to_scout: list[Player], stat_key: str) -> dict:
         r"""Using a Player object, a list of Players to scout and a statistic this method performs a 'Cheaper, Younger, Better' styled scouting analysis across that list of Players to scout.
 
         :param player: the player you are comparing against.
         :type player: Player
         :param players_to_scout: the players you are scouting.
         :type players_to_scout: list[Player]
-        :param stat: the statistic name you are using to compare these players.
-        :type stat: str
+        :param stat_key: the statistic name you are using to compare these players.
+        :type stat_key: str
         :returns: returns a dictionary containing the results from the cheaper, younger, better analysis.
         :rtype: dict
         """
 
-        stat = player.statistic(stat)
+        stat = player.statistic(stat_key).value
         age = player.profile()["age"]
         mv = player.market_value()
 
@@ -46,7 +46,7 @@ class Scouting:
         younger = []
         better = []
         for scouted_player in players_to_scout:
-            scouted_player_stat = scouted_player.statistic(stat).value
+            scouted_player_stat = scouted_player.statistic(stat_key).value
             scouted_player_age = scouted_player.profile()["age"]
             scouted_player_mv = scouted_player.market_value()
 
@@ -56,7 +56,7 @@ class Scouting:
                 "younger" : 0
             }
 
-            if( scouted_player_stat >= stat.value ):
+            if( scouted_player_stat >= stat ):
                 res["better"] = 1
                 better.append(scouted_player)
 
