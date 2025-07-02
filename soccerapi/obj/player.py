@@ -44,6 +44,7 @@ class Player:
         self.understat_id = player_data["understat_player_id"]
         #Cached Data
         self.fapi_profile = None
+        self.positions_cache = None
         self.player_country = None
         self.team = None
         self.stats_cache = {}
@@ -108,7 +109,9 @@ class Player:
             "fapi_profile" : self.fapi_profile,
             "player_country" : self.player_country,
             "team" : self.team,
-            "statistics" : self.stats_cache
+            "statistics" : self.stats_cache,
+            "positions" : self.positions_cache,
+            "market_value" : self.mv_cache
         })
     
     def import_data(self, data: dict[str]):
@@ -131,6 +134,9 @@ class Player:
             team = self.db.get("teams", data["team"]["id"])
             team.import_data(data["team"])
             self.team = team
+
+        if "market_value" in data:
+            self.mv_cache = data["market_value"]
         
         if "statistics" in data and data["statistics"]:
             stats = {}
@@ -187,23 +193,28 @@ class Player:
         :returns: A list of positions in the form of two letter abbreviations.
         :rtype: list[str]
         """
-        position_list = ["FB", "CB", "AM", "MF", "FW", "DM", "WM", "GK", "CM", "DF" ]
-        
-        if self.fbref_id is None:
-            return []
-        
-        res = self.fbref.player_positions(self)
-        if(res["success"]):
-            positions = []
-            for position in position_list:
-                if position in res["res"]:
-                    positions.append(position)
-            
-            return positions
+        if self.positions_cache:
+            return self.positions_cache
         else:
-            if( self.debug ):
-                print(res["error_string"])
-            return []
+            position_list = ["FB", "CB", "AM", "MF", "FW", "DM", "WM", "GK", "CM", "DF" ]
+            
+            if self.fbref_id is None:
+                return []
+            
+            res = self.fbref.player_positions(self)
+            if(res["success"]):
+                positions = []
+                for position in position_list:
+                    if position in res["res"]:
+                        positions.append(position)
+                
+                self.positions_cache = positions
+            else:
+                if( self.debug ):
+                    print(res["error_string"])
+                self.positions_cache = []
+        
+            return self.positions_cache
 
     def country(self) -> str:
         r"""Get the country the Player is from.

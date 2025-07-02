@@ -103,7 +103,8 @@ class Team:
             "fapi_id" : self.fapi_id,
             "fapi_profile" : self.fapi_profile,
             "statistics" : self.stats_cache,
-            "opp_statistics" : self.opps_stats_cache
+            "opp_statistics" : self.opps_stats_cache,
+            "market_value" : self.mv_cache
         })
     
     def import_data(self, data: dict[str]):
@@ -138,7 +139,10 @@ class Team:
                 else:
                     stats[key] = data["opp_statistics"]
             self.opps_stats_cache = stats
-            
+
+        if "market_value" in data:
+            self.mv_cache = data["market_value"]
+
     def profile(self) -> dict | None:
         r"""Return the API-Football profile of the Team.
 

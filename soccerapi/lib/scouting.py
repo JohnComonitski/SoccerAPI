@@ -24,8 +24,8 @@ class Scouting:
                 return True
         return False
 
-    def cheaper_better_younger(self, player: Player, players_to_scout: list[Player], stat_key: str) -> dict:
-        r"""Using a Player object, a list of Players to scout and a statistic this method performs a 'Cheaper, Younger, Better' styled scouting analysis across that list of Players to scout.
+    def younger_better_cheaper(self, player: Player, players_to_scout: list[Player], stat_key: str) -> dict:
+        r"""Using a Player object, a list of Players to scout and a statistic this method performs a 'Younger, Better, Cheaper' styled scouting analysis across that list of Players to scout.
 
         :param player: the player you are comparing against.
         :type player: Player
@@ -41,7 +41,7 @@ class Scouting:
         age = player.profile()["age"]
         mv = player.market_value()
 
-        cheaper_better_younger = []
+        younger_better_cheaper = []
         cheaper = []
         younger = []
         better = []
@@ -69,13 +69,20 @@ class Scouting:
                 cheaper.append(scouted_player)
 
             if( res["cheaper"] and res["younger"] and res["better"]):
-                cheaper_better_younger.append(scouted_player)
+                younger_better_cheaper.append(scouted_player)
+
+        cheaper = sorted(cheaper, key=lambda x: x.market_value())
+        cheaper.reverse()
+        younger = sorted(younger, key=lambda x: x.market_value())
+        younger.reverse()
+        better = sorted(better, key=lambda x: x.market_value())
+        better.reverse()
 
         return {
             "Cheaper" : cheaper,
             "Younger" : younger,
             "Better" : better,
-            "cheaper_better_younger" : cheaper_better_younger
+            "younger_better_cheaper" : younger_better_cheaper
         }
     
     def top_10_by_stat(self, players: list[Player], stat: str, year: Optional[str] = None) -> list[Player]:

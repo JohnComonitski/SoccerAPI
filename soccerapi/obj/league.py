@@ -91,6 +91,7 @@ class League:
             "fapi_id" : self.fapi_id,
             "fapi_profile" : self.fapi_profile,
             "teams" : self.teams_cache,
+            "market_value" : self.mv_cache
         }) 
     
     def import_data(self, data: dict[str]):
@@ -111,7 +112,11 @@ class League:
                 team.import_data(data["team"])
                 teams.append(team)
             self.team = teams
+
+        if "market_value" in data:
+            self.mv_cache = data["market_value"]
         
+
 
     def name(self) -> str:
         r"""Get the name of the League.

@@ -957,13 +957,16 @@ class Visualize:
             - **filename** (*str*): file name. If not set, a default will be generated.
         :type params: dict
         """
-        self.__set_up_vis(params)
-
         sets_list = []
         labels = []
         for key in sets.keys():
             labels.append(key)
             sets_list.append(sets[key])
+
+        if(params and "title" not in params):
+            params["title"] = "Comparing Players by " + ", ".join(labels) 
+
+        self.__set_up_vis(params)
 
         if(len(labels) > 3 or len(labels) == 1):
             return { "success" : 0, "res" : {}, "error_string" : "Error: Can only generate vendiagrams for 2 or 3 sets" }
@@ -1012,7 +1015,12 @@ class Visualize:
             label = venn.get_label_by_id(code)
             if label:
                 items = get_label_for_region(indices)
-                label.set_text("\n".join(items))
+                label_text = ""
+                if(len(items) > 3):
+                    label_text = f"{len(items)} total, including...\n" + "\n".join(list(items)[0:2])
+                elif(len(items) > 0):
+                    label_text = "\n".join(items)
+                label.set_text(label_text)
 
         if( "filename" not in params):
             params["filename"] = "_".join(labels) + "_venndiagram.png"
@@ -1032,14 +1040,17 @@ class Visualize:
             - **filename** (*str*): file name. If not set, a default will be generated.
         :type params: dict
         """
-        params["body_height"] = 4
-        self.__set_up_vis(params)
-
         #Get Stat Name
         stat_name = ""
         for key in top_10[0]:
             if key != "player" and key != "team":
                 stat_name = key
+
+        if(params and "title" not in params):
+            params["title"] = "Top 10  by " + stat_name
+
+        params["body_height"] = 4
+        self.__set_up_vis(params)
 
         # TODO: Build Viz Here
         self.ax2.set_axis_off()
