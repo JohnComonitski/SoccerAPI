@@ -1,5 +1,6 @@
 from typing import Any, Optional
 from ..obj.player import Player
+from datetime import datetime
 
 class Scouting:
     r"""The Scouting object. This class is provides a series of methods which
