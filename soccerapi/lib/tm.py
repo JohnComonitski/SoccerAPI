@@ -32,7 +32,7 @@ class TM:
         
         tm_player_id = player.tm_id
 
-        end_point = "https://www.transfermarkt.us/player-name/profil/spieler/"
+        end_point = "https://www.transfermarkt.us/player-name/marktwertverlauf/spieler/"
         end_point += tm_player_id
 
         page = self.make_request(end_point)
