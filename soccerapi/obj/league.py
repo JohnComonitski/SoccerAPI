@@ -41,11 +41,11 @@ class League:
         self.league_name = league_data["league_name"]
         self.id = league_data["league_id"]
         self.country = league_data["country_code"]
-        self.fbref_id = league_data["fbref_league_id"]
+        self.fbref_id = league_data["fbref_id"]
         self.fbref_stat_detail_level = league_data["fbref_stat_detail_level"]
-        self.tm_id = league_data["tm_league_id"]
-        self.understat_id = league_data["understat_league_id"]
-        self.fapi_id = league_data["fapi_league_id"]
+        self.tm_id = league_data["tm_id"]
+        self.understat_id = league_data["understat_id"]
+        self.fapi_id = league_data["fapi_id"]
         #Cached Data
         self.teams_cache = {}
         self.fapi_profile = None
@@ -178,8 +178,8 @@ class League:
         res = self.fapi.get_teams_in_league(self, year)
         if(res["success"]):
             for team in res["res"]["teams"]:
-                fapi_team_id = team["team"]["id"]
-                db_team = self.db.search("teams", { "fapi_team_id" : fapi_team_id })
+                fapi_id = team["team"]["id"]
+                db_team = self.db.search("teams", { "fapi_id" : fapi_id })
                 if(len(db_team) > 0):
                     teams_list.append(db_team[0])
             teams[year] = teams_list

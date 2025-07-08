@@ -83,7 +83,7 @@ class FBRef:
                             if match:
                                 league_id = str(match.group(1))
 
-                            stats[year][team_id]["fbref_league_id"] = league_id
+                            stats[year][team_id]["fbref_id"] = league_id
 
                         for col in cols:
                             key = stat_maping[str(col_count)]
@@ -137,11 +137,11 @@ class FBRef:
 
     def get_player_stats(self, player, year):
         if(not player.fbref_id ):
-            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Player object did not include an fbref_player_id" }
+            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Player object did not include an fbref_id" }
         
-        fbref_player_id = player.fbref_id
+        fbref_id = player.fbref_id
         
-        endpoint = "https://fbref.com/en/players/" + fbref_player_id + "/player-name"
+        endpoint = "https://fbref.com/en/players/" + fbref_id + "/player-name"
         doc = self.limiter.call(self.make_request, endpoint)
         stats = {}
 
@@ -257,9 +257,9 @@ class FBRef:
     
     def get_team_stats(self, team, year):
         if(not team.fbref_id ):
-            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
+            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_id" }
         
-        fbref_team_id = team.fbref_id
+        fbref_id = team.fbref_id
 
         year_string = ""
         last_year = None
@@ -269,7 +269,7 @@ class FBRef:
         last_year = int(year) - 1
         year_string = str(last_year) + "-" + str(year)
         
-        endpoint = "https://fbref.com/en/squads/"  + fbref_team_id + "/" +  year_string + "/team-name"
+        endpoint = "https://fbref.com/en/squads/"  + fbref_id + "/" +  year_string + "/team-name"
         doc = self.limiter.call(self.make_request, endpoint)
         stats = {}
 
@@ -288,9 +288,9 @@ class FBRef:
     
     def get_team_opposition_stats(self, team, year):
         if(not team.fbref_id ):
-            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_team_id" }
+            return { "success" : 0, "res" : { "stats" : {} }, "error_string" : "Error: Team object did not include an fbref_id" }
         
-        fbref_team_id = team.fbref_id
+        fbref_id = team.fbref_id
         
         year_string = ""
         last_year = None
@@ -300,7 +300,7 @@ class FBRef:
         last_year = int(year) - 1
         year_string = str(last_year) + "-" + str(year)
         
-        endpoint = "https://fbref.com/en/squads/"  + fbref_team_id + "/" +  year_string + "/team-name"
+        endpoint = "https://fbref.com/en/squads/"  + fbref_id + "/" +  year_string + "/team-name"
         doc = self.limiter.call(self.make_request, endpoint)
         stats = {}
 

@@ -54,9 +54,9 @@ class PostgreSQL:
     def build_cache(self):
         data = self.get_cache_data()
         cache = {
-            "players" : { "understat_player_id" : {}, "fbref_player_id" : {}, "tm_player_id" : {}, "fapi_player_id" : {}, "player_id" : {} },
-            "teams" : { "understat_team_id" : {}, "fbref_team_id" : {}, "tm_team_id" : {}, "fapi_team_id" : {}, "team_id" : {} },
-            "leagues" : { "understat_league_id" : {}, "fbref_league_id" : {}, "tm_league_id" : {}, "fapi_league_id" : {}, "league_id" : {} }
+            "players" : { "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "player_id" : {} },
+            "teams" : { "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "team_id" : {} },
+            "leagues" : { "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "league_id" : {} }
         }
         for table in data:
             singular = table[0:-1]
@@ -267,9 +267,9 @@ class PostgreSQL:
           Examples:
 
           >>> api.db.search(table_name=players, {'player_id': '12345'})
-          >>> api.db.search(table_name=players, {'fapi_player_id': '12345'})
-          >>> api.db.search(table_name=players, {'tm_player_id': '12345'})
-          >>> api.db.search(table_name=players, {'fbref_player_id' : '12345'})
+          >>> api.db.search(table_name=players, {'fapi_id': '12345'})
+          >>> api.db.search(table_name=players, {'tm_id': '12345'})
+          >>> api.db.search(table_name=players, {'fbref_id' : '12345'})
 
         :type table_name: str
         :type query: dict[str]

@@ -28,12 +28,12 @@ class TM:
 
     def get_player_value(self, player):
         if(not player.tm_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_id" }
         
-        tm_player_id = player.tm_id
+        tm_id = player.tm_id
 
         end_point = "https://www.transfermarkt.us/player-name/marktwertverlauf/spieler/"
-        end_point += tm_player_id
+        end_point += tm_id
 
         page = self.make_request(end_point)
         market_value = 0
@@ -52,12 +52,12 @@ class TM:
 
     def get_player_value_by_year(self, player, year):
         if(not player.tm_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_player_id" }
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Player object did not include a tm_id" }
         
-        tm_player_id = player.tm_id
+        tm_id = player.tm_id
         
         end_point = "https://www.transfermarkt.us/player-name/leistungsdatendetails/spieler/"
-        end_point += tm_player_id
+        end_point += tm_id
 
         page = self.make_request(end_point)
 
@@ -96,7 +96,7 @@ class TM:
                                     pattern = r'\/.*\/profil\/spieler\/([a-zA-Z0-9]*)'
                                     match = re.match(pattern, player_link, re.IGNORECASE)
                                     if match:
-                                        if(str(tm_player_id) == str(match.group(1))):
+                                        if(str(tm_id) == str(match.group(1))):
                                             return { "success" : 1, "res" : { "market_value" : self.parse_value(cols[-1].text) }, "error_string" : "" }
                                    
             return { "success" : 1, "res" : { "market_value" : 0 }, "error_string" : "Error: Player could not be found on a team in " + year }
@@ -104,8 +104,8 @@ class TM:
     
     def get_team_value(self, team, year):
         if(not team.tm_id):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_team_id" }     
-        tm_team_id = team.tm_id
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: Team object did not include a tm_id" }     
+        tm_id = team.tm_id
    
         if not year:
             current_date = datetime.now()
@@ -116,7 +116,7 @@ class TM:
                 year = str(current_date.year)
 
         end_point = "https://www.transfermarkt.us/team-name/startseite/verein/"
-        end_point += tm_team_id
+        end_point += tm_id
         end_point += "?saison_id=" + year
 
         page = self.make_request(end_point)
@@ -157,8 +157,8 @@ class TM:
 
     def get_league_value(self, league, year):
         if( not league.tm_id ):
-            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_league_id" }       
-        tm_league_id = league.tm_id
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_id" }       
+        tm_id = league.tm_id
 
         if not year:
             current_date = datetime.now()
@@ -169,7 +169,7 @@ class TM:
                 year = str(current_date.year)
 
         end_point = "https://www.transfermarkt.us/league/startseite/wettbewerb/"
-        end_point += tm_league_id
+        end_point += tm_id
         end_point += "/plus/?saison_id=" + year
 
         page = self.make_request(end_point)

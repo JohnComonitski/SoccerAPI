@@ -36,10 +36,10 @@ class Team:
         self.team_name = team_data["team_name"]
         self.team_country = team_data["country_code"]
         self.id = team_data["team_id"]
-        self.fbref_id = team_data["fbref_team_id"]
-        self.tm_id = team_data["tm_team_id"]
-        self.understat_id = team_data["understat_team_id"]
-        self.fapi_id = team_data["fapi_team_id"]
+        self.fbref_id = team_data["fbref_id"]
+        self.tm_id = team_data["tm_id"]
+        self.understat_id = team_data["understat_id"]
+        self.fapi_id = team_data["fapi_id"]
         #Cached Data
         self.fapi_profile = None
         self.stats_cache = {}
@@ -185,8 +185,8 @@ class Team:
 
         if(res["success"]):
             for player in res["res"]["players"][0]['players']:
-                fapi_player_id = player["id"]
-                db_player = self.db.search("players", { "fapi_player_id" : fapi_player_id })
+                fapi_id = player["id"]
+                db_player = self.db.search("players", { "fapi_id" : fapi_id })
                 if(len(db_player) > 0):
                     players.append(db_player[0])
         else:
@@ -270,8 +270,8 @@ class Team:
             if(len(res["res"]) > 0):
                 fapi_leagues = res["res"]
                 for league in fapi_leagues["response"]:
-                    fapi_league_id = league["league"]["id"]
-                    db_league = self.db.search("leagues", { "fapi_league_id" : fapi_league_id })
+                    fapi_id = league["league"]["id"]
+                    db_league = self.db.search("leagues", { "fapi_id" : fapi_id })
                     if(len(db_league) > 0):
                         leagues.append(db_league[0])
             else:

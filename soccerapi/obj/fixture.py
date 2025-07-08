@@ -37,7 +37,7 @@ class Fixture:
         #Inflate League
         self.league = None
         league_id = match_data["league"]["id"]
-        db_league = db.search("leagues", { "fapi_league_id" : league_id })
+        db_league = db.search("leagues", { "fapi_id" : league_id })
         if(len(db_league) > 0):
             self.league = db_league[0]
         else:
@@ -46,7 +46,7 @@ class Fixture:
         #Inflate Home Team
         self.home_team = None
         home_id = match_data["teams"]["home"]["id"]
-        db_team = db.search("teams", { "fapi_team_id" : home_id })
+        db_team = db.search("teams", { "fapi_id" : home_id })
         if(len(db_team) > 0):
             self.home_team = db_team[0]
         else:
@@ -55,7 +55,7 @@ class Fixture:
         #Inflate Away Team
         self.away_team = None
         away_id = match_data["teams"]["away"]["id"]
-        db_team = db.search("teams", { "fapi_team_id" : away_id })
+        db_team = db.search("teams", { "fapi_id" : away_id })
         if(len(db_team) > 0):
             self.away_team = db_team[0]
         else:
@@ -116,7 +116,7 @@ class Fixture:
         else:
             team = lineup[1]
         for player in team[lineup_type]:
-            db_player = self.db.search("players", { "fapi_player_id" : player["player"]["id"] })
+            db_player = self.db.search("players", { "fapi_id" : player["player"]["id"] })
             if(len(db_player) > 0):
                 players.append(db_player[0])
             else:
@@ -285,10 +285,10 @@ class Fixture:
                 if(len(res["response"]) > 0 ):
                     idx = 0
                     for team in res["response"]:
-                        fapi_team_id = str(team["team"]["id"])
-                        if stats[0]["team"].fapi_id == fapi_team_id:
+                        fapi_id = str(team["team"]["id"])
+                        if stats[0]["team"].fapi_id == fapi_id:
                             idx = 0
-                        elif stats[1]["team"].fapi_id == fapi_team_id:
+                        elif stats[1]["team"].fapi_id == fapi_id:
                             idx = 1
 
                         stats[idx]["statistics"] = {}

@@ -58,23 +58,23 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "tm_league_id",
-                    "label" : "TM League ID",
+                    "sql" : "tm_id",
+                    "label" : "TM ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fapi_league_id",
-                    "label" : "FAPI League ID",
+                    "sql" : "fapi_id",
+                    "label" : "FAPI ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fbref_league_id",
-                    "label" : "FBRef League ID",
+                    "sql" : "fbref_id",
+                    "label" : "FBRef ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "understat_league_id",
-                    "label" : "Understat League ID",
+                    "sql" : "understat_id",
+                    "label" : "Understat ID",
                     "type" : "text"
                 },
                 {
@@ -112,23 +112,23 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "tm_player_id",
-                    "label" : "TM Player ID",
+                    "sql" : "tm_id",
+                    "label" : "TM ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fapi_player_id",
-                    "label" : "FAPI Player ID",
+                    "sql" : "fapi_id",
+                    "label" : "FAPI ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fbref_player_id",
-                    "label" : "FBRef Player ID",
+                    "sql" : "fbref_id",
+                    "label" : "FBRef ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "understat_player_id",
-                    "label" : "Understat Player ID",
+                    "sql" : "understat_id",
+                    "label" : "Understat ID",
                     "type" : "text"
                 }
             ]
@@ -155,23 +155,23 @@ class Schema:
                     "type" : "text"
                 },
                 {
-                    "sql" : "tm_team_id",
-                    "label" : "TM Player ID",
+                    "sql" : "tm_id",
+                    "label" : "TM ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fapi_team_id",
-                    "label" : "FAPI Team ID",
+                    "sql" : "fapi_id",
+                    "label" : "FAPI ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "fbref_team_id",
-                    "label" : "FBRef Team ID",
+                    "sql" : "fbref_id",
+                    "label" : "FBRef ID",
                     "type" : "text"
                 },
                 {
-                    "sql" : "understat_team_id",
-                    "label" : "Understat Team ID",
+                    "sql" : "understat_id",
+                    "label" : "Understat ID",
                     "type" : "text"
                 },
             ]
@@ -198,7 +198,7 @@ class Schema:
                     "type":"TEXT"
                 },
                 {
-                    "sql":"fbref_league_id",
+                    "sql":"fbref_id",
                     "label":"Fbref League Id",
                     "type":"TEXT"
                 },
@@ -213,7 +213,7 @@ class Schema:
                     "type":"TEXT"
                 },
                 {
-                    "sql":"fbref_player_id",
+                    "sql":"fbref_id",
                     "label":"Fbref Player Id",
                     "type":"TEXT"
                 },
@@ -223,7 +223,7 @@ class Schema:
                     "type":"TEXT"
                 },
                 {
-                    "sql":"fbref_team_id",
+                    "sql":"fbref_id",
                     "label":"Fbrefteam Id",
                     "type":"TEXT"
                 },

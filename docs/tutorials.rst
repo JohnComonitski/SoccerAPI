@@ -47,33 +47,33 @@ foreign ID. Tables available to search on are players, teams and leagues.
 .. code-block:: python
 
    # Search for Erling Haaland using API-Football ID, Transfermarkt ID and FBRef ID respectively
-   >>> api.db.search("players", { "fapi_player_id" : "1100"})
+   >>> api.db.search("players", { "fapi_id" : "1100"})
    [Player(Erling Braut Haaland)]
 
-   >>> api.db.search("players", { "tm_player_id" : "418560"})
+   >>> api.db.search("players", { "tm_id" : "418560"})
    [Player(Erling Braut Haaland)]
 
-   >>> api.db.search("players", { "fbref_player_id" : "1f44ac21"})
+   >>> api.db.search("players", { "fbref_id" : "1f44ac21"})
    [Player(Erling Braut Haaland)]
 
    # Search for Man City using API-Football ID, Transfermarkt ID and FBRef ID respectively
-   >>> api.db.search("teams", { "fapi_team_id" : "33"})
+   >>> api.db.search("teams", { "fapi_id" : "33"})
    [Team(Manchester United - GB)]
 
-   >>> api.db.search("teams", { "tm_team_id" : "985"})
+   >>> api.db.search("teams", { "tm_id" : "985"})
    [Team(Manchester United - GB)]
 
-   >>> api.db.search("teams", { "fbref_team_id" : "19538871"})
+   >>> api.db.search("teams", { "fbref_id" : "19538871"})
    [Team(Manchester United - GB)]
 
    # Search for Premier League using API-Football ID, Transfermarkt ID and FBRef ID respectively
-   >>> api.db.search("leagues", { "fapi_league_id" : "39"})
+   >>> api.db.search("leagues", { "fapi_id" : "39"})
    [League(Premier League - GB)]
 
-   >>> api.db.search("leagues", { "tm_league_id" : "GB1"})
+   >>> api.db.search("leagues", { "tm_id" : "GB1"})
    [League(Premier League - GB)]
 
-   >>> api.db.search("leagues", { "fbref_league_id" : "9"})
+   >>> api.db.search("leagues", { "fbref_id" : "9"})
    [League(Premier League - GB)]
 
 Export an object
@@ -111,7 +111,7 @@ Get objects from other objects
 .. code-block:: python
 
    # Get Erling Haaland.
-   >>> haaland = api.db.search("players", { "fapi_player_id" : "1100"})[0]
+   >>> haaland = api.db.search("players", { "fapi_id" : "1100"})[0]
    >>> print(haaland)
    Player(Erling Braut Haaland)
 
@@ -137,7 +137,7 @@ Scrape a player's FBRef statistics from this season.
 
 .. code-block:: python
 
-   >>> haaland = api.db.search("players", { "fapi_player_id" : "1100"})[0]
+   >>> haaland = api.db.search("players", { "fapi_id" : "1100"})[0]
 
    # Returns statistics organized by team.
    >>> import pprint
@@ -168,7 +168,7 @@ Scrape a player's FBRef statistics from this season.
       'crosses': 3.0,
       'crosses_into_penalty_area': 1.0,
       'dispossessed': 20.0,
-      'fbref_league_id': '9',
+      'fbref_id': '9',
       'fouled': 12.0,
       'fouls': 20.0,
       'games': 25.0,
@@ -270,7 +270,7 @@ Scrape a player's FBRef statistics from a previous season.
 
 .. code-block:: python
 
-   >>> haaland = api.db.search("players", { "fapi_player_id" : "1100"})[0]
+   >>> haaland = api.db.search("players", { "fapi_id" : "1100"})[0]
 
    # Returns statistics organized by team
    >>> import pprint
@@ -300,7 +300,7 @@ Scrape a player's FBRef statistics from a previous season.
       'clearances': 16.0,
       'crosses': 5.0,
       'dispossessed': 19.0,
-      'fbref_league_id': '9',
+      'fbref_id': '9',
       'fouled': 31.0,
       'fouls': 18.0,
       'games': 31.0,
@@ -406,7 +406,7 @@ Scrape a player's FBRef Shot statistics from this season.
 
 .. code-block:: python
 
-   >>> haaland = api.db.search("players", { "fapi_player_id" : "1100"})[0]
+   >>> haaland = api.db.search("players", { "fapi_id" : "1100"})[0]
 
    # Returns shots taken this season.
    >>> haaland.statistic("shots")
@@ -510,7 +510,7 @@ starting XI of that team.
 .. code-block:: python
 
    # Get a team's fixture from a given date.
-   >>> wolves = api.db.search("teams", { "fapi_team_id" : "39"})[0]
+   >>> wolves = api.db.search("teams", { "fapi_id" : "39"})[0]
    >>> fixture = wolves.fixture("2024-11-30")
    >>> print(fixture)
    Fixture(Wolves vs Bournemouth)
@@ -527,7 +527,7 @@ Get each team statistics from a match.
 .. code-block:: python
 
    # Get a team's fixture from a given date.
-   >>> wolves = api.db.search("teams", { "fapi_team_id" : "39"})[0]
+   >>> wolves = api.db.search("teams", { "fapi_id" : "39"})[0]
    >>> fixture = wolves.fixture("2024-11-30")
 
    >>> fixture.statistics()
@@ -583,7 +583,7 @@ from that match.
 .. code-block:: python
 
    # Get a team's fixture from a given date
-   >>> wolves = api.db.search("teams", { "fapi_team_id" : "39"})[0]
+   >>> wolves = api.db.search("teams", { "fapi_id" : "39"})[0]
    >>> fixture = wolves.fixture("2024-11-30")
 
    # Get the starting XI.

@@ -38,10 +38,10 @@ class Player:
         self.first_name: str = player_data["first_name"]
         self.last_name: str = player_data["last_name"]
         self.id: str = player_data["player_id"]
-        self.fbref_id = player_data["fbref_player_id"]
-        self.tm_id = player_data["tm_player_id"]
-        self.fapi_id = player_data["fapi_player_id"]
-        self.understat_id = player_data["understat_player_id"]
+        self.fbref_id = player_data["fbref_id"]
+        self.tm_id = player_data["tm_id"]
+        self.fapi_id = player_data["fapi_id"]
+        self.understat_id = player_data["understat_id"]
         #Cached Data
         self.fapi_profile = None
         self.positions_cache = None
@@ -258,8 +258,8 @@ class Player:
             if(res["success"]):
                 fapi_player = res["res"]
                 if(fapi_player["response"][0]):
-                    fapi_team_id = fapi_player["response"][0]["team"]["id"]
-                    db_team = self.db.search("teams", { "fapi_team_id" : fapi_team_id })
+                    fapi_id = fapi_player["response"][0]["team"]["id"]
+                    db_team = self.db.search("teams", { "fapi_id" : fapi_id })
                     if(len(db_team)):
                         self.team = db_team[0]
             else:
@@ -330,8 +330,8 @@ class Player:
         res = self.fbref.get_player_stats(self, year)
         if(res["success"]):
             if(year in res["res"]["stats"]):
-                fbref_team_id = list(res["res"]["stats"][year].keys())[0]
-                stats[year] = res["res"]["stats"][year][fbref_team_id]
+                fbref_id = list(res["res"]["stats"][year].keys())[0]
+                stats[year] = res["res"]["stats"][year][fbref_id]
             else:
                 stats[year] = {}
         else:
