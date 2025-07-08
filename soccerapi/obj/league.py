@@ -65,15 +65,16 @@ class League:
     
     def __repr__(self):
         return f"League({self.league_name} - {self.country})"
-    
-    def export(self):
-        r"""Export the League object as a JSON file.
 
+    def export(self, path: Optional[str] = "."):
+        r"""Export the League object as a JSON file.
+            :param path: Directory to export the league object to. If not present, defaults to present working directory
+            :type path: str
         .. note:: The output filename is in the format ``league_{self.id}.json``.
         """
         data = self.to_json()
 
-        file_name = "league_" + str(self.id) + ".json"
+        file_name = f"./{path}/league_{self.id}.json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 

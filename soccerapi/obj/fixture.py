@@ -79,14 +79,15 @@ class Fixture:
     def __repr__(self):
         return f"Fixture({self.home_team.name()} vs {self.away_team.name()})"
     
-    def export(self):
+    def export(self, path: Optional[str] = "."):
         r"""Export the Fixture object as a JSON file.
-
-        .. note:: The output filename is in the format ``ficture_{self.id}.json``.
+            :param path: Directory to export the fixture object to. If not present, defaults to present working directory
+            :type path: str
+        .. note:: The output filename is in the format ``fixture_{self.id}.json``.
         """
         data = self.to_json()
 
-        file_name = "fixture_" + str(self.id) + ".json"
+        file_name = f"./{path}/fixture_{self.id}.json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 

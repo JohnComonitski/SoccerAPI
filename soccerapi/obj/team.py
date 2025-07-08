@@ -77,14 +77,15 @@ class Team:
         """
         return self.team_name
     
-    def export(self):
+    def export(self, path: Optional[str] = "."):
         r"""Export the Team object as a JSON file.
-
+            :param path: Directory to export the team object to. If not present, defaults to present working directory
+            :type path: str
         .. note:: The output filename is in the format ``team_{self.id}.json``.
         """
         data = self.to_json()
 
-        file_name = "team_" + str(self.id) + ".json"
+        file_name = f"./{path}/team_{self.id}.json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 

@@ -81,14 +81,15 @@ class Player:
         """
         return self.first_name[0] + ". " + self.last_name
     
-    def export(self):
+    def export(self, path: Optional[str] = "."):
         r"""Export the Player object as a JSON file.
-
+            :param path: Directory to export the player object to. If not present, defaults to present working directory
+            :type path: str
         .. note:: The output filename is in the format ``player_{self.id}.json``.
         """
         data = self.to_json()
 
-        file_name = "player_" + str(self.id) + ".json"
+        file_name = f"./{path}/player_{self.id}.json"
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
 
