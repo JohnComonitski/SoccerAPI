@@ -1038,6 +1038,7 @@ class Visualize:
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
             - **filename** (*str*): file name. If not set, a default will be generated.
+            - **exclude_photo** (*bool*): include the photo of the #1 player.
         :type params: dict
         """
         #Get Stat Name
@@ -1075,11 +1076,11 @@ class Visualize:
             highlight_color = self.secondary_color
             if i == 1:
                 highlight_color = self.highlight_color
-                
-                team_img = self.__get_img(player["player"], highlight_color)
-                im = OffsetImage(team_img, zoom=1.3)
-                ab = AnnotationBbox(im, (0.75, .5  - ( (i-1) * offset)), frameon=False)
-                self.ax2.add_artist(ab)
+                if ( ("exclude_photo" not in params) or ( not params["exclude_photo"] ) ):
+                    team_img = self.__get_img(player["player"], highlight_color)
+                    im = OffsetImage(team_img, zoom=1.3)
+                    ab = AnnotationBbox(im, (0.75, .5  - ( (i-1) * offset)), frameon=False)
+                    self.ax2.add_artist(ab)
 
             stat_test = TextArea(f'  {data} {stat_name}', textprops=dict(fontsize=18, color=highlight_color, fontfamily='Trebuchet MS', ha='left'))
 
