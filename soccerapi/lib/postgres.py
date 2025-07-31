@@ -67,16 +67,16 @@ class PostgreSQL:
                     row[key] = record[key]
                     
                 for key in record.keys():
-                    if key == "fbref_" + singular + "_id":
-                        cache[table]["fbref_" + singular + "_id"][str(row[key])] = row
-                    elif key == "tm_" + singular + "_id":
-                        cache[table]["tm_" + singular + "_id"][str(row[key])] = row
-                    elif key == "fapi_" + singular + "_id":
-                        cache[table]["fapi_" + singular + "_id"][str(row[key])] = row
-                    elif key == singular + "_id":
+                    if key == "fbref_id":
+                        cache[table]["fbref_id"][str(row[key])] = row
+                    if key == "tm_id":
+                        cache[table]["tm_id"][str(row[key])] = row
+                    if key == "fapi_id":
+                        cache[table]["fapi_id"][str(row[key])] = row
+                    if key == singular + "_id":
                         cache[table][singular + "_id"][str(row[key])] = row
-                    if key == "understat_" + singular + "_id":
-                        cache[table]["understat_" + singular + "_id"][str(row[key])] = row
+                    if key == "understat_id":
+                        cache[table]["understat_id"][str(row[key])] = row
         return cache
         
     def get_cache_data(self):
@@ -197,7 +197,6 @@ class PostgreSQL:
 
     def get(self, table_name, primary_key):
         schema = self.get_schema(table_name)
-
         if str(primary_key) in self.cache[table_name][schema["primary_key"]]:
             data = self.cache[table_name][schema["primary_key"]][str(primary_key)]
             return schema["class"](data, self)
