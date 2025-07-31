@@ -145,7 +145,7 @@ class Schema:
                     "primary_key" : True
                 },
                 {
-                    "sql" : "conutry_code",
+                    "sql" : "country_code",
                     "label" : "Country Code",
                     "type" : "text"
                 },

@@ -122,12 +122,24 @@ class Team:
 
         if "statistics" in data and data["statistics"]:
             stats = {}
-            for key in data["statistics"]:
-                stat_data = data["statistics"][key]
-                if "key" in stat_data:
-                    stats[key] = Statistic(stat_data)
-                else:
-                    stats[key] = data["statistics"]
+            
+            for year in data["statistics"]:
+                if year not in stats:
+                    stats[year] = {}
+
+                for key in data["statistics"][year]:
+                    stat_data = data["statistics"][year][key]
+                    if "key" in stat_data:
+                        if("context" in stat_data):
+                            if("player" in stat_data["context"]):
+                                stat_data["context"]["player"] = self.db.get("players", stat_data["context"]["player"])
+                            if("team" in stat_data["context"]):
+                                stat_data["context"]["team"] = self.db.get("teams", stat_data["context"]["team"])
+                            if("league" in stat_data["context"]):
+                                stat_data["context"]["league"] = self.db.get("leagues", stat_data["context"]["league"])
+                        stats[year][key] = Statistic(stat_data)
+                    else:
+                        stats[year][key] = data["statistics"][year][key]
             
             self.stats_cache = stats
 
@@ -348,13 +360,34 @@ class Team:
         res = self.fbref.get_team_stats(self, year)
 
         if(res["success"]):
-            stats[year] = res["res"]["stats"]
+            stats[year] = res["res"]["stats"]            
         else:
             if(self.debug):
                 print(res["error_string"])
             stats[year] = {}
-        self.stats_cache = stats
 
+        new_stats = {}
+        db_search_cache = {
+            "leagues" : {},
+            "teams" : {},
+            "players" : {}
+        }
+        for stat_year in stats:
+            new_stats[stat_year] = {}
+
+            for key in stats[stat_year]:
+                stat = stats[stat_year][key]
+                for obj_type in ["league", "team", "player"]:
+                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                        id = str(stat.context[obj_type])
+                        if id not in db_search_cache[f"{obj_type}s"]:
+                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_search_cache[f"{obj_type}s"][id] = db_league
+                        stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
+                
+                stats[stat_year][key] = stat
+
+        self.stats_cache = stats
         return self.stats_cache[year]
 
     def statistic(self, stat, year: Optional[str] = None) -> Statistic:
@@ -412,8 +445,29 @@ class Team:
             if(self.debug):
                 print(res["error_string"])
             stats[year] = {}
-        self.opps_stats_cache = stats
 
+        new_stats = {}
+        db_search_cache = {
+            "leagues" : {},
+            "teams" : {},
+            "players" : {}
+        }
+        for stat_year in stats:
+            new_stats[stat_year] = {}
+
+            for key in stats[stat_year]:
+                stat = stats[stat_year][key]
+                for obj_type in ["league", "team", "player"]:
+                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                        id = str(stat.context[obj_type])
+                        if id not in db_search_cache[f"{obj_type}s"]:
+                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_search_cache[f"{obj_type}s"][id] = db_league
+                        stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
+                
+                stats[stat_year][key] = stat
+
+        self.opps_stats_cache = stats
         return self.opps_stats_cache[year]
     
     def opponent_statistic(self, stat, year: Optional[str] = None) -> Statistic:

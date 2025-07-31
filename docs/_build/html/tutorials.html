@@ -137,33 +137,33 @@ leagues.</p>
 <p>Use the <code class="docutils literal notranslate"><span class="pre">search</span></code> method from <code class="docutils literal notranslate"><span class="pre">db</span></code> to search for objects using an object’s
 foreign ID. Tables available to search on are players, teams and leagues.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Search for Erling Haaland using API-Football ID, Transfermarkt ID and FBRef ID respectively</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;418560&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;418560&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1f44ac21&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1f44ac21&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)]</span>
 
 <span class="c1"># Search for Man City using API-Football ID, Transfermarkt ID and FBRef ID respectively</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;33&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;33&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;985&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;985&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;19538871&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;19538871&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">Team</span><span class="p">(</span><span class="n">Manchester</span> <span class="n">United</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
 <span class="c1"># Search for Premier League using API-Football ID, Transfermarkt ID and FBRef ID respectively</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;GB1&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;tm_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;GB1&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_league_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;leagues&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fbref_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;9&quot;</span><span class="p">})</span>
 <span class="p">[</span><span class="n">League</span><span class="p">(</span><span class="n">Premier</span> <span class="n">League</span> <span class="o">-</span> <span class="n">GB</span><span class="p">)]</span>
 </pre></div>
 </div>
@@ -195,7 +195,7 @@ to avoid redundant request calls and save time.</p>
 <section id="get-objects-from-other-objects">
 <h3>Get objects from other objects<a class="headerlink" href="#get-objects-from-other-objects" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get Erling Haaland.</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">haaland</span><span class="p">)</span>
 <span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)</span>
 
@@ -219,7 +219,7 @@ to avoid redundant request calls and save time.</p>
 <section id="get-all-player-s-statistics-from-this-season">
 <h3>Get all Player’s Statistics from this season<a class="headerlink" href="#get-all-player-s-statistics-from-this-season" title="Link to this heading"></a></h3>
 <p>Scrape a player’s FBRef statistics from this season.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="go"># Returns statistics organized by team.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
@@ -250,7 +250,7 @@ to avoid redundant request calls and save time.</p>
 <span class="go">   &#39;crosses&#39;: 3.0,</span>
 <span class="go">   &#39;crosses_into_penalty_area&#39;: 1.0,</span>
 <span class="go">   &#39;dispossessed&#39;: 20.0,</span>
-<span class="go">   &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
+<span class="go">   &#39;fbref_id&#39;: &#39;9&#39;,</span>
 <span class="go">   &#39;fouled&#39;: 12.0,</span>
 <span class="go">   &#39;fouls&#39;: 20.0,</span>
 <span class="go">   &#39;games&#39;: 25.0,</span>
@@ -350,7 +350,7 @@ to avoid redundant request calls and save time.</p>
 <section id="get-all-player-s-statistics-from-last-season">
 <h3>Get all Player’s Statistics from last season<a class="headerlink" href="#get-all-player-s-statistics-from-last-season" title="Link to this heading"></a></h3>
 <p>Scrape a player’s FBRef statistics from a previous season.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="go"># Returns statistics organized by team</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
@@ -380,7 +380,7 @@ to avoid redundant request calls and save time.</p>
 <span class="go">   &#39;clearances&#39;: 16.0,</span>
 <span class="go">   &#39;crosses&#39;: 5.0,</span>
 <span class="go">   &#39;dispossessed&#39;: 19.0,</span>
-<span class="go">   &#39;fbref_league_id&#39;: &#39;9&#39;,</span>
+<span class="go">   &#39;fbref_id&#39;: &#39;9&#39;,</span>
 <span class="go">   &#39;fouled&#39;: 31.0,</span>
 <span class="go">   &#39;fouls&#39;: 18.0,</span>
 <span class="go">   &#39;games&#39;: 31.0,</span>
@@ -484,7 +484,7 @@ to avoid redundant request calls and save time.</p>
 <section id="get-a-player-s-number-of-shots-from-this-season">
 <h3>Get a Player’s Number of Shots from this season<a class="headerlink" href="#get-a-player-s-number-of-shots-from-this-season" title="Link to this heading"></a></h3>
 <p>Scrape a player’s FBRef Shot statistics from this season.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_player_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;1100&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="go"># Returns shots taken this season.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span><span class="o">.</span><span class="n">statistic</span><span class="p">(</span><span class="s2">&quot;shots&quot;</span><span class="p">)</span>
@@ -572,7 +572,7 @@ value.</p>
 <p>Find a team’s fixture on a given date. Scrape the TM Market Value for the
 starting XI of that team.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date.</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">fixture</span><span class="p">)</span>
 <span class="n">Fixture</span><span class="p">(</span><span class="n">Wolves</span> <span class="n">vs</span> <span class="n">Bournemouth</span><span class="p">)</span>
@@ -587,7 +587,7 @@ starting XI of that team.</p>
 <h3>Get the team statistics from a given fixture<a class="headerlink" href="#get-the-team-statistics-from-a-given-fixture" title="Link to this heading"></a></h3>
 <p>Get each team statistics from a match.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date.</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span><span class="o">.</span><span class="n">statistics</span><span class="p">()</span>
@@ -641,7 +641,7 @@ starting XI of that team.</p>
 <p>Find a team’s fixture on a given date. Get the statistics for a given player
 from that match.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a team&#39;s fixture from a given date</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_team_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">wolves</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;teams&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;fapi_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;39&quot;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">fixture</span> <span class="o">=</span> <span class="n">wolves</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="s2">&quot;2024-11-30&quot;</span><span class="p">)</span>
 
 <span class="c1"># Get the starting XI.</span>

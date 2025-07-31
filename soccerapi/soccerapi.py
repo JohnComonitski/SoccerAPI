@@ -6,9 +6,10 @@ from .lib.understat import Understat
 from .lib.visualize import Visualize
 from .lib.scouting import Scouting
 from .obj.fixture import Fixture
+from .obj.statistic import Statistic
 import json
 import csv
-from typing import Any
+from typing import Any, Optional
 
 
 class SoccerAPI():
@@ -96,9 +97,11 @@ class SoccerAPI():
             "scouting" : Scouting(),
             "fapi" : FAPI(config=config),
         }
+
         self.db = PostgreSQL(app) 
         self.visualize = Visualize()
         self.scouting = Scouting()
+
         self.app = app
 
     def import_object(self, path: str) -> Any:
@@ -178,6 +181,10 @@ class SoccerAPI():
 
         return objects
 
+    def create_statistic(self, key: str, value: float, percentile: Optional[float] = None, context: dict = {} ) -> Statistic:
+        print(key)
+        print(value)
+        return Statistic({ "key" : key, "value" : value, "percentile" : percentile, "context" : context })
 
 if __name__ == '__main__':
     pass

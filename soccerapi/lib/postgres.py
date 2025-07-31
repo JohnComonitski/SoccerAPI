@@ -294,12 +294,14 @@ class PostgreSQL:
         res = []
         try:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+
                 query_params = self.build_query(query, 0)
                 # Generate the SQL query
                 update_query = sql.SQL("SELECT * FROM {} WHERE {}").format(
                     sql.Identifier(table_name),
                     sql.SQL(query_params),
                 )
+
                 cursor.execute(update_query)
 
                 for record in cursor:

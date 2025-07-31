@@ -1,5 +1,6 @@
-from ..lib.utils import traverse_dict
+from ..lib.utils import key_to_name, name_to_key, traverse_dict
 from .fixture import Fixture
+from .statistic import Statistic
 from datetime import datetime
 import json
 from typing import Any, Optional
@@ -50,6 +51,7 @@ class League:
         self.teams_cache = {}
         self.fapi_profile = None
         self.mv_cache = {}
+        self.stats_cache = {}
         #Packages
         self.db = db 
         app = db.app
@@ -92,7 +94,8 @@ class League:
             "fapi_id" : self.fapi_id,
             "fapi_profile" : self.fapi_profile,
             "teams" : self.teams_cache,
-            "market_value" : self.mv_cache
+            "statistics" : self.stats_cache,
+            "market_value" : self.mv_cache,
         }) 
     
     def import_data(self, data: dict[str]):
@@ -116,8 +119,30 @@ class League:
 
         if "market_value" in data:
             self.mv_cache = data["market_value"]
-        
 
+
+        if "statistics" in data and data["statistics"]:
+            stats = {}
+            
+            for year in data["statistics"]:
+                if year not in stats:
+                    stats[year] = {}
+
+                for key in data["statistics"][year]:
+                    stat_data = data["statistics"][year][key]
+                    if "key" in stat_data:
+                        if("context" in stat_data):
+                            if("player" in stat_data["context"]):
+                                stat_data["context"]["player"] = self.db.get("players", stat_data["context"]["player"])
+                            if("team" in stat_data["context"]):
+                                stat_data["context"]["team"] = self.db.get("teams", stat_data["context"]["team"])
+                            if("league" in stat_data["context"]):
+                                stat_data["context"]["league"] = self.db.get("leagues", stat_data["context"]["league"])
+                        stats[year][key] = Statistic(stat_data)
+                    else:
+                        stats[year][key] = data["statistics"][year][key]
+            
+            self.stats_cache = stats
 
     def name(self) -> str:
         r"""Get the name of the League.
@@ -279,3 +304,83 @@ class League:
             if(1 or self.debug ):
                 print(res["error_string"]) 
             return 0
+
+    def statistics(self, year = None) -> dict[Statistic]:
+        r"""Returns the League's FBRef Statistics for a given year.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
+        :type year: Optional[str]
+        :returns: a hash of Statistic objects.
+        :rtype: dict[Statistic]
+        """
+        stats = self.stats_cache
+
+        if not year:
+            current_date = datetime.now()
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
+
+        if year in stats:
+            return stats[year]
+        
+        res = self.fbref.get_league_stats(self, year)
+
+        if(res["success"]):
+            stats[year] = res["res"]["stats"]
+        else:
+            if(self.debug):
+                print(res["error_string"])
+            stats[year] = {}
+
+        new_stats = {}
+        db_search_cache = {
+            "leagues" : {},
+            "teams" : {},
+            "players" : {}
+        }
+        for stat_year in stats:
+            new_stats[stat_year] = {}
+
+            for key in stats[stat_year]:
+                stat = stats[stat_year][key]
+                for obj_type in ["league", "team", "player"]:
+                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                        id = str(stat.context[obj_type])
+                        if id not in db_search_cache[f"{obj_type}s"]:
+                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_search_cache[f"{obj_type}s"][id] = db_league
+                        stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
+                
+                stats[stat_year][key] = stat
+
+        self.stats_cache = stats
+
+        return self.stats_cache[year]
+
+    def statistic(self, stat, year: Optional[str] = None) -> Statistic:
+        r"""Get the League's FBRef statistics for a given year and Statistic.
+        
+        :param year: the year to be selected. If this parameter is not set, get the current year.
+        :type year: Optional[str]
+        :param stat: internal or display name of a statistic.
+        :type stat: str
+        :returns: a Statistic object.
+        :rtype: Statistic
+        """
+        if not year:
+            current_date = datetime.now()
+            year = str(current_date.year)
+
+        stat_key = None
+        if(key_to_name(stat)):
+            stat_key = stat
+        elif(name_to_key(stat)):
+            stat_key = name_to_key(stat)
+
+        stats = self.statistics(year)
+        if stat_key and stat_key in stats:
+            return stats[stat_key]
+        return Statistic({ "key" : stat_key, "value" : 0 })

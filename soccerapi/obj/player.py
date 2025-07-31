@@ -3,6 +3,7 @@ from datetime import datetime
 from .statistic import Statistic 
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
 from typing import Optional
+from .team import Team
 
 
 class Player:
@@ -47,7 +48,7 @@ class Player:
         self.positions_cache = None
         self.player_country = None
         self.team = None
-        self.stats_cache = {}
+        self.stats_cache = None
         self.mv_cache = {}
         #Packages
         self.db = db 
@@ -141,28 +142,28 @@ class Player:
         
         if "statistics" in data and data["statistics"]:
             stats = {}
-            has_years = 0 
-            first_key = next(iter(data["statistics"]))
-            if "20" in first_key:
-                has_years = 1
 
-            if(has_years):
-                for year in data["statistics"]:
-                    if year not in stats:
-                        stats[year] = {}
-                    for key in data["statistics"][year]:
-                        stat_data = data["statistics"][year][key]
+            for year in data["statistics"]:
+                if year not in stats:
+                    stats[year] = {}
+
+                for team in data["statistics"][year]:
+                    if team not in stats[year]:
+                        stats[year][team] = {}
+
+                    for key in data["statistics"][year][team]:
+                        stat_data = data["statistics"][year][team][key]
                         if "key" in stat_data:
-                            stats[year][key] = Statistic(stat_data)
+                            if("context" in stat_data):
+                                if("player" in stat_data["context"]):
+                                    stat_data["context"]["player"] = self.db.get("players", stat_data["context"]["player"])
+                                if("team" in stat_data["context"]):
+                                    stat_data["context"]["team"] = self.db.get("teams", stat_data["context"]["team"])
+                                if("league" in stat_data["context"]):
+                                    stat_data["context"]["league"] = self.db.get("leagues", stat_data["context"]["league"])
+                            stats[year][team][key] = Statistic(stat_data)
                         else:
-                            stats[year][key] = data["statistics"][year]
-            else:
-                for key in data["statistics"]:
-                    stat_data = data["statistics"][key]
-                    if "key" in stat_data:
-                        stats[key] = Statistic(stat_data)
-                    else:
-                        stats[key] = data["statistics"]
+                            stats[year][team][key] = data["statistics"][year][team][key]
 
             self.stats_cache = stats
 
@@ -304,52 +305,90 @@ class Player:
         self.mv_cache = mv_cache
         return self.mv_cache[year]
 
-    def statistics(self, year = None) -> dict[Statistic]:
-        r"""Returns the Player's FBRef Statistics for a given year.
+    def statistics(self, year: Optional[str] = None, team: Optional[str | Team] = None ) -> dict[Statistic]:
+        r"""Returns the Player's FBRef Statistics for a given year and team.
 
-        :param year: desired year for the statistics. If not set get the
-          previous year if the current month is between January and June, or
-          the current year otherwise.
+        :param year: desired year the statistics are from.
         :type year: Optional[str]
+        :param team: desired team the player was playing for when the statistics were recorded (Given players can be on multiple teams in a season)
+        :type team: Optional[str | Team]
         :returns: a hash of Statistic objects
         :rtype: dict[Statistic]
         """
         stats = self.stats_cache
 
-        if not year:
-            current_date = datetime.now()
-            if 1 <= current_date.month <= 6:
-                previous_year = current_date.year - 1
-                year = str(previous_year)
-            else:
-                year = str(current_date.year)
+        if stats is None:
+            # No Cache, get stats from FBRef
+            res = self.fbref.get_player_stats(self, year)
+            if(res["success"]):
+                stats = res["res"]["stats"]
 
-        if year in stats:
-            return stats[year]
+                #Clean Up Fbref IDs, Make them Soccer API IDs & Objects
+                new_stats = {}
+                db_search_cache = {
+                    "leagues" : {},
+                    "teams" : {},
+                    "players" : {}
+                }
+                for stat_year in stats:
+                    new_stats[stat_year] = {}
+                    for fbref_team_id in stats[stat_year]:
+                        if fbref_team_id not in db_search_cache["teams"]:
+                            db_team = self.db.search("teams", { "fbref_id" : fbref_team_id })[0]
+                            db_search_cache["teams"][fbref_team_id] = db_team
+                        team_id = str(db_search_cache["teams"][fbref_team_id].id)
+                        
+                        for key in stats[stat_year][fbref_team_id]:
+                            stat = stats[stat_year][fbref_team_id][key]
+                            for obj_type in ["league", "team", "player"]:
+                                if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                                    id = str(stat.context[obj_type])
+                                    if id not in db_search_cache[f"{obj_type}s"]:
+                                        db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                                        db_search_cache[f"{obj_type}s"][id] = db_league
+                                    stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
+                            
+                            stats[stat_year][fbref_team_id][key] = stat
 
-        res = self.fbref.get_player_stats(self, year)
-        if(res["success"]):
-            if(year in res["res"]["stats"]):
-                fbref_id = list(res["res"]["stats"][year].keys())[0]
-                stats[year] = res["res"]["stats"][year][fbref_id]
+                        new_stats[stat_year][team_id] = stats[stat_year][fbref_team_id]
+                stats = new_stats
+                self.stats_cache = new_stats
             else:
-                stats[year] = {}
+                if(self.debug):
+                    print(res["error_string"])
+                return {}
+
+        stats_by_year = {}
+        if year:
+            if(year in stats):
+                stats_by_year = stats[year]
+            else:
+                return {}
         else:
-            if(self.debug):
-                print(res["error_string"])
-            stats[year] = {}
-        self.stats_cache = stats
+            year = max(list(stats.keys()))
+        stats_by_year = stats[year]
 
-        return self.stats_cache[year]
+        if team:
+            if(str(type(team)) != "<class 'str'>" ):
+                team = str(team.id)
+            if team not in stats_by_year:
+                return {}
+        else:
+            team = list(stats_by_year.keys())[-1]
 
-    def statistic(self, stat, year: Optional[str] = None) -> Statistic:
-        r"""Get the Player's FBRef statistics for a given year and statistic.
+        stats_by_year[team]["year"] = year
+        stats_by_year[team]["team"] = self.db.get("teams", team)
+        return stats_by_year[team]
+
+    def statistic(self, stat, year: Optional[str] = None, team: Optional[str | Team] = None ) -> Statistic:
+        r"""Get the Player's FBRef statistics for a given year, team and statistic.
 
         :param stat: internal or display name of a statistic.
         :type stat: str
-        :param year: desired year for the statistics. See the ``statistic``
-          method for more information.
+        :param year: desired year the statistic is from.
         :type year: Optional[str]
+        :param team: desired team the player was playing for when the statistic was recorded (Given players can be on multiple teams in a season)
+        :type team: Optional[str | Team]
         :returns: a Statistic object.
         :rtype: Statistic
         """
@@ -359,7 +398,7 @@ class Player:
         elif(name_to_key(stat)):
             stat_key = name_to_key(stat)
 
-        stats = self.statistics(year)
+        stats = self.statistics(year=year, team=team)
         if stat_key and stat_key in stats:
             return stats[stat_key]
         return Statistic({ "key" : stat, "value" : 0, "percentile" : 0})
