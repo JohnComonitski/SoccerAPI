@@ -27,7 +27,7 @@ leagues.
 .. code-block:: python
 
    # Get Erling Haaland
-   >>> api.db.get("players", "82172")
+   >>> api.db.get("players", "82155")
    Player(Erling Braut Haaland)
 
    # Get Premier League (man_city)
@@ -87,7 +87,7 @@ to avoid redundant request calls and save time.
 
 .. code-block:: python
 
-   >>> haaland = api.db.get("players", "82172")
+   >>> haaland = api.db.get("players", "82155")
 
    # Prints JSON representation of object to the current directory.
    >>> haaland.export()
@@ -99,7 +99,7 @@ Import an object from a previosuly exported object JSON file.
 
 .. code-block:: python
 
-   >>> file_path = "player_82172.json"
+   >>> file_path = "player_82155.json"
 
    # Expecting a Soccer API JSON file in its path.
    >>> api.import_object(file_path)
@@ -419,7 +419,7 @@ Scrape a player's TM Market Value.
 
 .. code-block:: python
 
-   >>> haaland = api.db.get("players", "82172")
+   >>> haaland = api.db.get("players", "82155")
 
    # Returns market value as an integer.
    >>> haaland.market_value()
@@ -431,7 +431,7 @@ Using the year parameter when scraping a player's TM Market Value
 
    >>> from datetime import datetime
 
-   >>> haaland = api.db.get("players", "82172")
+   >>> haaland = api.db.get("players", "82155")
 
    # Get last five years.
    >>> current_year = datetime.now().year

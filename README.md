@@ -113,7 +113,7 @@ and combination of data across the following sites:
 7. begin data collection or analysis
 
    ```python
-   haaland = api.db.get("players", "82172")
+   haaland = api.db.get("players", "82155")
    stat = haaland.statistic("shots")
    ```
 

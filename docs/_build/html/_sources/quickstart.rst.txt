@@ -79,7 +79,7 @@ Here is a full Python program you can try:
    }
    api = soccerapi.soccerapi.SoccerAPI(config)
 
-   haaland = api.db.get("players", "82172")
+   haaland = api.db.get("players", "82155")
    stat = haaland.statistic("shots")
    print(stat)
 

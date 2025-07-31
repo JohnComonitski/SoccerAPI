@@ -130,6 +130,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.market_value_over_time"><code class="docutils literal notranslate"><span class="pre">League.market_value_over_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.name"><code class="docutils literal notranslate"><span class="pre">League.name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.profile"><code class="docutils literal notranslate"><span class="pre">League.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.statistic"><code class="docutils literal notranslate"><span class="pre">League.statistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.statistics"><code class="docutils literal notranslate"><span class="pre">League.statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.teams"><code class="docutils literal notranslate"><span class="pre">League.teams()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soccerapi.obj.league.League.to_json"><code class="docutils literal notranslate"><span class="pre">League.to_json()</span></code></a></li>
 </ul>
@@ -1416,6 +1418,43 @@ empty.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.obj.league.League.statistic">
+<span class="sig-name descname"><span class="pre">statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a></span></span><a class="headerlink" href="#soccerapi.obj.league.League.statistic" title="Link to this definition"></a></dt>
+<dd><p>Get the League’s FBRef statistics for a given year and Statistic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p></li>
+<li><p><strong>stat</strong> (<em>str</em>) – internal or display name of a statistic.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a Statistic object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soccerapi.obj.league.League.statistics">
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic"><span class="pre">Statistic</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.statistics" title="Link to this definition"></a></dt>
+<dd><p>Returns the League’s FBRef Statistics for a given year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – the year to be selected. If this parameter is not set, get the current year.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a hash of Statistic objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[<a class="reference internal" href="#soccerapi.obj.statistic.Statistic" title="soccerapi.obj.statistic.Statistic">Statistic</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="soccerapi.obj.league.League.teams">
 <span class="sig-name descname"><span class="pre">teams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><span class="pre">Team</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#soccerapi.obj.league.League.teams" title="Link to this definition"></a></dt>
 <dd><p>Return the League’s teams for a given year.</p>
@@ -1463,7 +1502,8 @@ between January and June, or the current year otherwise.</p>
 <li><p><strong>key</strong> (<em>str</em>) – internal name for a Statistic object.</p></li>
 <li><p><strong>value</strong> (<em>float</em>) – numeric value of the Statistic object.</p></li>
 <li><p><strong>percentile</strong> (<em>float</em>) – percentile representation of a Statistic’s value.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – display name for a Statistic object.</p></li>
+<li><p><strong>name</strong> (<em>dict</em>) – display name for a Statistic object.</p></li>
+<li><p><strong>context</strong> – dictionary describing the context (year and objects) this statistic was generated from</p></li>
 </ul>
 </dd>
 </dl>

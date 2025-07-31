@@ -119,7 +119,7 @@
 Soccer API primary key. Tables available to search on are players, teams and
 leagues.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get Erling Haaland</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82172&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82155&quot;</span><span class="p">)</span>
 <span class="n">Player</span><span class="p">(</span><span class="n">Erling</span> <span class="n">Braut</span> <span class="n">Haaland</span><span class="p">)</span>
 
 <span class="c1"># Get Premier League (man_city)</span>
@@ -174,7 +174,7 @@ foreign ID. Tables available to search on are players, teams and leagues.</p>
 useful when work is performed across multiple scripts and you want to save
 cached data such as statistics and API-Football profiles. This will allow you
 to avoid redundant request calls and save time.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82172&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82155&quot;</span><span class="p">)</span>
 
 <span class="go"># Prints JSON representation of object to the current directory.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
@@ -184,7 +184,7 @@ to avoid redundant request calls and save time.</p>
 <section id="import-an-object">
 <h3>Import an object<a class="headerlink" href="#import-an-object" title="Link to this heading"></a></h3>
 <p>Import an object from a previosuly exported object JSON file.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;player_82172.json&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;player_82155.json&quot;</span>
 
 <span class="go"># Expecting a Soccer API JSON file in its path.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">api</span><span class="o">.</span><span class="n">import_object</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -495,7 +495,7 @@ to avoid redundant request calls and save time.</p>
 <section id="get-a-player-s-current-transfermarkt-market-value">
 <h3>Get a Player’s current Transfermarkt Market Value<a class="headerlink" href="#get-a-player-s-current-transfermarkt-market-value" title="Link to this heading"></a></h3>
 <p>Scrape a player’s TM Market Value.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82172&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82155&quot;</span><span class="p">)</span>
 
 <span class="go"># Returns market value as an integer.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span><span class="o">.</span><span class="n">market_value</span><span class="p">()</span>
@@ -505,7 +505,7 @@ to avoid redundant request calls and save time.</p>
 <p>Using the year parameter when scraping a player’s TM Market Value</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82172&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">haaland</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="s2">&quot;82155&quot;</span><span class="p">)</span>
 
 <span class="go"># Get last five years.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">current_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
