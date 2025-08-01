@@ -402,15 +402,14 @@ objects and a series of parameters and generate visualizations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – the Players or Teams to plot on the scatter plot.</p></li>
-<li><p><strong>object</strong> – statistics to define the X, Y and (optional) Z axis of the scatter plot.</p></li>
+<li><p><strong>object</strong> (<em>list</em><em>[</em><em>(</em><a class="reference internal" href="#soccerapi.obj.player.Player" title="soccerapi.obj.player.Player"><em>Player</em></a><em> | </em><a class="reference internal" href="#soccerapi.obj.team.Team" title="soccerapi.obj.team.Team"><em>Team</em></a><em> )</em><em>]</em>) – the Players or Teams to plot on the scatter plot.</p></li>
+<li><p><strong>stats_names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – statistics to define the X, Y and (optional) Z axis of the scatter plot.</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – <p>params dictionary to define the scatter plot customization.</p>
 <ul>
 <li><p><strong>title</strong> (<em>str</em>): title to be displayed on the visualization. If not set, a default will be generated.</p></li>
 <li><p><strong>description</strong> (<em>str</em>): description of signature displayed below the title.</p></li>
 <li><p><strong>signature</strong> (<em>str</em>): signature included at the bottom of the visualization.</p></li>
 <li><p><strong>filename</strong> (<em>str</em>): file name. If not set, a default will be generated.</p></li>
-<li><p><strong>stats</strong> (<em>list[str]</em>): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.</p></li>
 <li><p><strong>years</strong> (<em>list[str]</em>): which year to plot the statistics of. Use 1 year to plot statistics from a single season. Use 2 years to plot the evolution of a statistic. If not included, the most recent season will be used as default.</p></li>
 <li><p><strong>color</strong> (<em>str</em>): color of the points on the scatter plot.</p></li>
 <li><p><strong>use_images</strong> (<em>bool</em>): use object logos of images instead of points on the scatter plot.</p></li>

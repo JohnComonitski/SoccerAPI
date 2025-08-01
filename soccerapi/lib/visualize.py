@@ -707,15 +707,14 @@ class Visualize:
 
         :param object: the Players or Teams to plot on the scatter plot.
         :type object: list[(Player | Team )]
-        :param object: statistics to define the X, Y and (optional) Z axis of the scatter plot.
-        :type object: list[str]
+        :param stats_names: statistics to define the X, Y and (optional) Z axis of the scatter plot.
+        :type stats_names: list[str]
         :param params: params dictionary to define the scatter plot customization.
 
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
             - **filename** (*str*): file name. If not set, a default will be generated.
-            - **stats** (*list[str]*): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.
             - **years** (*list[str]*): which year to plot the statistics of. Use 1 year to plot statistics from a single season. Use 2 years to plot the evolution of a statistic. If not included, the most recent season will be used as default.
             - **color** (*str*): color of the points on the scatter plot.
             - **use_images** (*bool*): use object logos of images instead of points on the scatter plot.
