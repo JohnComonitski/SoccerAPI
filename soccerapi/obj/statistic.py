@@ -217,12 +217,21 @@ class Statistic:
         """
         flatten_context = {}
         context = self.context
-        if "player" in context:
-            flatten_context["player"] = context["player"].id
-        if "team" in context:
-            flatten_context["team"] = context["team"].id
-        if "league" in context:
-            flatten_context["league"] = context["league"].id
+        if "player" in context and context["player"]:
+            if "str" in str(type(context["player"])):
+                flatten_context["player"] = context["player"]      
+            else:   
+                flatten_context["player"] = context["player"].id
+        if "team" in context and context["team"]:
+            if "str" in str(type(context["team"])):
+                flatten_context["team"] = context["team"]      
+            else:   
+                flatten_context["team"] = context["team"].id
+        if "league" in context and context["league"]:
+            if "str" in str(type(context["league"])):
+                flatten_context["league"] = context["league"]      
+            else:   
+                flatten_context["league"] = context["league"].id
         if "object" in context:
             flatten_context["object"] = context["object"]
         if "year" in context:

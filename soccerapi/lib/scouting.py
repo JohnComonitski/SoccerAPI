@@ -105,7 +105,6 @@ class Scouting:
         :returns: returns a list of the top 10 players by a given stat
         :rtype: list[Player]
         """
-
         stats_list = [ { stat: player.statistic(stat, year), "player" : player } for player in players ]
         stats_list.sort(key=lambda x: x[stat].value)
         stats_list.reverse()

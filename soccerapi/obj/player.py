@@ -334,23 +334,29 @@ class Player:
                     new_stats[stat_year] = {}
                     for fbref_team_id in stats[stat_year]:
                         if fbref_team_id not in db_search_cache["teams"]:
-                            db_team = self.db.search("teams", { "fbref_id" : fbref_team_id })[0]
-                            db_search_cache["teams"][fbref_team_id] = db_team
-                        team_id = str(db_search_cache["teams"][fbref_team_id].id)
-                        
-                        for key in stats[stat_year][fbref_team_id]:
-                            stat = stats[stat_year][fbref_team_id][key]
-                            for obj_type in ["league", "team", "player"]:
-                                if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
-                                    id = str(stat.context[obj_type])
-                                    if id not in db_search_cache[f"{obj_type}s"]:
-                                        db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
-                                        db_search_cache[f"{obj_type}s"][id] = db_league
-                                    stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
-                            
-                            stats[stat_year][fbref_team_id][key] = stat
+                            db_team = self.db.search("teams", { "fbref_id" : fbref_team_id })
+                            if(len(db_team) > 0):
+                                db_team = db_team[0]
+                                db_search_cache["teams"][fbref_team_id] = db_team
 
-                        new_stats[stat_year][team_id] = stats[stat_year][fbref_team_id]
+                        if fbref_team_id in db_search_cache["teams"]:
+                            team_id = str(db_search_cache["teams"][fbref_team_id].id)
+                        
+                            for key in stats[stat_year][fbref_team_id]:
+                                stat = stats[stat_year][fbref_team_id][key]
+                                for obj_type in ["league", "team", "player"]:
+                                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                                        id = str(stat.context[obj_type])
+                                        if id not in db_search_cache[f"{obj_type}s"]:
+                                            db_obj = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })
+                                            if(len(db_obj) > 0):
+                                                db_search_cache[f"{obj_type}s"][id] = db_obj[0]
+                                            else:
+                                                db_search_cache[f"{obj_type}s"][id] = None
+                                        stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]    
+                                stats[stat_year][fbref_team_id][key] = stat
+
+                            new_stats[stat_year][team_id] = stats[stat_year][fbref_team_id]
                 stats = new_stats
                 self.stats_cache = new_stats
             else:
@@ -365,7 +371,11 @@ class Player:
             else:
                 return {}
         else:
-            year = max(list(stats.keys()))
+            keys = list(stats.keys())
+            if(len(keys) > 0):
+                year = max(keys)
+            else:
+                return {}
         stats_by_year = stats[year]
 
         if team:
@@ -374,7 +384,11 @@ class Player:
             if team not in stats_by_year:
                 return {}
         else:
-            team = list(stats_by_year.keys())[-1]
+            keys = list(stats_by_year.keys())
+            if(len(keys) > 0):
+                team = list(stats_by_year.keys())[-1]
+            else: 
+                return {}
 
         stats_by_year[team]["year"] = year
         stats_by_year[team]["team"] = self.db.get("teams", team)
