@@ -171,6 +171,15 @@ class Visualize:
             if(desc_lines == 1):
                 desc_buffer = .1
             header_height += ( desc_lines * .25 )
+            if("type" in params and params["type"] == "radar"):
+                if(desc_lines == 1):
+                    header_height += .4
+                if(desc_lines == 2):
+                    header_height += .4
+                if(desc_lines == 3):
+                    header_height += .4
+        elif(params and "title" in params):
+            header_height += .4
 
         #Signature
         signature = ""
@@ -405,7 +414,7 @@ class Visualize:
         """
         object_type = str(type(object))
         if( "Player" not in object_type ):
-            return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Team objects can be used to generate pizza plots" }
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Only Player and Team objects can be used to generate radar plots" }
 
         columns = []
         if "columns" not in params:
@@ -430,30 +439,21 @@ class Visualize:
         # Build Radar
         N = len(stat_keys)
         theta = self.__radar_factory(N, frame='polygon')
-        self.__set_up_vis({"type" : "radar"})
+        params["type"] = "radar"
+        self.__set_up_vis(params)
 
         self.ax2.set_varlabels(stat_keys)
+        self.ax2.set_ylim(0, 100)
+        self.ax2.set_yticks([20, 40, 60, 80, 100])
+        self.ax2.set_aspect('equal')
         self.ax2.plot(theta, values, c=self.secondary_color, marker='o', label='_nolegend_')
         self.ax2.fill(theta, values, c=self.secondary_color, alpha=0.25)
 
-        # Create a circular mask for the image
-        object_img = object.image()
-        if( not object_img ):
-            object_img = ""
-
-        image = Image.open(urlopen(object_img))
-        mask = Image.new('L', image.size, 0)
-        draw = ImageDraw.Draw(mask)
-        draw.ellipse((0, 0) + image.size, fill=255)
-
-        # Apply the mask to the image
-        masked_img = ImageOps.fit(image, mask.size, centering=(0.5, 0.5))
-        masked_img.putalpha(mask)
-
         # Add image
-        add_image(
-            masked_img, self.fig, left=0.455, bottom=0.415, width=0.086, height=0.08, zorder= -1
-        )
+        img = self.__get_img(object) 
+        im = OffsetImage(img, zoom=.25)
+        ab = AnnotationBbox(im, (0.5, .5), frameon=False)
+        self.ax2.add_artist(ab)
 
         #Filename
         if( params and "filename" not in params):
