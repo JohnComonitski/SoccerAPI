@@ -36,6 +36,8 @@ class Statistic:
                 self.context["league"] = stat_data["context"]["league"]
             if "year" in stat_data["context"]:
                 self.context["year"] = stat_data["context"]["year"]
+            if "age" in stat_data["context"]:
+                self.context["age"] = stat_data["context"]["age"]
 
         name = key_to_name(stat_data["key"])
         if(name):

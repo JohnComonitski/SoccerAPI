@@ -5,3 +5,4 @@ beautifulsoup4
 requests
 psycopg2-binary
 matplotlib_venn
+curl_cffi

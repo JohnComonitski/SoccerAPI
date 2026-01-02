@@ -47,6 +47,7 @@ class League:
         self.tm_id = league_data["tm_id"]
         self.understat_id = league_data["understat_id"]
         self.fapi_id = league_data["fapi_id"]
+        self.type = league_data["type"]
         #Cached Data
         self.teams_cache = {}
         self.fapi_profile = None
@@ -326,14 +327,14 @@ class League:
         if year in stats:
             return stats[year]
         
-        res = self.fbref.get_league_stats(self, year)
+        res = self.fbref.get_league_stats(self.db, self)
 
         if(res["success"]):
-            stats[year] = res["res"]["stats"]
+            stats = res["res"]["stats"]
         else:
             if(self.debug):
                 print(res["error_string"])
-            stats[year] = {}
+            stats = {}
 
         new_stats = {}
         db_search_cache = {
@@ -350,15 +351,17 @@ class League:
                     if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
                         id = str(stat.context[obj_type])
                         if id not in db_search_cache[f"{obj_type}s"]:
-                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_league = self.db.get(f"{obj_type}s", stat.context[obj_type])
                             db_search_cache[f"{obj_type}s"][id] = db_league
                         stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
                 
                 stats[stat_year][key] = stat
 
         self.stats_cache = stats
-
-        return self.stats_cache[year]
+        if year in self.stats_cache:
+            return self.stats_cache[year]
+        else:
+            return {}
 
     def statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the League's FBRef statistics for a given year and Statistic.

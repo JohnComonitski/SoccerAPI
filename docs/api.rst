@@ -49,3 +49,6 @@ Obj
 
 .. automodule:: soccerapi.obj.fixture
    :members:
+
+.. automodule:: soccerapi.obj.transfer
+   :members:

@@ -1,6 +1,7 @@
 import json
 from .fixture import Fixture
 from .statistic import Statistic
+from .tranfer import Transfer
 from ..lib.utils import key_to_name, name_to_key, traverse_dict
 from datetime import datetime
 from typing import Optional
@@ -186,18 +187,18 @@ class Team:
         """
         return self.team_country
     
-    def players(self) -> list['Player']:
+    def players(self, year: Optional[str] = None) -> list['Player']:
         r"""Get the player's on a Team.
 
         :returns: a list of players or an empty list
         :rtype: list['Player']
         """
         players = []
-        res = self.fapi.get_players_on_team(self)
+        res = self.fapi.get_players_on_team(self, year)
 
-        if(res["success"]):
-            for player in res["res"]["players"][0]['players']:
-                fapi_id = player["id"]
+        if(res["success"] and len(res["res"]["players"]) > 0):
+            for player in res["res"]["players"]:
+                fapi_id = player["player"]["id"]
                 db_player = self.db.search("players", { "fapi_id" : fapi_id })
                 if(len(db_player) > 0):
                     players.append(db_player[0])
@@ -357,14 +358,14 @@ class Team:
         if year in stats:
             return stats[year]
         
-        res = self.fbref.get_team_stats(self, year)
+        res = self.fbref.get_team_stats(self.db, self)
 
         if(res["success"]):
-            stats[year] = res["res"]["stats"]            
+            stats = res["res"]["stats"]            
         else:
             if(self.debug):
                 print(res["error_string"])
-            stats[year] = {}
+            stats = {}
 
         new_stats = {}
         db_search_cache = {
@@ -372,6 +373,7 @@ class Team:
             "teams" : {},
             "players" : {}
         }
+
         for stat_year in stats:
             new_stats[stat_year] = {}
 
@@ -381,14 +383,17 @@ class Team:
                     if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
                         id = str(stat.context[obj_type])
                         if id not in db_search_cache[f"{obj_type}s"]:
-                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_league = self.db.get(f"{obj_type}s", stat.context[obj_type])
                             db_search_cache[f"{obj_type}s"][id] = db_league
                         stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
                 
                 stats[stat_year][key] = stat
 
         self.stats_cache = stats
-        return self.stats_cache[year]
+        if year in self.stats_cache:
+            return self.stats_cache[year]
+        else:
+            return {}
 
     def statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Team's FBRef statistics for a given year and Statistic.
@@ -438,13 +443,13 @@ class Team:
         if year in stats:
             return stats[year]
 
-        res = self.fbref.get_team_opposition_stats(self, year)
+        res = self.fbref.get_team_opposition_stats(self.db, self)
         if(res["success"]):
-            stats[year] = res["res"]["stats"]
+            stats = res["res"]["stats"]
         else:
             if(self.debug):
                 print(res["error_string"])
-            stats[year] = {}
+            stats = {}
 
         new_stats = {}
         db_search_cache = {
@@ -461,14 +466,17 @@ class Team:
                     if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
                         id = str(stat.context[obj_type])
                         if id not in db_search_cache[f"{obj_type}s"]:
-                            db_league = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })[0]
+                            db_league = self.db.get(f"{obj_type}s", stat.context[obj_type])
                             db_search_cache[f"{obj_type}s"][id] = db_league
                         stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]
                 
                 stats[stat_year][key] = stat
 
         self.opps_stats_cache = stats
-        return self.opps_stats_cache[year]
+        if year in self.opps_stats_cache:
+            return self.opps_stats_cache[year]
+        else:
+            return {}
     
     def opponent_statistic(self, stat, year: Optional[str] = None) -> Statistic:
         r"""Get the Team's FBRef opposition statistics for a given year and Statistic.
@@ -494,3 +502,53 @@ class Team:
         if stat_key and stat_key in stats:
             return stats[stat_key]
         return Statistic({ "key" : stat_key, "value" : 0 })
+    
+    def transfers(self, year: str = None, type: str = "both") -> dict:
+        r"""Get a Team's transfers.
+        
+        :param year: the year to be find transfers from. If this parameter is not set, get the current year.
+        :type year: Optional[str]
+        :param type: specify if you want transfers 'in', 'out' or 'both'. Defaults to both in and out transfers. 
+        :type type: str
+        :returns: a list of Transfer objects.
+        :rtype: dict
+        """
+        res = self.tm.get_transfers(self, year)
+
+        if(res["success"]):
+            for direction in [ "arrivals", "departures" ]:
+                tmp = []
+                for transfer in res["res"]["transfers"][direction]:
+                    db_player = self.db.search("players", { "tm_id" : transfer["player"]})
+                    if(len(db_player) > 0):
+                        transfer["player"] = db_player[0]
+                    if "team" in transfer:
+                        db_team = self.db.search("teams", { "tm_id" : transfer["team"]})
+                        if(len(db_team) > 0):
+                            transfer["team"] = db_team[0]
+                    if "from" in transfer:
+                        db_team = self.db.search("teams", { "tm_id" : transfer["from"]})
+                        if(len(db_team) > 0):
+                            transfer["from"] = db_team[0]
+                    if "to" in transfer:
+                        db_team = self.db.search("teams", { "tm_id" : transfer["to"]})
+                        if(len(db_team) > 0):
+                            transfer["to"] = db_team[0]
+                    if "league" in transfer:
+                        db_league = self.db.search("leagues", { "tm_id" : transfer["league"]})
+                        if(len(db_league) > 0):
+                            transfer["league"] = db_league[0]
+                    tmp.append(transfer)
+                res["res"]["transfers"][direction] = tmp
+
+            if type == "both":
+                return res["res"]["transfers"]
+            elif type == "in":
+                return { "arrivals" : res["res"]["transfers"]["arrivals"] }
+            elif type == "out":
+                return { "departures" : res["res"]["transfers"]["departures"] }
+
+        else:
+            if( self.debug ):
+                print(res["error_string"])
+        return {}

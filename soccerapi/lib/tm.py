@@ -117,7 +117,7 @@ class TM:
 
         end_point = "https://www.transfermarkt.us/team-name/startseite/verein/"
         end_point += tm_id
-        end_point += "?saison_id=" + year
+        #end_point += "?saison_id=" + year
 
         page = self.make_request(end_point)
         market_value = 0
@@ -209,3 +209,97 @@ class TM:
                 return { "success" : 0, "res" : { "market_value_by_year" : {} }, "error_string" :  value["error_string"] }
 
         return { "success" : 1, "res" : { "market_value_by_year" : values_by_year }, "error_string" : ""  }
+    
+    def get_transfers(self, team, year):
+        if( not team.tm_id ):
+            return { "success" : 0, "res" : { "market_value" : 0 }, "error_string" : "Error: League object did not include a tm_id" }       
+        tm_id = team.tm_id
+
+        if not year:
+            current_date = datetime.now()
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
+    
+        end_point = "https://www.transfermarkt.us/team-name/transfers/verein/"
+        end_point += tm_id + "/plus/?saison_id=" + year + "&pos=&detailpos=&w_s="
+
+        page = self.make_request(end_point)
+        all_transfers = {}
+        all_transfers["arrivals"] = []
+        all_transfers["departures"] = []
+        
+        if(page):
+            tables = page.find_all("table", class_="items")
+
+            for i, table in enumerate(tables):
+                is_arrivals = 0
+                if i == 0:
+                    is_arrivals = 1
+
+                body = table.find("tbody")
+                rows = body.find_all("tr", recursive=False)
+                transfers = []
+                for row in rows:
+                    transfer = {}
+                    columns = row.find_all("td" , recursive=False)
+                    for j, column in enumerate(columns):
+                        if is_arrivals:
+                            transfer["direction"] = "arrival"
+                            transfer["to"] = tm_id
+                        else:
+                            transfer["direction"] = "departure"
+                            transfer["from"] = tm_id
+
+                        if j == 1:
+                            url = column.find("a")["href"]
+                            pattern = r'\/.*\/profil\/spieler\/([a-zA-Z0-9]*)'
+                            match = re.match(pattern, url, re.IGNORECASE)
+                            if match:
+                                transfer["player"] = str(match.group(1))
+                        elif j == 2:
+                            transfer["age"] = column.text.strip()
+                        elif j == 4:
+                            links = column.find_all("a")
+                            for k, link in enumerate(links):
+                                if k == 1:
+                                    url = link["href"]
+                                    pattern = r'\/.*\/startseite/verein\/([a-zA-Z0-9]*)'
+                                    match = re.match(pattern, url, re.IGNORECASE)
+                                    if match:
+                                        transfer["team"] = str(match.group(1))
+                                elif k == 2:
+                                    url = link["href"]
+                                    pattern = r'\/.*\/transfers\/wettbewerb\/([a-zA-Z0-9]*)'
+                                    match = re.match(pattern, url, re.IGNORECASE)
+                                    if match:
+                                        transfer["league"] = str(match.group(1))
+                        elif j == 5:
+                            text = column.text
+                            if "Loan fee" in text:
+                                transfer["type"] = "Loan"
+                                transfer["fee"] = self.parse_value(text.split(":")[1])
+                            elif "€" in text:
+                                transfer["type"] = "Transfer"
+                                transfer["fee"] = self.parse_value(text)
+                            elif "free transfer" in text:
+                                transfer["type"] = "Free Transfer"
+                                transfer["fee"] = 0
+                            elif "End of loan" in text:
+                                transfer["type"] = "End of Loan"
+                                transfer["fee"] = 0
+                            elif "loan transfer" in text:
+                                transfer["type"] = "Loan"
+                                transfer["fee"] = 0
+                    
+                        text = column.text
+                    transfers.append(transfer)
+                
+                if is_arrivals:
+                    all_transfers["arrivals"] = transfers
+                else:
+                    all_transfers["departures"] = transfers
+
+        return { "success" : 1, "res" : { "transfers" : all_transfers }, "error_string" : ""  }

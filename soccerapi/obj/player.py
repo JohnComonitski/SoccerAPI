@@ -198,24 +198,20 @@ class Player:
         if self.positions_cache:
             return self.positions_cache
         else:
-            position_list = ["FB", "CB", "AM", "MF", "FW", "DM", "WM", "GK", "CM", "DF" ]
-            
             if self.fbref_id is None:
                 return []
-            
-            res = self.fbref.player_positions(self)
-            if(res["success"]):
-                positions = []
-                for position in position_list:
-                    if position in res["res"]:
-                        positions.append(position)
-                
-                self.positions_cache = positions
+
+            positions_list = []
+            query = f"SELECT position FROM players WHERE player_id = '{self.id}'"
+            res = self.db.raw_query(query)
+            if(len(res) > 0 and res[0]["position"]):
+                positions_list = res[0]["position"]
+
+            if(len(positions_list) > 0):
+                self.positions_cache = positions_list.split("-")
             else:
-                if( self.debug ):
-                    print(res["error_string"])
                 self.positions_cache = []
-        
+
             return self.positions_cache
 
     def country(self) -> str:
@@ -245,6 +241,29 @@ class Player:
                         print(res["error_string"])
         return None
     
+    def teams(self) -> 'Team':
+        r"""Get the current teams of s Player.
+
+        :ivar team: the player's teams.
+        :returns: the teams the player is on.
+        :rtype: list[Team]
+        """
+        teams = []
+        res = self.fapi.make_request("/players/teams?player=" + self.fapi_id, {})
+        if(res["success"]):
+            fapi_player = res["res"]
+            if(fapi_player["response"]):
+                for team in fapi_player["response"]:
+                    fapi_id = team["team"]["id"]
+                    db_team = self.db.search("teams", { "fapi_id" : fapi_id })
+                    if(len(db_team)):
+                        teams.append(db_team[0])
+
+        else:
+            if( self.debug ):
+                print(res["error_string"])
+        return teams
+
     def current_team(self) -> 'Team':
         r"""Get the current team of the Player.
 
@@ -258,15 +277,40 @@ class Player:
             res = self.fapi.make_request("/players/teams?player=" + self.fapi_id, {})
             if(res["success"]):
                 fapi_player = res["res"]
-                if(fapi_player["response"][0]):
-                    fapi_id = fapi_player["response"][0]["team"]["id"]
-                    db_team = self.db.search("teams", { "fapi_id" : fapi_id })
-                    if(len(db_team)):
-                        self.team = db_team[0]
+                seen_years = []
+
+                while(True):
+                    year = None
+                    for team in fapi_player["response"]:
+                        seasons = team['seasons']
+                        for season in seasons:
+                            if season in seen_years:
+                                seasons.remove(season)
+
+                        if(len(team['seasons']) > 0):
+                            if( (year is None) or (max(team['seasons']) > year) ):
+                                year = max(team['seasons'])
+                    
+                    if year is None:
+                        return None
+
+                    seen_years.append(year)
+
+                    candidates = []
+                    for team in fapi_player["response"]:
+                        if year in team['seasons']:
+                            candidates.append(team)
+
+                    for team in candidates:
+                        team_id = team["team"]["id"]
+                        res = self.fapi.make_request("/teams?id=" + str(team_id), {})
+                        if(not res['res']['response'][0]['team']['national']):
+                            db_team = self.db.search("teams", { "fapi_id" : str(team_id) })
+                            if(len(db_team)):
+                                return db_team[0]
             else:
                 if( self.debug ):
                     print(res["error_string"])
-            return self.team
 
     def market_value(self, year: Optional[str] = None) -> int:
         r"""Get the Player's Transfermarkt Market Value for a given year.
@@ -319,7 +363,8 @@ class Player:
 
         if stats is None:
             # No Cache, get stats from FBRef
-            res = self.fbref.get_player_stats(self, year)
+            res = self.fbref.get_player_stats(self.db, self)
+
             if(res["success"]):
                 stats = res["res"]["stats"]
 
@@ -332,31 +377,31 @@ class Player:
                 }
                 for stat_year in stats:
                     new_stats[stat_year] = {}
-                    for fbref_team_id in stats[stat_year]:
-                        if fbref_team_id not in db_search_cache["teams"]:
-                            db_team = self.db.search("teams", { "fbref_id" : fbref_team_id })
-                            if(len(db_team) > 0):
-                                db_team = db_team[0]
-                                db_search_cache["teams"][fbref_team_id] = db_team
+                    for team_id in stats[stat_year]:
+                        if team_id not in db_search_cache["teams"]:
+                            db_team = self.db.get("teams", team_id )
+                            if(db_team):
+                                db_search_cache["teams"][team_id] = db_team
 
-                        if fbref_team_id in db_search_cache["teams"]:
-                            team_id = str(db_search_cache["teams"][fbref_team_id].id)
+                        if team_id in db_search_cache["teams"]:
+                            t_id = str(db_search_cache["teams"][team_id].id)
                         
-                            for key in stats[stat_year][fbref_team_id]:
-                                stat = stats[stat_year][fbref_team_id][key]
+                            for key in stats[stat_year][team_id]:
+                                stat = stats[stat_year][team_id][key]
                                 for obj_type in ["league", "team", "player"]:
                                     if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
                                         id = str(stat.context[obj_type])
+
                                         if id not in db_search_cache[f"{obj_type}s"]:
-                                            db_obj = self.db.search(f"{obj_type}s", { "fbref_id" : stat.context[obj_type] })
-                                            if(len(db_obj) > 0):
-                                                db_search_cache[f"{obj_type}s"][id] = db_obj[0]
+                                            db_obj = self.db.get(f"{obj_type}s", stat.context[obj_type])
+                                            if(db_obj):
+                                                db_search_cache[f"{obj_type}s"][id] = db_obj
                                             else:
                                                 db_search_cache[f"{obj_type}s"][id] = None
                                         stat.context[obj_type] = db_search_cache[f"{obj_type}s"][id]    
-                                stats[stat_year][fbref_team_id][key] = stat
+                                stats[stat_year][team_id][key] = stat
 
-                            new_stats[stat_year][team_id] = stats[stat_year][fbref_team_id]
+                            new_stats[stat_year][t_id] = stats[stat_year][team_id]
                 stats = new_stats
                 self.stats_cache = new_stats
             else:
@@ -365,6 +410,7 @@ class Player:
                 return {}
 
         stats_by_year = {}
+
         if year:
             if(year in stats):
                 stats_by_year = stats[year]
@@ -386,7 +432,15 @@ class Player:
         else:
             keys = list(stats_by_year.keys())
             if(len(keys) > 0):
-                team = list(stats_by_year.keys())[-1]
+                team = None
+                key_count = 0
+                for key in keys:
+                    if team is None:
+                        team = key
+                        key_count = len(list(stats_by_year[key].keys()))
+                    elif(len(list(stats_by_year[key].keys())) > key_count):
+                        team = key
+                        key_count = len(list(stats_by_year[key].keys()))                
             else: 
                 return {}
 
@@ -415,6 +469,7 @@ class Player:
         stats = self.statistics(year=year, team=team)
         if stat_key and stat_key in stats:
             return stats[stat_key]
+
         return Statistic({ "key" : stat, "value" : 0, "percentile" : 0})
 
     def fbref_image(self) -> str:

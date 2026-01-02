@@ -33,33 +33,56 @@ class FAPI:
 
     def make_request(self, end_point, query):
         end_point = self.url + end_point
-        response = requests.get(end_point, headers=self.fapi_headers, params=query)
-        res = response.json()
+        try:
+            response = requests.get(end_point, headers=self.fapi_headers, params=query)
+        except requests.RequestException as e:
+            return { "success" : 0, "res" : None , "error_string" : "Error: requests.exceptions.JSONDecodeError" }
+        
+        try:
+            res = response.json()
+        except:
+            return { "success" : 0, "res" : {} , "error_string" : "Error: requests.exceptions.JSONDecodeError" }
+        
         if("message" in res):
             if(len(list(res.keys())) == 1):
-                return { "success" : 0, "res" : None , "error_string" : "Error: " + res["message"] }
+                return { "success" : 0, "res" : {} , "error_string" : "Error: " + res["message"] }
 
         if("errors" in res):
             error = self.parse_error(res["errors"])
         
         if(error):
-            return { "success" : 0, "res" : None , "error_string" : "Error: " + error }
+            return { "success" : 0, "res" : {} , "error_string" : "Error: " + error }
         
         return { "success" : 1, "res" : res , "error_string" : "" }
     
-    def get_players_on_team(self, team):
+    def get_players_on_team(self, team, year):
         res = {}
         if(not team.fapi_id):
             return { "success" : 0, "res" : { "players" : {res}}, "error_string" : "Error: Team object did not include a fapi_id" }
         fapi_id = team.fapi_id
+
+        if not year:
+            current_date = datetime.now()
+            if 1 <= current_date.month <= 6:
+                previous_year = current_date.year - 1
+                year = str(previous_year)
+            else:
+                year = str(current_date.year)
         
-        query = { "team" : fapi_id}
-        response = self.make_request("/players/squads", query)
+        query = { "team" : fapi_id, "season" : year}
+        response = self.make_request("/players", query)
         
         if(response["success"]):
-            response = response["res"]
-            if "response" in response:
-                return { "success" : 1, "res" : { "players" : response['response']}, "error_string" : "" }
+            page = response["res"]["paging"]["total"]
+            players = []
+            for i in range(1, page+1):
+                query["page"] = i
+                page_res = self.make_request("/players", query)
+                if(page_res["success"]):
+                    page_res = page_res["res"]
+                    if "response" in page_res:
+                        players = players + page_res['response']
+            return { "success" : 1, "res" : { "players" : players }, "error_string" : "" }
             
         return { "success" : 0, "res" : { "players" : {}}, "error_string" : "Error: " + response["error_string"] }
     
@@ -80,9 +103,9 @@ class FAPI:
         query = { "league" : fapi_id, "season" : year}
         response = self.make_request("/teams", query)
         if(response["success"]):
-            response = response["res"]
-            if "response" in response:
-                res = response['response']
+            res = response["res"]
+            if "response" in res:
+                res = res['response']
                 if(len(res) > 0):
                     return { "success" : 1, "res" : { "teams" : res}, "error_string" : "" }
                     

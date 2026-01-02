@@ -82,7 +82,12 @@ class Schema:
                     "label" : "FBRef Stat Detail Level",
                     "type" : "text",
                     "options" : [ "detailed", "limited", "none" ]
-                }
+                },
+                {
+                    "sql" : "type",
+                    "label" : "Type",
+                    "type" : "text"
+                },
             ]  
         }  
         self.players = {
