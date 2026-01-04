@@ -348,7 +348,7 @@ class League:
             for key in stats[stat_year]:
                 stat = stats[stat_year][key]
                 for obj_type in ["league", "team", "player"]:
-                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'str'>":
+                    if obj_type in stat.context and str(type(stat.context[obj_type])) == "<class 'int'>":
                         id = str(stat.context[obj_type])
                         if id not in db_search_cache[f"{obj_type}s"]:
                             db_league = self.db.get(f"{obj_type}s", stat.context[obj_type])
