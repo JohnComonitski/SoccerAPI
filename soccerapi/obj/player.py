@@ -363,7 +363,7 @@ class Player:
 
         if stats is None:
             # No Cache, get stats from FBRef
-            res = self.fbref.get_player_stats(self.db, self)
+            res = self.fbref.get_stats(self)
 
             if(res["success"]):
                 stats = res["res"]["stats"]

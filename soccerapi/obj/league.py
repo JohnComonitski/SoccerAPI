@@ -327,7 +327,7 @@ class League:
         if year in stats:
             return stats[year]
         
-        res = self.fbref.get_league_stats(self.db, self)
+        res = self.fbref.get_stats(self)
 
         if(res["success"]):
             stats = res["res"]["stats"]

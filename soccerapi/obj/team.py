@@ -358,7 +358,7 @@ class Team:
         if year in stats:
             return stats[year]
         
-        res = self.fbref.get_team_stats(self.db, self)
+        res = self.fbref.get_stats(self)
 
         if(res["success"]):
             stats = res["res"]["stats"]            
@@ -444,7 +444,7 @@ class Team:
         if year in stats:
             return stats[year]
 
-        res = self.fbref.get_team_opposition_stats(self.db, self)
+        res = self.fbref.get_stats(self, opp=True)
         if(res["success"]):
             stats = res["res"]["stats"]
         else:
