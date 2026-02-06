@@ -1243,7 +1243,7 @@ class Visualize:
         else:
             table.scale(1, 1.75)
 
-        n_rows = len(rows) + 1  # +1 for header
+        n_rows = len(rows) + 1 
         n_cols = len(columns)
 
         if "justification" in params:
