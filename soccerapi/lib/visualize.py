@@ -2,6 +2,7 @@ from datetime import datetime
 from .utils import *
 from ..obj.player import Player
 from ..obj.team import Team
+from ..obj.league import League
 from urllib.request import urlopen
 from PIL import Image, ImageDraw, ImageOps
 from mplsoccer import VerticalPitch, PyPizza, FontManager, add_image
@@ -21,6 +22,7 @@ import textwrap
 import requests
 list
 from io import BytesIO
+import numpy as np
 
 class Visualize:
     r"""The Visualize object. This class is designed to take in Soccer API 
@@ -189,7 +191,10 @@ class Visualize:
             signature = params["signature"]
 
         height = header_height + body_height + footer_height
+
         width = 8
+        if( params and "width" in params):
+            width = params["width"]
 
         # Find where each section starts
         top_y = (body_height + footer_height) / height
@@ -302,14 +307,19 @@ class Visualize:
     def __get_img(self, obj, c = None):
         if c is None:
             c = self.secondary_color
-        profile = obj.profile()
-        url = ""
+
+        url = ""    
         round_edges = 0
-        if "logo" in profile:
-            url = profile["logo"]
-        elif "photo" in profile:
-            round_edges = 1
-            url = profile["photo"]
+        if("str" in str(type(obj))):
+            url = obj
+        else:
+            profile = obj.profile()            
+            if "logo" in profile:
+                url = profile["logo"]
+            elif "photo" in profile:
+                round_edges = 1
+                url = profile["photo"]
+
         if(url):
             response = requests.get(url)
             img = Image.open(BytesIO(response.content)).convert("RGBA")
@@ -371,6 +381,49 @@ class Visualize:
         poly = Polygon(points, closed=True, color=color, alpha=0.6, linewidth=0)
         self.ax2.add_patch(poly)
 
+    def __add_images_to_table(self, table, image_dict, columns):
+        """
+        ax        : matplotlib axes
+        table     : matplotlib table
+        image_dict: {column_name: [AnnotationBbox, ...]}
+        columns   : list of column names in table order
+        """
+        x_pad=0.35
+        y_pad=0.66
+
+        fig = self.ax2.figure
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+
+        for col_name, images in image_dict.items():
+            col_idx = columns.index(col_name)
+
+            for row_idx, oi in enumerate(images, start=1):  # skip header
+                cell = table[row_idx, col_idx]
+
+                # Cell bbox in DISPLAY coords
+                bbox = cell.get_window_extent(renderer)
+
+                # Apply intra-cell padding
+                cx = bbox.x0 + bbox.width * x_pad
+                cy = bbox.y0 + bbox.height * y_pad
+
+                # Convert to FIGURE FRACTION
+                fx = cx / fig.bbox.width
+                fy = cy / fig.bbox.height
+
+                ab = AnnotationBbox(
+                    oi,
+                    (fx, fy),
+                    xycoords="figure fraction",
+                    frameon=False
+                )
+
+                ab.set_transform(fig.transFigure)
+                ab.set_zorder(20)
+
+                self.ax2.add_artist(ab)
+
     def set_styling(self, params: dict):
         r"""Change the color scheme and font defaults for your visualizations.
 
@@ -408,7 +461,7 @@ class Visualize:
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
             - **columns** (*list[str]*): names of the statistics to be used as columns on the radar chart. If not included, default statistics will be used.
         :type params: dict
         """
@@ -472,7 +525,7 @@ class Visualize:
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
         :type params: dict
         """
         object_type = str(type(player))
@@ -714,7 +767,7 @@ class Visualize:
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
             - **years** (*list[str]*): which year to plot the statistics of. Use 1 year to plot statistics from a single season. Use 2 years to plot the evolution of a statistic. If not included, the most recent season will be used as default.
             - **color** (*str*): color of the points on the scatter plot.
             - **use_images** (*bool*): use object logos of images instead of points on the scatter plot.
@@ -953,7 +1006,7 @@ class Visualize:
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
         :type params: dict
         """
         sets_list = []
@@ -1036,7 +1089,7 @@ class Visualize:
             - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): file name. If not set, a default will be generated.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
             - **exclude_photo** (*bool*): include the photo of the #1 player.
         :type params: dict
         """
@@ -1114,5 +1167,290 @@ class Visualize:
 
         if( "filename" not in params):
             params["filename"] =  f"{stat_name}_top10.png"
+
+        self.__output_vis(params)
+
+    def table(self, columns: list[str], rows: list[list], params: dict):
+        r"""Generate and export a table detailing stats of various Soccer API objects.
+
+        :param columns: list of column names.
+        :type columns: list[str]
+        :param rows: list of list containing data to be displayed in table.
+        :type rows: list[list]
+        :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
+            - **width** (*str*): set the width of the visualization if the table needs more horizontal room.
+            - **fontsize** (*int*): set the table body fontsize.
+            - **justification** (*list[str]*): list of strings to set the text justification of each column. If set, there must be a justification for each column.
+            - **highlight** (*list[str]*): list of strings denoting columns to highlight.
+            - **remove_index_header** (*bool*): Do not include header for the left most column.
+            - **columns_with_images** (*list[str]*): List of columns to use images for instead of printing the raw text.
+
+        :type params: dict
+        """
+        # Check columns and rows match
+        col_count = len(columns)
+        for row in rows:
+            if len(row) != col_count:
+                return { "success" : 0, "res" : {}, "error_string" : "Error: Number of items per row does not match number of columns." }
+
+        if "columns_with_images" in params:
+            params["body_height"] = .25 + (.6 * len(rows))
+        else:
+            params["body_height"] = .25 + (.3 * len(rows))
+        
+        self.__set_up_vis(params)
+
+        self.ax2.set_axis_off()
+
+        images = {}
+        if "columns_with_images" in params:
+            idxs = []
+            idx = 0
+            for column in columns:
+                if column in params["columns_with_images"]:
+                    images[column] = []
+                    idxs.append(idx)
+                idx +=1
+
+            for idx in idxs:
+                for i, row in enumerate(rows):
+                    url = row[idx]
+                    rows[i][idx] = ""
+                    img = self.__get_img(url) 
+                    im = OffsetImage(img, zoom=.20)
+                    #ab = AnnotationBbox(im, (0.5, .5), frameon=False)
+                    images[columns[idx]].append(im)
+
+        if "remove_index_header" in params:
+            columns[0] = ""
+
+        table = self.ax2.table(
+            cellText=rows,
+            colLabels=columns,
+            loc="center",
+            cellLoc="center",
+        )
+
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        if "columns_with_images" in params:
+            table.scale(1, 3.50)
+        else:
+            table.scale(1, 1.75)
+
+        n_rows = len(rows) + 1  # +1 for header
+        n_cols = len(columns)
+
+        if "justification" in params:
+            if len(params["justification"]) != len(columns):
+                return { "success" : 0, "res" : {}, "error_string" : "Error: Number of justifications must match number of columns." }
+
+        for (row, col), cell in table.get_celld().items():
+            # Remove all borders first
+            cell.visible_edges = ""
+
+            # Add only bottom horizontal lines
+            cell.visible_edges = "B"
+            cell.set_edgecolor(self.secondary_color)
+            cell.set_linewidth(1.0)
+
+            # Left-justify every column except the first
+            if "justification" in params:
+                print(params["justification"][col])
+                cell.get_text().set_ha(params["justification"][col])
+            else:
+                if col == 0:
+                    cell.get_text().set_ha("left")
+                if col > 0:
+                    if "columns_with_images" in params:
+                        if columns[col] in params["columns_with_images"]:
+                            cell.get_text().set_ha("left")
+                        else:
+                            cell.get_text().set_ha("right")
+                    else:
+                        cell.get_text().set_ha("right")
+
+            # Highlight Column
+            cell.get_text().set_color(self.tertiary_color) 
+            if "highlight" in params:
+                if col > 0:
+                    if columns[col] in params["highlight"]:
+                        cell.get_text().set_color(self.highlight_color) 
+
+            if row == 0:
+                cell.get_text().set_fontsize(18)   # bigger header font
+                cell.get_text().set_weight("bold")
+            elif "fontsize" in params:
+                cell.get_text().set_fontsize(params["fontsize"]) 
+
+        if "columns_with_images" in params:
+            for column in images:
+                self.__add_images_to_table(table, images, columns)
+
+        if( "filename" not in params):
+            params["filename"] =  f"table.png"
+
+        self.__output_vis(params)
+
+    def bar_chart(self, objects: list[(Player|Team|League)], stat: str, params: dict):
+        r"""Generate and export a bar chart for a statistic of various Soccer API objects.
+
+        :param objects: list of Soccer API objects.
+        :type objects: list[(Player|Team|League)]
+        :param stat: statistic featured on in the bar chart
+        :type stat: str
+        :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
+            - **width** (*str*): set the width of the visualization if the table needs more horizontal room.
+            - **year** (*str*): year you want the statistic from.
+            - **team** (*str*): team you want the statistic from.
+            - **raw_values** (*lst[int]*): Build bar chart with provided raw values rather than generated by Soccer API.
+            - **chart_scale** (*int*): Set length of x axis on bar chart
+        :type params: dict
+        """
+    
+        params["body_height"] = 0.6 * len(objects)
+
+        use_raw_values = False
+        if "raw_values" in params:
+            use_raw_values = True
+
+        rows = []
+        values = []
+        value_labels = []
+        images = []
+        for obj in objects:
+            rows.append(obj.short_name())
+            images.append(self.__get_img(obj, c=self.tertiary_color))
+            if use_raw_values:
+                if stat in [ "Market Value", "mv", "MV", "market value" ]:
+                    mv = obj.market_value()
+                    values.append(mv)
+                    value_labels.append( f"€{mv:,}")
+                else:
+                    year = None
+                    if "year" in params:
+                        year = params["year"]
+                    team = None
+                    if "team" in params:
+                        year = params["team"]
+                    val = obj.statistic(stat, year=year, team=team).value
+                    values.append(val)
+                    value_labels.append(f"{val:,}")
+
+        if use_raw_values:
+            values = params["raw_values"]
+            value_labels = params["raw_values"]
+
+        self.__set_up_vis(params)
+
+        # --- Bars ---
+        y_pos = np.arange(len(rows))
+        bars = self.ax2.barh(
+            y_pos,
+            values,
+            height=0.6,
+            color=self.secondary_color,
+        )
+
+        # --- Axis / ticks ---
+        self.ax2.set_axis_on()
+        if "chart_scale" in params:
+            self.ax2.set_xlim(0, params["chart_scale"])
+
+        # X ticks at the bottom only
+        self.ax2.xaxis.set_ticks_position('bottom')
+        self.ax2.xaxis.set_label_position('bottom')
+
+        # Tick + label colors
+        self.ax2.tick_params(
+            axis='both',
+            colors=self.tertiary_color,
+            labelcolor=self.tertiary_color
+        )
+
+        # Y labels
+        self.ax2.set_yticks([])
+        self.ax2.set_ylabel("", color=self.tertiary_color)
+        self.ax2.set_axis_on()
+
+        label_offset = 0.07  # small upward offset
+
+        xmin, xmax = self.ax2.get_xlim()
+        x_offset = xmin + 0.01 * (xmax - xmin)  # 2% from the left
+        for bar, label in zip(bars, rows):
+            y = bar.get_y() - label_offset  # above the bar
+
+            self.ax2.text(
+                x_offset,
+                y,
+                label,
+                ha="left",
+                va="bottom",
+                color=self.tertiary_color,
+                fontsize=11
+            )
+
+        # --- Value labels ---
+        xmin, xmax = self.ax2.get_xlim()
+        icon_x = xmin + 0.005 * (xmax - xmin)
+        for bar, label, image, y in zip(bars, value_labels, images, y_pos):
+            x = bar.get_width()
+            y = bar.get_y() + bar.get_height() / 2
+
+            image_zoom = 0.13
+            x_img = bar.get_x() + bar.get_width() * 0.02
+            y_img = bar.get_y() + bar.get_height() / 2
+            imagebox = OffsetImage(image, zoom=image_zoom)
+
+            ab = AnnotationBbox(
+                imagebox,
+                (icon_x, y_img),
+                frameon=False,
+                box_alignment=(0, 0.5)  # left-center align
+            )
+            ab.set_clip_path(bar)
+
+            self.ax2.add_artist(ab)
+
+            # Decide inside vs outside
+            if x > max(values) * 0.1:
+                # inside bar
+                self.ax2.text(
+                    x - (0.01 * max(values)),
+                    y,
+                    label,
+                    va="center",
+                    ha="right",
+                    color=self.tertiary_color,
+                    fontsize=10
+                )
+            else:
+                # outside bar
+                self.ax2.text(
+                    x + (0.01 * max(values)),
+                    y,
+                    label,
+                    va="center",
+                    ha="left",
+                    color=self.tertiary_color,
+                    fontsize=10
+                )
+        self.ax2.set_xlabel(stat, color=self.tertiary_color)
+        
+        # Optional: ranking-style order
+        self.ax2.invert_yaxis()
+
+        if( "filename" not in params):
+            params["filename"] =  f"{stat}_bar_chart.png"
 
         self.__output_vis(params)

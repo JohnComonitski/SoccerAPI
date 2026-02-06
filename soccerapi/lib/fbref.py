@@ -39,7 +39,7 @@ class FBRef:
                 else:
                     if stat["is_opposition"] != True:
                         tmp_stats.append(stat)
-        raw_stats = tmp_stats
+            raw_stats = tmp_stats
 
         stats = {}
         context = { "object" : obj_type }
