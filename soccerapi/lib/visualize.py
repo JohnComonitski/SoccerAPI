@@ -1079,97 +1079,6 @@ class Visualize:
 
         self.__output_vis(params)
 
-    def top_10_list(self, top_10: list[dict], params: dict):
-        r"""Generate and export a top 10 list of Players and Teams for a given stat
-
-        :param 10: list of dictionaries objects detailing the top 10 list (generated buy .scounting.top_10_list).
-        :type sets: list[dict]
-        :param params: params dictionary to define the top 10 list customization.
-
-            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
-            - **description** (*str*): description of signature displayed below the title.
-            - **signature** (*str*): signature included at the bottom of the visualization.
-            - **filename** (*str*): visualization file name. If not set, a default will be generated.
-            - **exclude_photo** (*bool*): include the photo of the #1 player.
-        :type params: dict
-        """
-        #Get Stat Name
-        stat_name = ""
-        for key in top_10[0]:
-            if key != "player" and key != "team":
-                stat_name = key
-
-        if(params and "title" not in params):
-            params["title"] = "Top 10  by " + stat_name
-
-        params["body_height"] = 4
-        self.__set_up_vis(params)
-
-        # TODO: Build Viz Here
-        self.ax2.set_axis_off()
-
-        from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker
-        i = 1
-        offset = .105
-        for player in top_10:
-            name = player["player"].short_name()
-            player_name = f"{i}. {name}"
-            data = player[stat_name]
-            
-            team = player["player"].current_team()
-            team_img = None
-            if(team):
-                team_img = self.__get_img(team)
-                im = OffsetImage(team_img, zoom=.15)
-                ab = AnnotationBbox(im, (0.07, .971  - ( (i-1) * offset)), frameon=False)
-                self.ax2.add_artist(ab)
-
-            name_text = TextArea(player_name, textprops=dict(fontsize=16, color=self.tertiary_color, fontfamily='Trebuchet MS', ha='left'))
-            highlight_color = self.secondary_color
-            if i == 1:
-                highlight_color = self.highlight_color
-                if ( ("exclude_photo" not in params) or ( not params["exclude_photo"] ) ):
-                    team_img = self.__get_img(player["player"], highlight_color)
-                    im = OffsetImage(team_img, zoom=1.3)
-                    ab = AnnotationBbox(im, (0.75, .5  - ( (i-1) * offset)), frameon=False)
-                    self.ax2.add_artist(ab)
-
-            stat_test = TextArea(f'  {data} {stat_name}', textprops=dict(fontsize=18, color=highlight_color, fontfamily='Trebuchet MS', ha='left'))
-
-            hbox = HPacker(children=[name_text, stat_test], align="left", pad=0, sep=0)
-            ab = AnnotationBbox(hbox, (0.1, (.97 - ( (i-1) * offset))), xycoords='data', frameon=False, box_alignment=(0, 0.5))
-            self.ax2.add_artist(ab)
-
-            '''
-            self.ax2.text(
-                x=0.1, 
-                y=.95 - ( (i-1) * offset),
-                s=player_name, 
-                fontsize=18, 
-                color=self.tertiary_color, 
-                fontfamily='Trebuchet MS',
-                ha='left'
-            )
-
-        
-            self.ax2.text(
-                x=0.1 + (len(player_name) * .015), 
-                y=.95 - ( (i-1) * offset),
-                s=f'{data} {stat_name}', 
-                fontsize=18, 
-                color=self.secondary_color, 
-                fontfamily='Trebuchet MS',
-                ha='left'
-            )
-            '''
-
-            i +=1
-
-        if( "filename" not in params):
-            params["filename"] =  f"{stat_name}_top10.png"
-
-        self.__output_vis(params)
-
     def table(self, columns: list[str], rows: list[list], params: dict):
         r"""Generate and export a table detailing stats of various Soccer API objects.
 
@@ -1189,6 +1098,7 @@ class Visualize:
             - **highlight** (*list[str]*): list of strings denoting columns to highlight.
             - **remove_index_header** (*bool*): Do not include header for the left most column.
             - **columns_with_images** (*list[str]*): List of columns to use images for instead of printing the raw text.
+            - **column_width** (*dict*): Set length of columns with dictionary featuring column name (str) and column size (int).
 
         :type params: dict
         """
@@ -1207,6 +1117,7 @@ class Visualize:
 
         self.ax2.set_axis_off()
 
+        # Prep images for columns
         images = {}
         if "columns_with_images" in params:
             idxs = []
@@ -1223,12 +1134,12 @@ class Visualize:
                     rows[i][idx] = ""
                     img = self.__get_img(url) 
                     im = OffsetImage(img, zoom=.20)
-                    #ab = AnnotationBbox(im, (0.5, .5), frameon=False)
                     images[columns[idx]].append(im)
 
         if "remove_index_header" in params:
             columns[0] = ""
 
+        # Build columns
         table = self.ax2.table(
             cellText=rows,
             colLabels=columns,
@@ -1236,32 +1147,54 @@ class Visualize:
             cellLoc="center",
         )
 
+        n_rows = len(rows) + 1 
+
+        # Setting up column widths
+        column_widths = {}
+        total_weight = 0
+
+        for col in columns:
+            weight = 1
+            if "column_width" in params and col in params["column_width"]:
+                weight = params["column_width"][col]
+            column_widths[col] = weight
+            total_weight += weight
+
+        base_width = 1.0 / total_weight
+
+        # Apply column widths
+        for col_idx, col_name in enumerate(columns):
+            
+            width = base_width * column_widths[col_name]
+            for row_idx in range(n_rows):
+                cell = table[(row_idx, col_idx)]
+                cell.set_width(width)
+
+        # Table fonts
         table.auto_set_font_size(False)
         table.set_fontsize(10)
+
+        # Increase height of columns to accommodate images
         if "columns_with_images" in params:
             table.scale(1, 3.50)
         else:
             table.scale(1, 1.75)
-
-        n_rows = len(rows) + 1 
-        n_cols = len(columns)
 
         if "justification" in params:
             if len(params["justification"]) != len(columns):
                 return { "success" : 0, "res" : {}, "error_string" : "Error: Number of justifications must match number of columns." }
 
         for (row, col), cell in table.get_celld().items():
-            # Remove all borders first
+            # Remove all borders
             cell.visible_edges = ""
 
-            # Add only bottom horizontal lines
+            # Set bottom horizontal lines
             cell.visible_edges = "B"
             cell.set_edgecolor(self.secondary_color)
             cell.set_linewidth(1.0)
 
             # Left-justify every column except the first
             if "justification" in params:
-                print(params["justification"][col])
                 cell.get_text().set_ha(params["justification"][col])
             else:
                 if col == 0:
@@ -1269,25 +1202,28 @@ class Visualize:
                 if col > 0:
                     if "columns_with_images" in params:
                         if columns[col] in params["columns_with_images"]:
-                            cell.get_text().set_ha("left")
+                            columns[col]
+                            cell.get_text().set_ha("center")
                         else:
                             cell.get_text().set_ha("right")
                     else:
                         cell.get_text().set_ha("right")
 
-            # Highlight Column
+            # Highlight columns
             cell.get_text().set_color(self.tertiary_color) 
             if "highlight" in params:
                 if col > 0:
                     if columns[col] in params["highlight"]:
                         cell.get_text().set_color(self.highlight_color) 
 
+            # Set headers and font sizes
             if row == 0:
-                cell.get_text().set_fontsize(18)   # bigger header font
+                cell.get_text().set_fontsize(18)
                 cell.get_text().set_weight("bold")
             elif "fontsize" in params:
                 cell.get_text().set_fontsize(params["fontsize"]) 
 
+        # Add images to tables.
         if "columns_with_images" in params:
             for column in images:
                 self.__add_images_to_table(table, images, columns)
@@ -1313,17 +1249,19 @@ class Visualize:
             - **width** (*str*): set the width of the visualization if the table needs more horizontal room.
             - **year** (*str*): year you want the statistic from.
             - **team** (*str*): team you want the statistic from.
-            - **raw_values** (*lst[int]*): Build bar chart with provided raw values rather than generated by Soccer API.
-            - **chart_scale** (*int*): Set length of x axis on bar chart
+            - **raw_values** (*lst[int]*): build bar chart with provided raw values rather than generated by Soccer API.
+            - **chart_scale** (*int*): set length of x axis on bar chart.
         :type params: dict
         """
     
         params["body_height"] = 0.6 * len(objects)
 
+        # Using raw values for columns
         use_raw_values = False
         if "raw_values" in params:
             use_raw_values = True
 
+        # Generating data
         rows = []
         values = []
         value_labels = []
@@ -1353,7 +1291,7 @@ class Visualize:
 
         self.__set_up_vis(params)
 
-        # --- Bars ---
+        # Create bar chart
         y_pos = np.arange(len(rows))
         bars = self.ax2.barh(
             y_pos,
@@ -1362,33 +1300,33 @@ class Visualize:
             color=self.secondary_color,
         )
 
-        # --- Axis / ticks ---
+        # Setting up axes
         self.ax2.set_axis_on()
         if "chart_scale" in params:
             self.ax2.set_xlim(0, params["chart_scale"])
 
-        # X ticks at the bottom only
+        # X axes set up
         self.ax2.xaxis.set_ticks_position('bottom')
         self.ax2.xaxis.set_label_position('bottom')
 
-        # Tick + label colors
         self.ax2.tick_params(
             axis='both',
             colors=self.tertiary_color,
             labelcolor=self.tertiary_color
         )
 
-        # Y labels
+        # Y axes ser up
         self.ax2.set_yticks([])
         self.ax2.set_ylabel("", color=self.tertiary_color)
         self.ax2.set_axis_on()
 
-        label_offset = 0.07  # small upward offset
+        label_offset = 0.07
 
+        # Label for each column moved to above bar
         xmin, xmax = self.ax2.get_xlim()
-        x_offset = xmin + 0.01 * (xmax - xmin)  # 2% from the left
+        x_offset = xmin + 0.01 * (xmax - xmin)
         for bar, label in zip(bars, rows):
-            y = bar.get_y() - label_offset  # above the bar
+            y = bar.get_y() - label_offset
 
             self.ax2.text(
                 x_offset,
@@ -1400,7 +1338,7 @@ class Visualize:
                 fontsize=11
             )
 
-        # --- Value labels ---
+        # Adding values and images to column
         xmin, xmax = self.ax2.get_xlim()
         icon_x = xmin + 0.005 * (xmax - xmin)
         for bar, label, image, y in zip(bars, value_labels, images, y_pos):
@@ -1416,15 +1354,14 @@ class Visualize:
                 imagebox,
                 (icon_x, y_img),
                 frameon=False,
-                box_alignment=(0, 0.5)  # left-center align
+                box_alignment=(0, 0.5)
             )
             ab.set_clip_path(bar)
 
             self.ax2.add_artist(ab)
 
-            # Decide inside vs outside
+            # Decide if value goes inside or outside of bar
             if x > max(values) * 0.1:
-                # inside bar
                 self.ax2.text(
                     x - (0.01 * max(values)),
                     y,
@@ -1435,7 +1372,6 @@ class Visualize:
                     fontsize=10
                 )
             else:
-                # outside bar
                 self.ax2.text(
                     x + (0.01 * max(values)),
                     y,
@@ -1447,10 +1383,197 @@ class Visualize:
                 )
         self.ax2.set_xlabel(stat, color=self.tertiary_color)
         
-        # Optional: ranking-style order
         self.ax2.invert_yaxis()
 
         if( "filename" not in params):
             params["filename"] =  f"{stat}_bar_chart.png"
+
+        self.__output_vis(params)
+
+
+    def beeswarm_plot(self, objects: list[(Player|Team|League)], stats: str, params: dict):
+        r"""Generate and export a beeswarm plot for a statistic of various Soccer API objects.
+
+        :param objects: list of Soccer API objects.
+        :type objects: list[(Player|Team|League)]
+        :param stat: statistic featured on in the bar chart
+        :type stat: str
+        :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
+            - **objects** (*list[(Player|Team|League)]*): objects to plot on beeswarm plot.
+            - **to_highlight** (*Player|Team|League)*): object to highlight in beeswarm plot.
+            - **stats** (*list[str]*): statistics to build beeswarm plots for.
+            - **year** (*str*): year you want the statistic from.
+            - **team** (*str*): team you want the statistic from.
+            - **use_image** (*bool*): use image as icon for 'to_highlight' object.
+        :type params: dict
+        """
+
+        params["body_height"] = .5 + (1 * len(stats))
+        
+        self.__set_up_vis(params)
+
+        # Find object to highlight
+        target_idx = None
+        target_img = None
+        if "to_highlight" in params:
+            to_hightlight = params["to_highlight"]
+            i = 0
+            for object in objects:
+                if object == to_hightlight:
+                    if "use_image" in params:
+                        img = self.__get_img(object)
+                        img_array = np.asarray(img)
+                        target_img = OffsetImage(img_array, zoom=0.10)
+                    target_idx = i
+                i += 1
+
+        if "to_highlight" in params and target_idx is None:
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Could not find 'to_highlight' object in 'objects' parmams." }
+
+        # Generate data
+        values_list = []
+        for stat in stats:
+            values = []
+            for object in objects:
+                if stat in [ "Market Value", "mv", "MV", "market value" ]:
+                    values.append(object.market_value())
+                else:
+                    year = None
+                    if "year" in params:
+                        year = params["year"]
+                    team = None
+                    if "team" in params:
+                        year = params["team"]
+                    val = object.statistic(stat, year=year, team=team).value
+                    values.append(val)
+            values_list.append(values)
+
+        self.ax2.clear()
+
+        n_stats = len(stats)
+        base_y_positions = np.arange(n_stats)[::-1]
+
+        # Iterate over data
+        for i, (stat, values) in enumerate(zip(stats, values_list)):
+
+            values = np.asarray(values)
+            y_base = base_y_positions[i]
+
+            vmin = values.min()
+            vmax = values.max()
+
+            # Normalize data
+            if vmax == vmin:
+                scaled = np.full_like(values, 0.5, dtype=float)
+            else:
+                scaled = (values - vmin) / (vmax - vmin)
+
+            scaled = 0.05 + 0.9 * scaled
+
+            # Set y axis for points
+            y_positions = np.full(len(values), y_base)
+
+            # plot data
+            self.ax2.scatter(
+                scaled,
+                y_positions,
+                s=60,
+                alpha=0.25,
+                color=self.secondary_color,
+                linewidths=0
+            )
+
+            # Highlight point
+            if target_idx is not None:
+                if target_img:
+                    x = scaled[target_idx]
+                    y = y_base
+                    ab = AnnotationBbox(
+                        target_img,
+                        (x, y),
+                        frameon=False,
+                        box_alignment=(0.5, 0.5),
+                        zorder=10
+                    )
+
+                    self.ax2.add_artist(ab)
+                else:
+                    self.ax2.scatter(
+                        scaled[target_idx],
+                        y_base,
+                        s=150,
+                        color=self.highlight_color,
+                        edgecolor=self.highlight_color,
+                        linewidth=1.8,
+                        zorder=5
+                    )
+
+            # Set plot titles
+            self.ax2.text(
+                0.5,
+                y_base + 0.25,
+                stat,
+                ha="center",
+                va="bottom",
+                fontsize=14,
+                color="white"
+            )
+
+            # Add base line
+            self.ax2.hlines(
+                y_base,
+                xmin=0,
+                xmax=1,
+                color="white",
+                alpha=0.08,
+                linewidth=1
+            )
+
+            # Add Tickmarks
+            percent_positions = np.linspace(0, 1, 5)
+
+            for p in percent_positions:
+
+                x = 0.05 + 0.9 * p
+                real_value = vmin + p * (vmax - vmin)
+
+                # Tickmark
+                self.ax2.vlines(
+                    x,
+                    y_base - 0.08,
+                    y_base + 0.08,
+                    color="white",
+                    alpha=0.3,
+                    linewidth=1
+                )
+
+                # Label
+                self.ax2.text(
+                    x,
+                    y_base - 0.25,
+                    f"{real_value:,.2f}",
+                    ha="center",
+                    va="top",
+                    fontsize=9,
+                    color="white",
+                    alpha=0.8
+                )
+
+        self.ax2.set_xlim(0, 1)
+        self.ax2.set_ylim(-0.5, n_stats - 0.5)
+
+        self.ax2.set_xticks([])
+        self.ax2.set_yticks([])
+
+        for spine in self.ax2.spines.values():
+            spine.set_visible(False)
+
+        if( "filename" not in params):
+            params["filename"] =  f"beeswarm.png"
 
         self.__output_vis(params)
