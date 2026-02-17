@@ -1390,7 +1390,6 @@ class Visualize:
 
         self.__output_vis(params)
 
-
     def beeswarm_plot(self, objects: list[(Player|Team|League)], stats: str, params: dict):
         r"""Generate and export a beeswarm plot for a statistic of various Soccer API objects.
 
@@ -1404,9 +1403,7 @@ class Visualize:
             - **description** (*str*): description of signature displayed below the title.
             - **signature** (*str*): signature included at the bottom of the visualization.
             - **filename** (*str*): visualization file name. If not set, a default will be generated.
-            - **objects** (*list[(Player|Team|League)]*): objects to plot on beeswarm plot.
             - **to_highlight** (*Player|Team|League)*): object to highlight in beeswarm plot.
-            - **stats** (*list[str]*): statistics to build beeswarm plots for.
             - **year** (*str*): year you want the statistic from.
             - **team** (*str*): team you want the statistic from.
             - **use_image** (*bool*): use image as icon for 'to_highlight' object.
@@ -1575,5 +1572,216 @@ class Visualize:
 
         if( "filename" not in params):
             params["filename"] =  f"beeswarm.png"
+
+        self.__output_vis(params)
+
+    def compare_stats(self, objects: list[(Player|Team|League)], stat: str, params: dict):
+        r"""Clean comparison of Soccer API objects for a given stat.
+
+        :param objects: list of Soccer API objects.
+        :type objects: list[(Player|Team|League)]
+        :param stat: statistic to be compared
+        :type stat: str
+        :param params: params dictionary to define the radar chart customization.
+
+            - **title** (*str*): title to be displayed on the visualization. If not set, a default will be generated.
+            - **description** (*str*): description of signature displayed below the title.
+            - **signature** (*str*): signature included at the bottom of the visualization.
+            - **filename** (*str*): visualization file name. If not set, a default will be generated.
+            - **year** (*str*): year you want the statistic from.
+            - **team** (*str*): team you want the statistic from.
+        :type params: dict
+        """
+
+        if len(objects) > 21:
+            return { "success" : 0, "res" : {}, "error_string" : "Error: Can not visualize more than 21 objects" }
+
+
+        # Determin Rows
+        rows = []
+        row = []
+        for object in objects:
+            if len(row) > 2:
+                rows.append(row)
+                row = []
+            row.append(object)
+        if len(row) <= 3:
+            rows.append(row)
+
+        params["body_height"] = len(rows) * 2
+
+        self.__set_up_vis(params)
+
+        stats = []
+        # Prep Data
+        for object in objects:
+            if stat in [ "Market Value", "mv", "MV", "market value" ]:
+                stats.append(object.market_value())
+            else:
+                year = None
+                if "year" in params:
+                    year = params["year"]
+                team = None
+                if "team" in params:
+                    year = params["team"]
+                val = object.statistic(stat, year=year, team=team).value
+                stats.append(val)
+        
+        # Find Index of Object with Greatest Value
+        max_val = None
+        max_idx = 0
+        i = 0
+        for val in stats:
+            if max_val is None:
+                max_val = val
+            elif val > max_val:
+                max_val = val
+                max_idx = i
+            i+=1
+
+        # Generate Images
+        images = []
+        i = 0
+        for object in objects:
+            c = self.secondary_color
+            if i == max_idx:
+                c = self.highlight_color
+            
+            img = self.__get_img(object, c=c)
+            img_array = np.asarray(img)
+            images.append(OffsetImage(img_array, zoom=0.55))
+            i+=1
+
+        self.ax2.clear()
+
+        #Places Images and Stats
+        idx = 0
+        row_count = (len(rows))
+        offsets = {
+            "1" : .4,
+            "2" : .2,
+            "3" : .13,
+            "4" : .09,
+            "5" : .075,
+            "6" : .06,
+            "7" : .053,
+        }
+        text_offset = offsets[str(len(rows))]
+        for row in rows:
+            row_len= len(row)
+            y = (row_count - .5 ) / (len(rows))
+            row_count -= 1
+            if row_len == 1:
+                x = .5
+                img = images[idx]
+                label = f"{stats[idx]:,.2f} {stat}"
+                
+                ab = AnnotationBbox(
+                    img,
+                    (x, y),
+                    frameon=False,
+                    box_alignment=(0.5, 0.5),
+                    zorder=10
+                )
+                self.ax2.add_artist(ab)
+
+                color = self.secondary_color
+                if idx == max_idx:
+                    color = self.highlight_color
+
+                self.ax2.text(
+                    x,
+                    y - text_offset,
+                    label,
+                    ha="center",
+                    va="top",
+                    fontsize=18,
+                    color=color,
+                    weight='bold', 
+                    alpha=1
+                )
+            elif row_len == 2:
+                x1 = .33
+                x2 = .66
+                for i in range(2):
+                    img = images[idx + i]
+                    label = f"{stats[idx + i]:,.2f} {stat}"
+                    x = None
+                    if i == 0:
+                        x = x1
+                    elif i == 1:
+                        x = x2
+                    ab = AnnotationBbox(
+                        img,
+                        (x, y),
+                        frameon=False,
+                        box_alignment=(0.5, 0.5),
+                        zorder=10
+                    )
+                    self.ax2.add_artist(ab)
+
+                    color = self.secondary_color
+                    if idx+i == max_idx:
+                        color = self.highlight_color
+
+                    self.ax2.text(
+                        x,
+                        y - text_offset,
+                        label,
+                        ha="center",
+                        va="top",
+                        fontsize=18,
+                        color=color,
+                        weight='bold', 
+                        alpha=1
+                    )
+            elif row_len == 3:
+                x1 = .25
+                x2 = .5
+                x3 = .75
+                for i in range(3):
+                    img = images[idx + i]
+                    label = f"{stats[idx + i]:,.2f} {stat}"
+                    x = None
+                    if i == 0:
+                        x = x1
+                    elif i == 1:
+                        x = x2
+                    elif i == 2:
+                        x = x3
+                    ab = AnnotationBbox(
+                        img,
+                        (x, y),
+                        frameon=False,
+                        box_alignment=(0.5, 0.5),
+                        zorder=10
+                    )
+                    self.ax2.add_artist(ab)
+
+                    color = self.secondary_color
+                    if idx+i == max_idx:
+                        color = self.highlight_color
+
+                    self.ax2.text(
+                        x,
+                        y - text_offset,
+                        label,
+                        ha="center",
+                        va="top",
+                        fontsize=18,
+                        color=color,
+                        weight='bold', 
+                        alpha=1
+                    )
+            idx += 3
+
+        self.ax2.set_xticks([])
+        self.ax2.set_yticks([])
+
+        for spine in self.ax2.spines.values():
+            spine.set_visible(False)
+
+        if( "filename" not in params):
+            params["filename"] =  f"{stat}_compare.png"
 
         self.__output_vis(params)
