@@ -17,6 +17,8 @@ class Team:
       :vartype fbref_stat_detail_level: str
       :ivar tm_id: Team's Transfermarkt ID.
       :vartype tm_id: str
+      :ivar fotmob_id: Team's Fotmob ID.
+      :vartype fotmob_id: str
       :ivar fapi_id: Team's API-Football ID
       :vartype fapi_id: str
       :ivar understat_id: teams's Understat ID.
@@ -39,6 +41,7 @@ class Team:
         self.id = team_data["team_id"]
         self.fbref_id = team_data["fbref_id"]
         self.tm_id = team_data["tm_id"]
+        self.fotmob_id = team_data["fotmob_id"]
         self.understat_id = team_data["understat_id"]
         self.fapi_id = team_data["fapi_id"]
         #Cached Data
@@ -553,3 +556,31 @@ class Team:
             if( self.debug ):
                 print(res["error_string"])
         return {}
+    
+    def statistics_available(self, year: Optional[str] = None ) -> list[str]:
+        r"""Returns the statistics a team has available for a given year and team.
+
+        :param year: desired year the statistics are from.
+        :type year: Optional[str]
+        :returns: a list of statistic names as strings
+        :rtype: list[str]
+        """
+        self.statistics()
+        stats = self.stats_cache
+        
+        if year is None:
+            keys = list(stats.keys())
+            if(len(keys) > 0):
+                year = max(keys)             
+
+        stat_names = []
+        if year in stats:
+            stat_names = list(stats[year].keys())
+
+        available_stats = []
+        for stat in stat_names:
+            if str(type(stats[year][stat])) == "<class 'SoccerAPI.soccerapi.obj.statistic.Statistic'>":
+                if (stats[year][stat] > 0):
+                    available_stats.append(stat)
+
+        return available_stats

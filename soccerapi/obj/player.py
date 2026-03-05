@@ -19,6 +19,8 @@ class Player:
     :vartype id: str
     :ivar tm_id: player's Transfermarkt ID.
     :vartype tm_id: str
+    :ivar fotmob_id: Player's Fotmob ID.
+    :vartype fotmob_id: str
     :ivar fapi_id: player's API-Football ID.
     :vartype fapi_id: str
     :ivar understat_id: player's Understat ID.
@@ -41,6 +43,7 @@ class Player:
         self.id: str = player_data["player_id"]
         self.fbref_id = player_data["fbref_id"]
         self.tm_id = player_data["tm_id"]
+        self.fotmob_id = player_data["fotmob_id"]
         self.fapi_id = player_data["fapi_id"]
         self.understat_id = player_data["understat_id"]
         #Cached Data
@@ -566,3 +569,51 @@ class Player:
             if( self.debug ):
                 print(res["error_string"])
         return
+
+    def statistics_available(self, year: Optional[str] = None, team: Optional[str | Team] = None ) -> list[str]:
+        r"""Returns the statistics a player has available for a given year and team.
+
+        :param year: desired year the statistics are from.
+        :type year: Optional[str]
+        :param team: desired team the player was playing for when the statistics were recorded (Given players can be on multiple teams in a season)
+        :type team: Optional[str | Team]
+        :returns: a list of statistic names as strings
+        :rtype: list[str]
+        """
+        self.statistics()
+        stats = self.stats_cache
+        
+        if year is None:
+            keys = list(stats.keys())
+            if(len(keys) > 0):
+                year = max(keys)
+
+        if team:
+            if(str(type(team)) != "<class 'str'>" ):
+                team = str(team.id)
+        else:
+            stats_by_year = stats[year]
+            keys = list(stats_by_year.keys())
+            if(len(keys) > 0):
+                team = None
+                key_count = 0
+                for key in keys:
+                    if team is None:
+                        team = key
+                        key_count = len(list(stats_by_year[key].keys()))
+                    elif(len(list(stats_by_year[key].keys())) > key_count):
+                        team = key
+                        key_count = len(list(stats_by_year[key].keys()))                
+
+        stat_names = []
+        if year in stats:
+            if team in stats[year]:
+                stat_names = list(stats[year][team].keys())
+
+        available_stats = []
+        for stat in stat_names:
+            if str(type(stats[year][team][stat])) == "<class 'SoccerAPI.soccerapi.obj.statistic.Statistic'>":
+                if (stats[year][team][stat] > 0):
+                    available_stats.append(stat)
+
+        return available_stats
