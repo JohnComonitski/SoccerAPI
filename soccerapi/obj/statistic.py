@@ -39,7 +39,11 @@ class Statistic:
             if "age" in stat_data["context"]:
                 self.context["age"] = stat_data["context"]["age"]
 
-        name = key_to_name(stat_data["key"])
+        if "new" in stat_data and stat_data["new"]:
+            name = stat_data["name"]
+        else:
+            name = key_to_name(stat_data["key"])
+
         if(name):
             self.name = name
         else:

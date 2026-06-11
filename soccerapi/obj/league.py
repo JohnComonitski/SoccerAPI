@@ -389,7 +389,36 @@ class League:
         stats = self.statistics(year)
         if stat_key and stat_key in stats:
             return stats[stat_key]
+        elif stat in stats:
+            return stats[stat]
+        
         return Statistic({ "key" : stat_key, "value" : 0 })
+
+    def set_statistic(self, name, key, year: str, value: int) -> Statistic:
+        r"""Set a custom statistic for a League
+        
+        :param name: Statistic's display name
+        :type name: str
+        :param key: Statistic's key
+        :type key: str
+        :param value: Statistic's value
+        :type value: int
+        :param year: year the statistic is from.
+        :type year: str
+
+        :returns: a Statistic
+        :rtype: Statistic
+        """
+        self.statistics()
+        new_cache = self.stats_cache
+
+        if year not in new_cache:
+            new_cache[year] = {}
+
+        stat = Statistic({ "new" : True, "key" : key, "name" : name, "value" : value, "percentile" : 0})
+        new_cache[year][key] = stat
+
+        return stat
 
     def statistics_available(self, year: Optional[str] = None ) -> list[str]:
         r"""Returns the statistics a team has available for a given year and team.

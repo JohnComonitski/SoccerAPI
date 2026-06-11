@@ -360,7 +360,7 @@ class Team:
 
         if year in stats:
             return stats[year]
-        
+
         res = self.fbref.get_stats(self)
 
         if(res["success"]):
@@ -420,9 +420,38 @@ class Team:
             stat_key = name_to_key(stat)
 
         stats = self.statistics(year)
+
         if stat_key and stat_key in stats:
             return stats[stat_key]
+        elif stat in stats:
+            return stats[stat]
         return Statistic({ "key" : stat_key, "value" : 0 })
+
+    def set_statistic(self, name, key, year: str, value: int) -> Statistic:
+        r"""Set a custom statistic for a Team
+        
+        :param name: Statistic's display name
+        :type name: str
+        :param key: Statistic's key
+        :type key: str
+        :param value: Statistic's value
+        :type value: int
+        :param year: year the statistic is from.
+        :type year: str
+
+        :returns: a Statistic
+        :rtype: Statistic
+        """
+        self.statistics()
+        new_cache = self.stats_cache
+
+        if year not in new_cache:
+            new_cache[year] = {}
+
+        stat = Statistic({ "new" : True, "key" : key, "name" : name, "value" : value, "percentile" : 0})
+        new_cache[year][key] = stat
+
+        return stat
 
     def opponent_statistics(self, year: Optional[str] = None) -> dict[Statistic]:
         r"""Get the Team's FBRef opposition statistics for a given year.
@@ -505,7 +534,36 @@ class Team:
         stats = self.opponent_statistics(year)
         if stat_key and stat_key in stats:
             return stats[stat_key]
+        elif stat in stats:
+            return stats[stat]
+
         return Statistic({ "key" : stat_key, "value" : 0 })
+    
+    def set_opponent_statistic(self, name, key, year: str, value: int) -> Statistic:
+        r"""Set a custom statistic for a Team's opposition
+        
+        :param name: Statistic's display name
+        :type name: str
+        :param key: Statistic's key
+        :type key: str
+        :param value: Statistic's value
+        :type value: int
+        :param year: year the statistic is from.
+        :type year: str
+
+        :returns: a Statistic
+        :rtype: Statistic
+        """
+        self.opponent_statistics()
+        new_cache = self.opps_stats_cache
+
+        if year not in new_cache:
+            new_cache[year] = {}
+
+        stat = Statistic({ "new" : True, "key" : key, "name" : name, "value" : value, "percentile" : 0})
+        new_cache[year][key] = stat
+
+        return stat
     
     def transfers(self, year: str = None, type: str = "both") -> dict:
         r"""Get a Team's transfers.

@@ -472,8 +472,43 @@ class Player:
         stats = self.statistics(year=year, team=team)
         if stat_key and stat_key in stats:
             return stats[stat_key]
+        elif stat in stats:
+            return stats[stat]
 
         return Statistic({ "key" : stat, "value" : 0, "percentile" : 0})
+
+    def set_statistic(self, name, key, year: str, team: str | Team, value: int) -> Statistic:
+        r"""Set a custom statistic for a Player
+        
+        :param name: Statistic's display name
+        :type name: str
+        :param key: Statistic's key
+        :type key: str
+        :param value: Statistic's value
+        :type value: int
+        :param year: year the statistic is from.
+        :type year: str
+        :param team: team the player was playing for when the statistic was recorded
+        :type team: str | Team
+        :returns: a Statistic
+        :rtype: Statistic
+        """
+        self.statistics()
+        new_cache = self.stats_cache
+
+        if year not in new_cache:
+            new_cache[year] = {}
+
+        if(str(type(team)) != "<class 'str'>" ):
+            team = str(team.id)
+
+        if team not in new_cache[year]:
+            new_cache[year][team] = {}
+
+        stat = Statistic({ "new" : True, "key" : key, "name" : name, "value" : value, "percentile" : 0})
+        new_cache[year][team][key] = stat
+
+        return stat
 
     def fbref_image(self) -> str:
         r"""Get a URL of the Player's FBRef image.
