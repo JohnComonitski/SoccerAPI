@@ -54,9 +54,9 @@ class PostgreSQL:
     def build_cache(self):
         data = self.get_cache_data()
         cache = {
-            "players" : { "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "player_id" : {} },
-            "teams" : { "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "team_id" : {} },
-            "leagues" : { "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "league_id" : {} }
+            "players" : { "opta_id" : {},  "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "player_id" : {} },
+            "teams" : { "opta_id" : {}, "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "team_id" : {} },
+            "leagues" : { "opta_id" : {}, "fotmob_id" : {}, "understat_id" : {}, "fbref_id" : {}, "tm_id" : {}, "fapi_id" : {}, "league_id" : {} }
         }
         for table in data:
             singular = table[0:-1]
@@ -79,6 +79,8 @@ class PostgreSQL:
                         cache[table]["understat_id"][str(row[key])] = row
                     if key == "fotmob_id":
                         cache[table]["fotmob_id"][str(row[key])] = row
+                    if key == "opta_id":
+                        cache[table]["opta_id"][str(row[key])] = row
         return cache
         
     def get_cache_data(self):
