@@ -25,6 +25,8 @@ class Player:
     :vartype fapi_id: str
     :ivar understat_id: player's Understat ID.
     :vartype understat_id: str
+    :ivar opta_id: player's Opta ID.
+    :vartype opta_id: str
     :ivar db: a database instance.
     :vartype db: Any
     """
@@ -46,6 +48,7 @@ class Player:
         self.fotmob_id = player_data["fotmob_id"]
         self.fapi_id = player_data["fapi_id"]
         self.understat_id = player_data["understat_id"]
+        self.opta_id = player_data["opta_id"]
         #Cached Data
         self.fapi_profile = None
         self.positions_cache = None

@@ -23,6 +23,8 @@ class Team:
       :vartype fapi_id: str
       :ivar understat_id: teams's Understat ID.
       :vartype understat_id: str
+      :ivar opta_id: teams's Opta ID.
+      :vartype opta_id: str
       :ivar db: PostgreSQL database initalization object.
       :vartype db: PostgreSQL
     """
@@ -44,6 +46,7 @@ class Team:
         self.fotmob_id = team_data["fotmob_id"]
         self.understat_id = team_data["understat_id"]
         self.fapi_id = team_data["fapi_id"]
+        self.opta_id = team_data["opta_id"]
         #Cached Data
         self.fapi_profile = None
         self.stats_cache = {}

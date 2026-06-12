@@ -23,6 +23,8 @@ class League:
     :vartype fapi_id: str
     :ivar understat_id: league's Understat ID.
     :vartype understat_id: str
+    :ivar opta_id: league's Opta ID.
+    :vartype opta_id: str
     :ivar fbref_stat_detail_level: level of Statistic detail FBRef provides for
       this League object.
     :vartype fbref_stat_detail_level: str
@@ -50,6 +52,7 @@ class League:
         self.fotmob_id = league_data["fotmob_id"]
         self.understat_id = league_data["understat_id"]
         self.fapi_id = league_data["fapi_id"]
+        self.opta_id = league_data["opta_id"]
         self.type = league_data["type"]
         #Cached Data
         self.teams_cache = {}
