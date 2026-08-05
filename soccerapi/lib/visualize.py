@@ -181,7 +181,8 @@ class Visualize:
                 if(desc_lines == 3):
                     header_height += .4
         elif(params and "title" in params):
-            header_height += .4
+            pass
+            #header_height += .4
 
         #Signature
         signature = ""
@@ -786,6 +787,7 @@ class Visualize:
                     - **stat** (*str*): statistic used to calculate the top n.
                 - **top_quartile** (*bool*): highlight all points in the top quartile.
             - **label_highlights** (*bool*): include a label (object name) of the objects highlighted.
+            - **use_image_for_highlights** (*bool*): include images for highlighted objects.
             - **label_all** (*bool*): label (object name) of for all objects.
             - **x_label** (*str*): label used along the x axis. If not set, a default will be generated.
             - **y_label** (*str*): label used along the y axis. If not set, a default will be generated.
@@ -844,7 +846,10 @@ class Visualize:
         for obj in objs:
             image = None
             if use_images:
-                image = self.__get_img(obj) 
+                image = self.__get_img(obj)
+            elif "use_image_for_highlights" in params and params["use_image_for_highlights"]:
+                if str(obj.id) in obj_highlight:
+                    image = self.__get_img(obj, c=highlight_color)
             stat = { "object" : obj, "image" : image }
 
             if(z_stat):
@@ -872,7 +877,10 @@ class Visualize:
         images = []
         idx = 0
         for obj in stats:
-            labels.append(obj["object"].name())
+            if obj["image"] is not None:
+                labels.append("")
+            else:
+                labels.append(obj["object"].name())
             images.append(obj["image"])
             if has_obj_highlights:
                 if(str(obj["object"].id) in obj_highlight):
@@ -951,16 +959,15 @@ class Visualize:
 
         self.ax2.scatter(x_end, y_end, c=c, marker='o', facecolors='none', s=z, edgecolors=self.tertiary_color, linewidth=.75)
 
-        if(use_images):
-            z_sizes = [ .2 for i in range(len(x_end)) ]
-            if use_images and z:
-                z_sizes = normalize(z, min_new=.1, max_new=.3)
+        z_sizes = [ .2 for i in range(len(x_end)) ]
+        if use_images and z:
+            z_sizes = normalize(z, min_new=.1, max_new=.3)
 
-            for (x0, y0, img, z_size) in zip(x_end, y_end, images, z_sizes):
-                if img:
-                    im = OffsetImage(img, zoom=z_size)
-                    ab = AnnotationBbox(im, (x0, y0), frameon=False)
-                    self.ax2.add_artist(ab)
+        for (x0, y0, img, z_size) in zip(x_end, y_end, images, z_sizes):
+            if img is not None:
+                im = OffsetImage(img, zoom=z_size)
+                ab = AnnotationBbox(im, (x0, y0), frameon=False)
+                self.ax2.add_artist(ab)
         
         if( params and "label_all" in params):
             for (x, y, text) in zip(x_end, y_end, labels):
@@ -1596,7 +1603,6 @@ class Visualize:
         if len(objects) > 21:
             return { "success" : 0, "res" : {}, "error_string" : "Error: Can not visualize more than 21 objects" }
 
-
         # Determin Rows
         rows = []
         row = []
@@ -1608,7 +1614,7 @@ class Visualize:
         if len(row) <= 3:
             rows.append(row)
 
-        params["body_height"] = len(rows) * 2
+        params["body_height"] = len(rows) * 1.75
 
         self.__set_up_vis(params)
 

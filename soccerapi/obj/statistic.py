@@ -1,4 +1,4 @@
-from ..lib.utils import key_to_name, traverse_dict
+from ..lib.utils import key_to_name, traverse_dict, get_z_score
 
 
 class Statistic:
@@ -23,6 +23,7 @@ class Statistic:
         """
         self.key = stat_data["key"]
         self.percentile = None
+        self.zscore = None
 
         self.context = {}
         if("context" in stat_data):
@@ -73,6 +74,28 @@ class Statistic:
                 self.percentile = float(stat_data["percentile"])
             else:
                 self.percentile = 0
+
+    def z_score(self) -> int:
+        r"""Get the Z Score of a statistic in the context of its league and season
+
+        :returns: Z Score of a statistic
+        :rtype: int
+        """
+        score = self.zscore
+        if score is not None:
+            return score
+        
+        obj_type = self.context["object"]
+        obj = self.context[obj_type]
+        league = self.context["league"]
+        year = self.context["year"]
+        stat = self.key
+
+        if(league is not None and year is not None):
+            score = get_z_score(stat, obj_type, obj, league, year)
+
+        self.zscore = score
+        return self.zscore
         
     def __str__(self):
         return str(self.value)

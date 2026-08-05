@@ -1,3 +1,5 @@
+import requests
+import json
 import numpy as np
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
@@ -471,3 +473,44 @@ def kmeans(x, y, n_clusters):
     point_colors = [colors[label] for label in labels]
 
     return point_colors
+
+global_z_scores = {}
+def get_z_score(stat, obj_type, obj, league, year):
+    year = str(year)
+    league_id = str(league.id)
+    obj_id = str(obj.id)
+
+    if year not in global_z_scores:
+        global_z_scores[year] = {}
+
+    if league_id not in global_z_scores[year]:
+        global_z_scores[year][league_id] = {}
+
+    if stat not in global_z_scores[year][league_id]:
+        global_z_scores[year][league_id][stat] = {}
+
+    if obj_type not in global_z_scores[year][league_id][stat]:
+        global_z_scores[year][league_id][stat][obj_type] = {}
+
+    if obj_id in global_z_scores[year][league_id][stat][obj_type]:
+        return global_z_scores[year][league_id][stat][obj_type][obj_id]
+
+    zscores = query_for_zscore(stat, obj_type, league_id, year)
+
+    scores = {}
+    for zscore in zscores:
+        scores[str(zscore["id"])] = zscore["zscore"]
+
+    if obj_id not in scores:
+        scores[obj_id] = None
+
+    global_z_scores[year][league_id][stat][obj_type] = scores
+
+    return global_z_scores[year][league_id][stat][obj_type][obj_id]
+
+def query_for_zscore(stat, obj_type, league_id, year):
+    endpoint = f"https://3juig81jql.execute-api.us-west-2.amazonaws.com/v1/soccerapi/zscores?stat={stat}&obj_type={obj_type}&league_id={league_id}&year={year}"
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'}
+    res = requests.get(endpoint, headers=headers)
+    #print(res.text)
+    return json.loads(res.text)
